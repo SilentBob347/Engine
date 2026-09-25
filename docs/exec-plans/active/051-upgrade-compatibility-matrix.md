@@ -2,7 +2,8 @@
 
 ## 状态与完整责任
 
-- **状态**：已确认，待实施（下一步 S0）；待决问题已于 2026-09-25 由用户确认，见“已确认的决定”。
+- **状态**：实施中。S0–S2 已完成；S3–S6 的测试台、入口与 CI 定义已实现并在本地运行，进度与实测见“实施记录”；
+  待决问题已于 2026-09-25 由用户确认，见“已确认的决定”。
 - **日期**：2026-09-25。
 - **跟踪**：[Issue #119](https://github.com/UniClipboard/Engine/issues/119)。
 - **依据**：[Engine 测试架构](../../design-docs/testing-architecture.md)（nextest 负责进程调度、分组与超时，
@@ -103,6 +104,18 @@ Desktop 版本使用时只算一个锚点。共 14 个点（13 个旧 rev 与当
   不静默跳过。
 - 核实结果：13 个旧 rev 的 `uc-engine` 都有 `EngineConfig`、`HostCapabilities`、`HostDirectories`、
   `HostSecureStorage` 与 `dev-tools`，rc15（A07）先例只需 10 行补丁。
+- 实施取舍（能力分层）：13 个旧 rev 的公开接口可归为 5 代，差异集中在少数入口。宿主以 7 个按能力划分的 feature
+  表达（`test-network-config`、`network-recovery`、`process-observability`、`device-group-choices`、`join-status`、
+  `connectivity-opportunity`、`startup-progress`），当前源码的 `current-engine` 启用全部能力；锚点与能力的对应登记在
+  `tests/upgrade-matrix/host-features.json`，构建脚本按此传 feature。缺少的工作区成员声明由构建脚本统一补上。
+  因此当前没有任何锚点补丁；补丁目录保留给能力分层无法覆盖的差异。
+
+### 外部依赖跳过
+
+A01、A02 的公开接口无法在 Engine 启动前关闭默认 n0 relay 与 pkarr 公共发现（`with_test_relay_fallback` 从 A03
+才有，此前网络设置只从资料中的设置文件在启动时读取）。按“风险”一节，宿主在这两个锚点上拒绝启动并报告
+`local_network_unavailable`，不访问外部服务；涉及它们的 125 个单元登记为 `skip`，两条完整链登记
+`excluded_points: [a01, a02]`。若日后决定以其他方式在首次启动前提供本地网络配置，再重新登记。
 
 ### 资料在进程之间传递
 
@@ -193,6 +206,26 @@ bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
 | 旧 rev 依赖的外部服务（rendezvous、relay）不可用或已变化 | 测试一律使用本地直连与本地 relay 宿主，不访问外部服务；无法关闭外部依赖的锚点记为跳过并登记原因 |
 | 首轮全矩阵暴露大量不一致 | 先判定并登记，产品问题另行立项，不在测试计划里修产品 |
 | 全矩阵夜间耗时过长 | 按维度与起始版本分片；若仍超预算，先报告实测数据再决定是否收缩组合 |
+
+## 实施记录
+
+### 2026-09-25（t-0054）
+
+- S0：`resolve-desktop-anchors.mjs` 从 GitHub 发布列表重新生成的锚点与本计划表一致（13 个 rev、14 个发布、457 个单元：
+  D1 92、D2 92、D3 182、D4 91）；重复运行无漂移；A06 只能经 `refs/pull/57/head` 取得，构建脚本按 SHA 补取。
+- S1：13 个锚点全部构建成功，无补丁。首次冷构建单个 2–12 分钟（本机与其他任务并行、负载高）；只改宿主时借共享
+  编译缓存每个 34–95 秒；缓存命中不到 1 秒；单个宿主二进制约 170 MB；构建目录在复制产物后回收。rc15 旧流程
+  改用同一脚本的 A07，删除 `scripts/testing/rc15-test-host.patch`。
+- S2：宿主新增锚点与能力报告、启动失败如实回复、`capture`、`observe`、`unlock`、`sync_preference`。A03–A13 与当前
+  源码逐一执行“启动 → 写入 → observe → 退出 → 重启 → observe”一致；A03、A04 重启后需以口令解锁（该版本行为）。
+- S3–S5：`tests/upgrade-matrix` 测试台与四个维度已实现；A13 → HEAD 的首批真实结果：
+  - D1、D2 通过。
+  - D3 两个邀请方向均失败：A13 与当前源码从零配对不收敛，加入方停在 `pending`，没有“对端需升级”之类的
+    明确拒绝；邀请方日志为 `space_admission` 认证失败（`identity_mismatch`，`initial_version`）。同版本两侧均约 1 秒
+    完成配对；升级前已建立的配对跨版本仍可互通（D2 通过）。判定为待确认的产品问题，登记保持 `pass`。
+  - D4 失败：当前源码升级后的资料由 A13 打开能启动，但 `ListDevices` 返回错误码 1392，既非明确报告需要处理，也非
+    正常工作；再次用当前源码打开时内容与降级前一致。是否登记为已接受的不兼容需产品决定。
+- 全矩阵与 10 次冒烟结果、CI 远端运行：见任务报告，完成后回填本节。
 
 ## 已确认的决定
 

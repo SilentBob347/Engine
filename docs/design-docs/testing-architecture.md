@@ -11,6 +11,7 @@
 - 使用指南：[Engine 测试使用指南](testing-guide.md)
 - 当前采用清单：[Engine 测试采用清单](../references/test-adoption-inventory.md)
 - 当前采用与进程韧性计划：[048 testkit 采用指南与进程韧性](../exec-plans/active/048-testkit-adoption-and-process-resilience.md)
+- 跨版本升级兼容矩阵：[051 升级兼容性测试矩阵](../exec-plans/active/051-upgrade-compatibility-matrix.md)
 
 # 1. Overview
 
@@ -290,7 +291,7 @@ Iroh host 和成熟系统工具。网络故障必须在对应真实环境中实�
 | 文字与文件传输 | **部分**：真实 `ClipboardSyncFacade` 证明 text snapshot V3 编码、canonical hash 与 accepted fan-out；公开 `FileTransferFacade` 证明登记、单调进度和唯一 Completed；不模拟真实网络或 exact bytes | **当前提交已验证**：direct exact text 0.298 秒、双向 exact bytes 0.226 秒；relay 分别 0.134 秒和 0.242 秒 |
 | 断线重连 | **部分**：034 的成员消息在 partition/heal 后恢复，证明业务端点可继续接受消息；不等于真实连接重建 | **当前提交已验证回归**：E03/E04/E06/E10/E13 实际施加 namespace/relay/known-peer 故障；四种模式工件均通过 |
 | 重启恢复 | **部分**：`restart_continues_from_persisted_admission` 使用真实 Application 负责人和固定 seed；不是完整 Engine 进程重启 | **当前提交已验证回归**：E11/E12 停止/重建真实 Engine 并继续 exact text；direct 工件通过 |
-| 旧资料升级 | **已有 focused 证据但不属于多节点模拟**：真实 synthetic storage migration 与 process crash recovery 18 项，本地测试累计 5.546 秒 | **workflow 已接入、默认分支未生效**：scheduled/手工 `profile-upgrade` 复用同两项 binary；alpha.5 外部完整 fixture 未验证 |
+| 旧资料升级 | **已有 focused 证据但不属于多节点模拟**：真实 synthetic storage migration 与 process crash recovery 18 项，本地测试累计 5.546 秒 | **workflow 已接入、默认分支未生效**：scheduled/手工 `profile-upgrade` 复用同两项 binary；alpha.5 外部完整 fixture 未验证。跨真实旧版本的资料升级、先后升级、新旧混用与降级由 `upgrade-matrix` 负责（[051](../exec-plans/active/051-upgrade-compatibility-matrix.md)） |
 
 ### 当前可复用入口
 
@@ -300,6 +301,7 @@ Iroh host 和成熟系统工具。网络故障必须在对应真实环境中实�
 | `PairingScenarioFixture` | 准备 `JoinSpaceInput`、调用一次 `complete_joiner_pairing`、断言稳定快照 | 可控 transport/clock/persistence、真实 admission maintenance、激活和最终确认 | 只证明 joiner 规则；Sponsor 唯一性由三设备场景证明，双方链路由 E01 证明 |
 | `TwoMemberHistoryScenario` + `VirtualMembershipNetwork` | 准备两节点、exchange/partition/heal、预期 ACK/Offline | 真实 Application endpoint/ledger、节点注册、typed message 路由、frame 预算、故障生命周期与脱敏 trace | 只覆盖成员历史，不负责 invitation、内容或真实连接生命周期 |
 | `run-connection-recovery-e2e.sh --mode ... --case ...` | mode、场景前缀、网络场景 repeat | Engine 进程、profile、身份、端口、namespace、relay、等待、清理和 JSON 工件 | Linux/root 环境；本地测试只跑一轮，不属于快速线 |
+| `run-test-group.sh upgrade-matrix` 与 `tests/upgrade-matrix/` | 锚点清单与每个单元的期望登记；维度只声明版本顺序、动作与公开核对 | 旧版宿主按 rev 构建与缓存、单元 `Scenario`、宿主进程、资料目录、本地 rendezvous、期望比对、`cell.json` 与矩阵表；nextest 负责展开后的调度、分组与期限 | 只覆盖各 Desktop 公开发布锁定的 Engine rev；不能在启动前关闭外部 relay/发现的锚点登记为跳过 |
 | `engine-real-environment.yml` 的 `profile-upgrade` | 选择升级模式 | 固定 nextest、编译/场景/总耗时、JUnit 与 testkit 工件 | workflow 尚未进入默认分支，当前不能 workflow_dispatch |
 
 选择迁移对象时，先处理这五类中最慢、最不稳定且诊断收益最高的测试；已有简单快速测试保持原样。t-0010

@@ -15,6 +15,7 @@
 | 真实 Engine 完整配对、文字与文件传输 | `scripts/testing/connection-recovery-network.mjs` 的 `E01`/`E02` | real-network/nightly | 独立进程、profile、身份、端口与 namespace；公开 setup/eligibility/peer/history/ReadEntryFile 终态、exact bytes 和 cleanup 证据 |
 | rendezvous provider 正常/无效/暂时失败 | `crates/uc-infra/src/rendezvous/invitation_adapter/tests/provider_dependency_evidence.rs` | persistence-provider/evidence | 私有 adapter 场景与业务实现分目录；产品、环境、清理分类 |
 | 成员多设备真实场景（配对、最终确认、F0–F7 拓扑、移除收敛、空间切换、成员历史、自动连接） | `crates/uc-engine/tests/space_membership_auto_pairing_e2e/` | membership-e2e；PR 冒烟、nightly/workflow_dispatch 全组 | 每场景 `result.json`/`summary.txt`：失败分类、最后拓扑事件、等待阶段、设备目录清理与复现命令；真实 Engine、SQLite、MLS 与本机回环 Iroh，分区由 dev-tools 施加 |
+| 跨版本升级兼容矩阵（单设备升级、两设备先后升级、新旧混用、降级回退） | `tests/upgrade-matrix/`、`tests/hosts/connectivity/` | upgrade-matrix；PR 冒烟 5 单元，nightly/workflow_dispatch 全矩阵按维度分片 | 每单元 `result.json`/`summary.txt`/`cell.json` 与汇总 `matrix.md`/`matrix.json`；各 Desktop 公开发布锁定的 Engine rev 真实构建，公开操作核对，登记期望比对（[051](../exec-plans/active/051-upgrade-compatibility-matrix.md)） |
 | profile storage upgrade 与崩溃恢复 | `crates/uc-infra/tests/profile_storage_upgrade.rs`、`profile_storage_upgrade_crash.rs` | process/evidence/nightly | synthetic migration、子进程退出、持久恢复、资源回收；alpha.5 外部 fixture 单列未验证 |
 
 ## 首批五类双线状态

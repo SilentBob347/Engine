@@ -107,6 +107,7 @@ bash scripts/testing/run-test-group.sh persistence-provider
 bash scripts/testing/run-test-group.sh engine-smoke
 bash scripts/testing/run-test-group.sh process
 bash scripts/testing/run-test-group.sh membership-e2e
+bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
 ```
 
 `membership-e2e` 运行 `crates/uc-engine/tests/space_membership_auto_pairing_e2e.rs`：每个场景启动 2–10 个完整
@@ -127,6 +128,28 @@ bash scripts/testing/run-test-group.sh membership-e2e -E 'test(f7_)'
 RUST_LOG=warn,uc_application::space::membership=debug \
   bash scripts/testing/run-test-group.sh membership-e2e -E 'test(removal_convergence)' --no-capture
 ```
+
+`upgrade-matrix` 运行升级兼容矩阵（[计划 051](../exec-plans/active/051-upgrade-compatibility-matrix.md)）：
+`tests/upgrade-matrix/anchors.json` 列出各 Desktop 公开发布锁定的 Engine rev，`expectations.json` 登记每个单元的
+期望（`pass`、`known-incompatible` 或 `skip`，后两者必须写明条件、原因与链接）。`build.rs` 把清单展开为具名测试，
+例如 `d1::a13_to_head`、`d3::a13_to_head_old_inviter`、`d2::chain`；每个单元一个 `uc_testkit::Scenario`，经
+`tests/hosts/connectivity` 宿主驱动各版本的公开 Engine 操作，使用本地 rendezvous 与本机回环直连，不访问外部服务。
+入口先用 `scripts/testing/build-upgrade-anchors.sh` 按 rev 构建并缓存旧版宿主（`<target>/upgrade-anchors/<rev>/bin`，
+宿主源码或补丁变化时自动重建，`--clean` 回收），再交给 nextest 的 `upgrade-matrix` 测试组。`--smoke` 只跑上一个
+锚点到当前源码的 5 个单元，`--dimension d1|d2|d3|d4` 只跑一个维度，其余参数交给 nextest：
+
+```bash
+bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
+bash scripts/testing/run-test-group.sh upgrade-matrix --dimension d4
+bash scripts/testing/run-test-group.sh upgrade-matrix -E 'test(=d1::a05_to_head)'
+bash scripts/testing/build-upgrade-anchors.sh --clean
+```
+
+每个单元目录除 `result.json`、`summary.txt` 外还有 `cell.json`（登记、实际结果、宿主身份与能力、脱敏事实）；
+失败或跳过时附宿主 stderr 与 Engine 日志尾部。入口结束时汇总为同目录的 `matrix.md` 与 `matrix.json`。实际结果与
+登记不一致（包括登记为已知不兼容却通过、未登记的跳过）时测试失败；不得通过修改登记掩盖产品失败。旧版公开接口的
+差异由宿主按能力划分的 feature 表达，锚点与能力的对应见 `tests/upgrade-matrix/host-features.json`；只有能力分层
+无法覆盖时才为锚点新增 `tests/upgrade-matrix/anchors/<锚点>.patch`，且只能改宿主与工作区成员声明。
 
 `real-network` 会转交现有 Linux 网络脚本；`device` 要求明确平台与设备，不会自动运行。cargo-nextest 必须为脚本声明的固定版本；脚本不会静默退回语义不同的 runner。
 
