@@ -204,7 +204,7 @@ case "${GROUP}" in
     status=0
     run_nextest -p uc-upgrade-matrix -E "${filter}" "$@" || status=$?
     node scripts/testing/summarize-upgrade-matrix.mjs "${artifact_root}/upgrade-matrix" \
-      "${summary_mode[@]}" || status=$?
+      ${summary_mode[@]+"${summary_mode[@]}"} || status=$?
     printf 'matrix artifacts: %s/upgrade-matrix\n' "${artifact_root}"
     printf 'nextest JUnit: target/nextest/ci/junit.xml\n'
     exit "${status}"

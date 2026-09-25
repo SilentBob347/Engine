@@ -73,41 +73,55 @@ fn peer_id(device: &Device) -> Result<String, ScenarioFailure> {
         .ok_or_else(|| failure(FailureKind::FixtureInvalid, "peer-id-unknown"))
 }
 
+/// 发送结果中各目标的结局，只保留结局种类，不含标识。
+fn send_outcome(report: &Value) -> Value {
+    json!(report["per_target"].as_array().map(|targets| {
+        targets
+            .iter()
+            .map(|target| target["outcome"]["kind"].clone())
+            .collect::<Vec<_>>()
+    }))
+}
+
 /// 发送方向接收方发送一段文本与一个文件，等待接收方历史出现相同内容。
 async fn send_both_kinds(
+    run: &mut CellRun,
     sender: &mut Device,
     receiver: &mut Device,
     tag: &str,
 ) -> Result<(), ScenarioFailure> {
     let peer = peer_id(receiver)?;
     let text = format!("upgrade matrix synthetic message {tag}");
-    let deadline = Deadline::new("peer-not-connected");
+    // 旧版的 `connected` 只反映当前是否已有连接，发送时才建立；因此只要求对端已配对，
+    // 然后发送一次并以接收方收到为准，不重复发送。
+    let deadline = Deadline::new("peer-not-paired");
     loop {
         let peers = sender
             .call("peers", Value::Null, "peers-query-failed")
             .await?;
-        let connected = peers.as_array().is_some_and(|peers| {
+        let paired = peers.as_array().is_some_and(|peers| {
             peers
                 .iter()
-                .any(|entry| entry["peer_id"] == peer.as_str() && entry["connected"] == true)
+                .any(|entry| entry["peer_id"] == peer.as_str() && entry["is_paired"] == true)
         });
-        if connected {
+        if paired {
             break;
         }
         deadline.tick().await?;
     }
-    sender
+    let report = sender
         .call(
             "send",
             json!({ "text": text, "peer": peer }),
             "send-text-failed",
         )
         .await?;
+    run.fact(&format!("send-text-{tag}"), send_outcome(&report));
     receiver
         .wait_for_content(&digest(text.as_bytes()), "sent-text-not-received")
         .await?;
     let file = format!("upgrade matrix synthetic shared file {tag}");
-    sender
+    let report = sender
         .call(
             "send_file",
             json!({
@@ -119,6 +133,7 @@ async fn send_both_kinds(
             "send-file-failed",
         )
         .await?;
+    run.fact(&format!("send-file-{tag}"), send_outcome(&report));
     receiver
         .wait_for_content(&digest(file.as_bytes()), "sent-file-not-received")
         .await?;
@@ -132,8 +147,8 @@ pub(crate) async fn exchange(
     b: &mut Device,
     tag: &str,
 ) -> Result<(), ScenarioFailure> {
-    send_both_kinds(a, b, &format!("{tag}-ab")).await?;
-    send_both_kinds(b, a, &format!("{tag}-ba")).await?;
+    send_both_kinds(run, a, b, &format!("{tag}-ab")).await?;
+    send_both_kinds(run, b, a, &format!("{tag}-ba")).await?;
     for device in [a, b] {
         let reply = device.raw("eligibility", Value::Null).await?;
         let key = format!("device-group-choices-{}-{tag}", device.label);
