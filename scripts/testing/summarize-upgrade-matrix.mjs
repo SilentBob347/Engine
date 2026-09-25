@@ -1,23 +1,26 @@
 #!/usr/bin/env node
 // 汇总升级兼容矩阵各单元的 cell.json，输出 matrix.json 与 matrix.md（行 = 起始版本，列 = 目标版本，按维度分表）。
 //
-// 用法：node scripts/testing/summarize-upgrade-matrix.mjs <单元工件根目录> [--smoke]
+// 用法：node scripts/testing/summarize-upgrade-matrix.mjs <单元工件根目录…> [--partial]
+//
+// 可传多个根目录（例如 CI 各分片下载后的目录），按单元合并。
 //
 // 未执行的单元记为“未运行”；完整模式下存在未运行或与登记不一致的单元时以非零退出。
 
 import { execFileSync } from 'node:child_process'
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { basename, dirname, join, resolve } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 
 import { expandCells } from './resolve-desktop-anchors.mjs'
 
 const REPOSITORY_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const root = process.argv[2]
-const smoke = process.argv.includes('--smoke')
+const roots = process.argv.slice(2).filter(argument => !argument.startsWith('--'))
+const root = roots[0]
+const partial = process.argv.includes('--partial')
 if (!root) {
-  process.stderr.write('usage: summarize-upgrade-matrix.mjs <artifact root> [--smoke]\n')
+  process.stderr.write('usage: summarize-upgrade-matrix.mjs <artifact root...> [--partial]\n')
   process.exit(2)
 }
 
@@ -27,15 +30,20 @@ const points = [...anchors.map(anchor => anchor.id), 'head']
 const registered = new Map(expectations.cells.map(cell => [cell.cell, cell]))
 const expanded = expandCells(anchors.map(anchor => anchor.id))
 
+function cellDirectories(directory, depth = 0) {
+  if (!existsSync(directory) || depth > 3) return []
+  if (existsSync(join(directory, 'cell.json'))) return [directory]
+  return readdirSync(directory, { withFileTypes: true })
+    .filter(entry => entry.isDirectory())
+    .flatMap(entry => cellDirectories(join(directory, entry.name), depth + 1))
+}
+
 function readCells() {
   const cells = new Map()
-  if (!existsSync(root)) return cells
-  for (const entry of readdirSync(root, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue
-    const path = join(root, entry.name, 'cell.json')
-    if (!existsSync(path)) continue
-    const cell = JSON.parse(readFileSync(path, 'utf8'))
-    const result = JSON.parse(readFileSync(join(root, entry.name, 'result.json'), 'utf8'))
+  for (const directory of roots.flatMap(root => cellDirectories(root))) {
+    const entry = { name: basename(directory) }
+    const cell = JSON.parse(readFileSync(join(directory, 'cell.json'), 'utf8'))
+    const result = JSON.parse(readFileSync(join(directory, 'result.json'), 'utf8'))
     // 同一单元多次运行（例如冒烟重复）时保留全部结果，矩阵表取最后一次并报告不一致次数。
     const list = cells.get(cell.cell) ?? []
     list.push({ ...cell, artifact: entry.name, elapsed_ms: result.total_elapsed_ms, stages: result.stages })
@@ -89,7 +97,7 @@ const summary = {
   schema_version: 1,
   generated_at: new Date().toISOString(),
   source: gitRevision(),
-  mode: smoke ? 'smoke' : 'full',
+  mode: partial ? 'partial' : 'full',
   points,
   total_cells: cells.length,
   executed_cells: executed.length,
@@ -164,5 +172,5 @@ process.stdout.write(
   `upgrade matrix: executed ${summary.executed_cells}/${summary.total_cells}; ${JSON.stringify(counts)}; ${join(root, 'matrix.md')}\n`,
 )
 const mismatched = cells.some(cell => cell.status === 'mismatch')
-const incomplete = !smoke && cells.some(cell => cell.status === 'not-run')
+const incomplete = !partial && cells.some(cell => cell.status === 'not-run')
 if (mismatched || incomplete) process.exitCode = 1

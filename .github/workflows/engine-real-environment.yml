@@ -17,6 +17,7 @@ on:
           - legacy
           - profile-upgrade
           - membership-e2e
+          - upgrade-matrix
       case_prefix:
         description: Optional single scenario prefix such as E01, E02, or E03
         required: false
@@ -101,7 +102,7 @@ jobs:
 
   manual:
     name: Manual real Engine scenario
-    if: github.event_name == 'workflow_dispatch' && inputs.mode != 'profile-upgrade' && inputs.mode != 'membership-e2e'
+    if: github.event_name == 'workflow_dispatch' && inputs.mode != 'profile-upgrade' && inputs.mode != 'membership-e2e' && inputs.mode != 'upgrade-matrix'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
@@ -267,3 +268,136 @@ jobs:
             target/test-artifacts/ci/membership-e2e
           if-no-files-found: error
           retention-days: 14
+
+  # 升级兼容矩阵：先按 rev 构建并缓存全部旧版宿主，再按维度分片运行，最后合并矩阵表。
+  upgrade-anchors:
+    name: Upgrade matrix anchor hosts
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'upgrade-matrix')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y clang libclang-dev cmake
+      - name: Install pinned Rust toolchain
+        run: rustup show active-toolchain
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32
+        with:
+          workspaces: . -> target
+          shared-key: engine-real-environment-upgrade-matrix
+      - name: Cache anchor hosts
+        uses: actions/cache@v4
+        with:
+          path: |
+            target/upgrade-anchors/*/bin
+            target/upgrade-anchors/*/host.json
+          key: upgrade-anchors-${{ runner.os }}-${{ hashFiles('tests/upgrade-matrix/anchors.json', 'tests/upgrade-matrix/host-features.json', 'tests/upgrade-matrix/anchors/**', 'tests/hosts/connectivity/**', 'scripts/testing/build-upgrade-anchors.sh') }}
+          restore-keys: upgrade-anchors-${{ runner.os }}-
+      - name: Build anchor hosts
+        shell: bash
+        run: |
+          started_at=$(date +%s)
+          bash scripts/testing/build-upgrade-anchors.sh --all
+          echo "- anchor host build wall time: $(( $(date +%s) - started_at ))s" >> "$GITHUB_STEP_SUMMARY"
+      - name: Retain anchor build records
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: engine-upgrade-anchors-${{ github.run_attempt }}
+          path: |
+            target/upgrade-anchors/*/host.json
+            target/upgrade-anchors/*/build.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  upgrade-matrix:
+    name: Upgrade matrix (${{ matrix.dimension }})
+    needs: upgrade-anchors
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        dimension: [d1, d2, d3, d4]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y clang libclang-dev cmake
+      - name: Install pinned Rust toolchain
+        run: rustup show active-toolchain
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32
+        with:
+          workspaces: . -> target
+          shared-key: engine-real-environment-upgrade-matrix
+      - name: Cache anchor hosts
+        uses: actions/cache@v4
+        with:
+          path: |
+            target/upgrade-anchors/*/bin
+            target/upgrade-anchors/*/host.json
+          key: upgrade-anchors-${{ runner.os }}-${{ hashFiles('tests/upgrade-matrix/anchors.json', 'tests/upgrade-matrix/host-features.json', 'tests/upgrade-matrix/anchors/**', 'tests/hosts/connectivity/**', 'scripts/testing/build-upgrade-anchors.sh') }}
+          restore-keys: upgrade-anchors-${{ runner.os }}-
+      - name: Install cargo-nextest
+        uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532
+        with:
+          tool: cargo-nextest@0.9.145
+      - name: Run matrix shard
+        shell: bash
+        env:
+          UC_TEST_ARTIFACTS_DIR: target/test-artifacts/ci
+        run: |
+          started_at=$(date +%s)
+          set +e
+          bash scripts/testing/run-test-group.sh upgrade-matrix --dimension ${{ matrix.dimension }}
+          result=$?
+          set -e
+          echo "- ${{ matrix.dimension }} wall time: $(( $(date +%s) - started_at ))s, result $result" >> "$GITHUB_STEP_SUMMARY"
+          exit "$result"
+      - name: Retain matrix shard evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: engine-upgrade-matrix-${{ matrix.dimension }}-${{ github.run_attempt }}
+          path: |
+            target/nextest/ci/junit.xml
+            target/test-artifacts/ci/upgrade-matrix
+          if-no-files-found: error
+          retention-days: 14
+
+  upgrade-matrix-report:
+    name: Upgrade matrix report
+    needs: upgrade-matrix
+    if: always() && needs.upgrade-matrix.result != 'skipped'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Download matrix shards
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: engine-upgrade-matrix-d*-${{ github.run_attempt }}
+          path: target/upgrade-matrix-shards
+      - name: Summarize matrix
+        shell: bash
+        run: |
+          mkdir -p target/upgrade-matrix-report
+          set +e
+          node scripts/testing/summarize-upgrade-matrix.mjs target/upgrade-matrix-report target/upgrade-matrix-shards
+          result=$?
+          set -e
+          cat target/upgrade-matrix-report/matrix.md >> "$GITHUB_STEP_SUMMARY"
+          exit "$result"
+      - name: Retain matrix report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: engine-upgrade-matrix-report-${{ github.run_attempt }}
+          path: target/upgrade-matrix-report
+          if-no-files-found: error
+          retention-days: 30

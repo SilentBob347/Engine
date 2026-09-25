@@ -33,7 +33,11 @@ pub(crate) struct CellRun {
     facts: Map<String, Value>,
     stderr: BTreeMap<&'static str, StderrTail>,
     profiles: Vec<(&'static str, TempDirLease)>,
+    call_errors: CallErrors,
 }
+
+/// 设备公开操作返回的错误：命令名与 Engine 错误码，写入 `cell.json` 供判定。
+pub(crate) type CallErrors = Arc<Mutex<Vec<Value>>>;
 
 /// 失败时从每台设备资料目录保留的 Engine 日志尾部上限。
 const ENGINE_LOG_TAIL_BYTES: u64 = 512 * 1024;
@@ -82,6 +86,10 @@ impl CellRun {
 
     pub(crate) fn rendezvous(&self) -> &str {
         &self.rendezvous
+    }
+
+    pub(crate) fn call_errors(&self) -> CallErrors {
+        Arc::clone(&self.call_errors)
     }
 
     pub(crate) fn stderr_tail(&mut self, label: &'static str) -> StderrTail {
@@ -278,6 +286,7 @@ pub async fn run_cell(id: &'static str) {
         facts: Map::new(),
         stderr: BTreeMap::new(),
         profiles: Vec::new(),
+        call_errors: Arc::default(),
     };
     let result = crate::dimensions::run(&mut run, &spec).await;
     let stage = run.stage;
@@ -295,8 +304,13 @@ pub async fn run_cell(id: &'static str) {
         facts,
         stderr,
         profiles,
+        call_errors,
         ..
     } = run;
+    let call_errors = call_errors
+        .lock()
+        .map(|errors| errors.clone())
+        .unwrap_or_default();
     // 资料目录在场景结束前释放，清理结果计入 result.json。
     drop(profiles);
     drop(server);
@@ -317,6 +331,7 @@ pub async fn run_cell(id: &'static str) {
         "scenario_outcome": outcome,
         "hosts": hosts,
         "facts": facts,
+        "call_errors": call_errors,
     });
     write_private(
         &artifact_dir.join("cell.json"),

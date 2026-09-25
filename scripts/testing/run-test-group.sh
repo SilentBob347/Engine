@@ -165,12 +165,21 @@ case "${GROUP}" in
     exit "${status}"
     ;;
   upgrade-matrix)
-    # 升级兼容矩阵：旧版宿主按 rev 缓存，入口自行确保所需锚点已构建；--smoke 只跑上一个锚点到当前源码。
+    # 升级兼容矩阵：旧版宿主按 rev 缓存，入口自行确保所需锚点已构建；--smoke 只跑上一个锚点到当前源码，
+    # --dimension d1|d2|d3|d4 只跑一个维度（CI 分片），其余参数原样交给 nextest。
     smoke=false
-    if [[ "${1:-}" == --smoke ]]; then
-      smoke=true
-      shift
-    fi
+    dimension=
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --smoke) smoke=true; shift ;;
+        --dimension)
+          [[ "${2:-}" =~ ^d[1-4]$ ]] || { printf -- '--dimension expects d1, d2, d3 or d4\n' >&2; exit 2; }
+          dimension=$2
+          shift 2
+          ;;
+        *) break ;;
+      esac
+    done
     artifact_root="$(artifact_root)"
     export UC_TEST_ARTIFACTS_DIR="${artifact_root}"
     UC_UPGRADE_TARGET_DIR="$(cargo metadata --locked --no-deps --format-version 1 |
@@ -185,10 +194,17 @@ case "${GROUP}" in
     else
       bash scripts/testing/build-upgrade-anchors.sh --all
     fi
+    if [[ -n "${dimension}" ]]; then
+      filter="${filter} & test(/^${dimension}::/)"
+    fi
+    summary_mode=()
+    if [[ "${smoke}" == true || -n "${dimension}" || $# -gt 0 ]]; then
+      summary_mode=(--partial)
+    fi
     status=0
     run_nextest -p uc-upgrade-matrix -E "${filter}" "$@" || status=$?
     node scripts/testing/summarize-upgrade-matrix.mjs "${artifact_root}/upgrade-matrix" \
-      $([[ "${smoke}" == true ]] && printf -- '--smoke') || status=$?
+      "${summary_mode[@]}" || status=$?
     printf 'matrix artifacts: %s/upgrade-matrix\n' "${artifact_root}"
     printf 'nextest JUnit: target/nextest/ci/junit.xml\n'
     exit "${status}"

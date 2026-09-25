@@ -10,7 +10,7 @@ use uc_testkit::{FailureKind, ScenarioFailure};
 
 use crate::{
     catalog::Point,
-    cell::CellRun,
+    cell::{CallErrors, CellRun},
     fixture::{Content, content_digest},
     host::{HostProcess, Started, StderrTail},
 };
@@ -39,6 +39,7 @@ pub(crate) struct Device {
     pub(crate) id: Option<String>,
     capabilities: Vec<String>,
     stderr: StderrTail,
+    errors: CallErrors,
 }
 
 impl Device {
@@ -49,6 +50,7 @@ impl Device {
     ) -> Result<Self, ScenarioFailure> {
         let root = run.profile_dir(label)?;
         let stderr = run.stderr_tail(label);
+        let errors = run.call_errors();
         Ok(Self {
             label,
             name,
@@ -59,6 +61,7 @@ impl Device {
             id: None,
             capabilities: Vec::new(),
             stderr,
+            errors,
         })
     }
 
@@ -169,7 +172,21 @@ impl Device {
             request = json!({});
         }
         request["command"] = json!(command);
-        self.host()?.call(request, condition).await
+        let reply = self.host()?.raw(request).await?;
+        match reply.get("ok") {
+            Some(value) => Ok(value.clone()),
+            None => {
+                if let Ok(mut errors) = self.errors.lock() {
+                    errors.push(json!({
+                        "device": self.label,
+                        "point": self.point.as_ref().map(|point| point.id.clone()),
+                        "command": command,
+                        "code": reply["code"],
+                    }));
+                }
+                Err(failure(FailureKind::ProductInvariant, condition))
+            }
+        }
     }
 
     pub(crate) async fn raw(
