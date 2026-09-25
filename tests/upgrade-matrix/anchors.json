@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "source": {
+    "desktop_repository": "UniClipboard/UniClipboard",
+    "manifest": "Cargo.toml",
+    "dependency": "uc-engine",
+    "release_filter": "non-draft GitHub releases whose tag matches v1.x.y[-(alpha|beta|rc).N]",
+    "generator": "scripts/testing/resolve-desktop-anchors.mjs"
+  },
+  "anchors": [
+    {
+      "id": "a01",
+      "engine_rev": "7a72f8dcd7be1b96bf312686841d1afbd7bc66a6",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.2",
+          "commit": "190faa25a8eabd09adb29162e36513495d6e4d13",
+          "published_at": "2026-08-05T02:17:05Z"
+        }
+      ]
+    },
+    {
+      "id": "a02",
+      "engine_rev": "90aff6b071a1466343fd1f301654ea89b5f98ce5",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.3",
+          "commit": "f153175c529537e73cd31f43ac1dd214cbefadfa",
+          "published_at": "2026-08-06T02:16:28Z"
+        }
+      ]
+    },
+    {
+      "id": "a03",
+      "engine_rev": "49976d5ea21c5d448d9ef5df2c581b77abeb52cf",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.4",
+          "commit": "d03ec9e41c8b14830d433ba6f878bc2068813c60",
+          "published_at": "2026-08-15T17:07:32Z"
+        }
+      ]
+    },
+    {
+      "id": "a04",
+      "engine_rev": "b390487672caa97a57a28657b22d3900bf5631f1",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.5",
+          "commit": "0776179f2e71fc99dfe122bb7a64b62e64ea1aaf",
+          "published_at": "2026-08-16T04:48:34Z"
+        }
+      ]
+    },
+    {
+      "id": "a05",
+      "engine_rev": "168a3ebd7c2701f2e9f8a0ebe0c4a0af4aa14543",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.8",
+          "commit": "8d956540642cf1c1100e4deddb76ef9c12028b9b",
+          "published_at": "2026-09-08T16:08:37Z"
+        }
+      ]
+    },
+    {
+      "id": "a06",
+      "engine_rev": "9149a875f389bfbf3c24dc9e3c9f7e50c517c07e",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.9",
+          "commit": "9ec3567f72f7c3b9975a5962030a47b2caad70a6",
+          "published_at": "2026-09-10T13:50:00Z"
+        }
+      ]
+    },
+    {
+      "id": "a07",
+      "engine_rev": "f6f305d9689e4e79e7ab6d0e4921061f9416e4a6",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.10",
+          "commit": "cb22db8c8ced019d1ffa4277a9e7fcfc095091c2",
+          "published_at": "2026-09-12T13:39:36Z"
+        }
+      ]
+    },
+    {
+      "id": "a08",
+      "engine_rev": "63a347fa2d6effed50f7f451e30d00ca64e6444b",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.11",
+          "commit": "f8b90962e94f61ca483ed3e087d444e67eec7a30",
+          "published_at": "2026-09-13T13:41:30Z"
+        }
+      ]
+    },
+    {
+      "id": "a09",
+      "engine_rev": "fdae47290a39cf3aca212b989685a31480ae2506",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.12",
+          "commit": "459c47b598f2103ec73d5b0857c908aa0d22b556",
+          "published_at": "2026-09-16T00:04:53Z"
+        }
+      ]
+    },
+    {
+      "id": "a10",
+      "engine_rev": "63cb50a49b47c828c288ae17fd931bec37f8911d",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.13",
+          "commit": "78c6f5322131757bf1c6e06e2d3b6c2a64b571dd",
+          "published_at": "2026-09-16T04:54:35Z"
+        }
+      ]
+    },
+    {
+      "id": "a11",
+      "engine_rev": "cca03181c2c650f66fedbc3228a927fa12bed512",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.14",
+          "commit": "2a87ea5a4ff8eaa6e44b9c8e74349ca612d307b9",
+          "published_at": "2026-09-16T11:49:26Z"
+        },
+        {
+          "tag": "v1.0.0-alpha.15",
+          "commit": "6d4629c10a79317b9cfd40d10d51c2db5e066f11",
+          "published_at": "2026-09-16T14:33:12Z"
+        }
+      ]
+    },
+    {
+      "id": "a12",
+      "engine_rev": "a13ff9d78398f830a122f4042bafdb4e2a5acb05",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.16",
+          "commit": "745d8a13aa579e98d433a838929da451fd4a7bb6",
+          "published_at": "2026-09-18T12:06:30Z"
+        }
+      ]
+    },
+    {
+      "id": "a13",
+      "engine_rev": "5e8d3d4322ca4eb83113f342068d4cb3297ea5eb",
+      "desktop_releases": [
+        {
+          "tag": "v1.0.0-alpha.17",
+          "commit": "61b12c45382820bbbf64af60fe5d52ce3c8a5b18",
+          "published_at": "2026-09-19T23:23:50Z"
+        }
+      ]
+    }
+  ]
+}

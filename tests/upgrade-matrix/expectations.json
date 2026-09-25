@@ -1,0 +1,2218 @@
+{
+  "schema_version": 1,
+  "cells": [
+    {
+      "cell": "d1-a01-a02",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a01-a03",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a01-a04",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a01-a05",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a01-a06",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a01-a07",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a01-a08",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a01-a09",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a01-a10",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a01-a11",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a01-a12",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a01-a13",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a01-head",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-a03",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-a04",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-a05",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-a06",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-a07",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-a08",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-a09",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-a10",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-a11",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-a12",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-a13",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-head",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a03-a04",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a03-a05",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a03-a06",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a03-a07",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a03-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a03-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a03-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a03-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a03-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a03-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a03-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a04-a05",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a04-a06",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a04-a07",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a04-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a04-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a04-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a04-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a04-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a04-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a04-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a05-a06",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a05-a07",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a05-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a05-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a05-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a05-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a05-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a05-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a05-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a06-a07",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a06-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a06-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a06-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a06-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a06-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a06-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a06-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a07-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a07-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a07-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a07-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a07-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a07-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a07-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a08-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a08-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a08-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a08-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a08-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a08-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a09-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a09-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a09-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a09-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a09-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a10-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a10-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a10-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a10-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a11-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a11-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a11-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a12-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a12-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a13-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-chain",
+      "expected": "pass",
+      "excluded_points": [
+        "a01",
+        "a02"
+      ],
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services."
+    },
+    {
+      "cell": "d2-a01-a02",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a01-a03",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a01-a04",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a01-a05",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a01-a06",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a01-a07",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a01-a08",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a01-a09",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a01-a10",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a01-a11",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a01-a12",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a01-a13",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a01-head",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-a03",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-a04",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-a05",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-a06",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-a07",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-a08",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-a09",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-a10",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-a11",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-a12",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-a13",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-head",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a03-a04",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a03-a05",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a03-a06",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a03-a07",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a03-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a03-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a03-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a03-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a03-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a03-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a03-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a04-a05",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a04-a06",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a04-a07",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a04-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a04-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a04-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a04-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a04-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a04-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a04-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a05-a06",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a05-a07",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a05-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a05-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a05-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a05-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a05-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a05-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a05-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a06-a07",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a06-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a06-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a06-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a06-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a06-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a06-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a06-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a07-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a07-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a07-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a07-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a07-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a07-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a07-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a08-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a08-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a08-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a08-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a08-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a08-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a09-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a09-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a09-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a09-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a09-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a10-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a10-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a10-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a10-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a11-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a11-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a11-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a12-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a12-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a13-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-chain",
+      "expected": "pass",
+      "excluded_points": [
+        "a01",
+        "a02"
+      ],
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services."
+    },
+    {
+      "cell": "d3-a01-a02-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a02-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a03-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a03-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a04-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a04-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a05-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a05-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a06-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a06-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a07-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a07-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a08-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a08-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a09-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a09-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a10-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a10-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a11-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a11-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a12-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a12-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a13-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-a13-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-head-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-head-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a03-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a03-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a04-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a04-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a05-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a05-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a06-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a06-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a07-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a07-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a08-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a08-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a09-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a09-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a10-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a10-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a11-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a11-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a12-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a12-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a13-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-a13-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-head-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-head-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a03-a04-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a04-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a05-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a05-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a06-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a06-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a07-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a07-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a08-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a08-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a09-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a09-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a10-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a10-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a11-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a11-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a12-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a12-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a13-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-a13-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-head-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a03-head-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a05-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a05-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a06-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a06-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a07-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a07-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a08-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a08-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a09-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a09-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a10-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a10-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a11-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a11-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a12-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a12-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a13-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-a13-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-head-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a04-head-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a06-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a06-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a07-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a07-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a08-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a08-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a09-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a09-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a10-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a10-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a11-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a11-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a12-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a12-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a13-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-a13-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-head-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a05-head-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a07-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a07-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a08-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a08-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a09-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a09-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a10-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a10-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a11-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a11-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a12-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a12-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a13-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-a13-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-head-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a06-head-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-a08-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-a08-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-a09-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-a09-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-a10-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-a10-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-a11-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-a11-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-a12-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-a12-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-a13-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-a13-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-head-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a07-head-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a08-a09-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a08-a09-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a08-a10-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a08-a10-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a08-a11-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a08-a11-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a08-a12-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a08-a12-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a08-a13-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a08-a13-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a08-head-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a08-head-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a09-a10-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a09-a10-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a09-a11-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a09-a11-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a09-a12-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a09-a12-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a09-a13-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a09-a13-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a09-head-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a09-head-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a10-a11-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a10-a11-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a10-a12-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a10-a12-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a10-a13-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a10-a13-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a10-head-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a10-head-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a11-a12-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a11-a12-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a11-a13-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a11-a13-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a11-head-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a11-head-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a12-a13-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a12-a13-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a12-head-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a12-head-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a13-head-old-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a13-head-new-inviter",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a01-a02",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a01-a03",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a01-a04",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a01-a05",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a01-a06",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a01-a07",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a01-a08",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a01-a09",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a01-a10",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a01-a11",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a01-a12",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a01-a13",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a01-head",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-a03",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-a04",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-a05",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-a06",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-a07",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-a08",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-a09",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-a10",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-a11",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-a12",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-a13",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-head",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a03-a04",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a03-a05",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a03-a06",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a03-a07",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a03-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a03-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a03-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a03-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a03-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a03-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a03-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a04-a05",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a04-a06",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a04-a07",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a04-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a04-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a04-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a04-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a04-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a04-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a04-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a05-a06",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a05-a07",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a05-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a05-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a05-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a05-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a05-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a05-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a05-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a06-a07",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a06-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a06-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a06-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a06-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a06-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a06-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a06-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a07-a08",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a07-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a07-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a07-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a07-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a07-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a07-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a08-a09",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a08-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a08-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a08-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a08-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a08-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a09-a10",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a09-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a09-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a09-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a09-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a10-a11",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a10-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a10-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a10-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a11-a12",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a11-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a11-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a12-a13",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a12-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a13-head",
+      "expected": "pass"
+    }
+  ]
+}
