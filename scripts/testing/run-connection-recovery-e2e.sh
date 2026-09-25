@@ -53,11 +53,11 @@ target=$(cargo metadata --locked --no-deps --format-version 1 | node -e 'let s="
 evidence="$target/connection-recovery-evidence"
 [[ -x "$target/debug/uc-connectivity-host" ]] || { echo 'The test host has not been built; run without --prebuilt.' >&2; exit 2; }
 mkdir -p "$evidence"
+# 旧版互通使用升级兼容矩阵的 a07 锚点（Desktop v1.0.0-alpha.10，Engine v1.1.0-rc.15），由同一构建脚本按 rev 缓存。
+legacy_anchor=a07
 legacy_revision=f6f305d9689e4e79e7ab6d0e4921061f9416e4a6
-legacy=$(mktemp -d "${TMPDIR:-/tmp}/uc-connectivity-rc15.XXXXXX")
 cleanup() {
   local status=$?
-  rm -rf -- "$legacy"
   if ((EUID != 0)); then
     sudo chown -R -- "$(id -u):$(id -g)" "$evidence" || status=1
   fi
@@ -65,12 +65,7 @@ cleanup() {
 }
 trap cleanup EXIT
 if [[ "$mode" == all || "$mode" == legacy ]]; then
-  git archive "$legacy_revision" | tar -x -C "$legacy"
-  cp -R tests/hosts/connectivity "$legacy/tests/hosts/connectivity"
-  git -C "$legacy" apply "$repo/scripts/testing/rc15-test-host.patch"
-  # 旧版宿主来自另一棵源码树，调用方为当前树提供的构建来源不适用；以固定修订加补丁如实记录。
-  UC_ENGINE_SOURCE_COMMIT="$legacy_revision" UC_ENGINE_SOURCE_STATE=modified \
-    CARGO_TARGET_DIR="$target/rc15" cargo build --manifest-path "$legacy/Cargo.toml" -p uc-connectivity-host --no-default-features --offline
+  bash scripts/testing/build-upgrade-anchors.sh "$legacy_anchor"
 fi
 
 git rev-parse HEAD > "$evidence/current-revision.txt"
@@ -99,5 +94,5 @@ if [[ "$mode" == all || "$mode" == direct ]]; then "${runner[@]}" --mode direct;
 if [[ "$mode" == all || "$mode" == known-peer ]]; then "${runner[@]}" --mode known-peer; fi
 if [[ "$mode" == all || "$mode" == relay ]]; then "${runner[@]}" --mode relay --relay "$target/debug/uc-connectivity-relay"; fi
 if [[ "$mode" == all || "$mode" == legacy ]]; then
-  "${runner[@]}" --mode legacy --legacy-host "$target/rc15/debug/uc-connectivity-host" --legacy-side 0
+  "${runner[@]}" --mode legacy --legacy-host "$target/upgrade-anchors/$legacy_revision/bin/uc-connectivity-host" --legacy-side 0
 fi

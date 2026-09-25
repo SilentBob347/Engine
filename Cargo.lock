@@ -7026,6 +7026,7 @@ version = "1.1.0-rc.18"
 dependencies = [
  "anyhow",
  "serde_json",
+ "sha2 0.10.9",
  "tempfile",
  "tokio",
  "uc-engine",
@@ -7350,6 +7351,18 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.18",
  "tokio",
+]
+
+[[package]]
+name = "uc-upgrade-matrix"
+version = "1.1.0-rc.18"
+dependencies = [
+ "serde",
+ "serde_json",
+ "sha2 0.10.9",
+ "tokio",
+ "uc-testkit",
+ "wiremock",
 ]
 
 [[package]]

@@ -44,6 +44,10 @@ max-threads = 4
 [test-groups.membership-topology]
 max-threads = 2
 
+# 升级兼容矩阵：每个单元启动 1–2 个完整 Engine 宿主进程；并发按本机核数保守限制。
+[test-groups.upgrade-matrix]
+max-threads = 4
+
 [[profile.default.overrides]]
 filter = "package(uc-testkit)"
 test-group = "fast"
@@ -183,3 +187,27 @@ test-group = "engine-host-contract"
 [[profile.ci.overrides]]
 filter = "package(uc-engine-uniffi) & binary(public_contract)"
 test-group = "binding-contract"
+
+# 升级兼容矩阵单元预算 900 秒、完整链 3300 秒（见 tests/upgrade-matrix/src/cell.rs）；期限略长于预算，
+# 让场景自己写出超时分类与工件。测试台与 nextest 都不重试。
+[[profile.default.overrides]]
+filter = "package(uc-upgrade-matrix) & test(/::chain$/)"
+test-group = "upgrade-matrix"
+slow-timeout = { period = "300s", terminate-after = 12 }
+
+[[profile.default.overrides]]
+filter = "package(uc-upgrade-matrix)"
+test-group = "upgrade-matrix"
+slow-timeout = { period = "120s", terminate-after = 8 }
+
+# 升级兼容矩阵单元预算 900 秒、完整链 3300 秒（见 tests/upgrade-matrix/src/cell.rs）；期限略长于预算，
+# 让场景自己写出超时分类与工件。测试台与 nextest 都不重试。
+[[profile.ci.overrides]]
+filter = "package(uc-upgrade-matrix) & test(/::chain$/)"
+test-group = "upgrade-matrix"
+slow-timeout = { period = "300s", terminate-after = 12 }
+
+[[profile.ci.overrides]]
+filter = "package(uc-upgrade-matrix)"
+test-group = "upgrade-matrix"
+slow-timeout = { period = "120s", terminate-after = 8 }

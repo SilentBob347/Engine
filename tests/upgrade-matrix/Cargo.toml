@@ -1,0 +1,21 @@
+[package]
+name = "uc-upgrade-matrix"
+version.workspace = true
+edition = "2024"
+license.workspace = true
+publish = false
+description = "Upgrade compatibility matrix: drives published Engine anchors and the current source through the connectivity test host."
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+tokio = { version = "1", features = ["io-util", "macros", "process", "rt-multi-thread", "sync", "time"] }
+uc-testkit = { path = "../uc-testkit" }
+wiremock = "0.6"
+
+[build-dependencies]
+serde_json = "1"
+
+[lints]
+workspace = true

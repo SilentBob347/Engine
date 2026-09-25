@@ -5,13 +5,31 @@ edition = "2021"
 license.workspace = true
 publish = false
 
+# 旧版 Engine 公开接口按能力分层：当前源码启用全部能力；旧锚点只启用其 rev 已有的能力，
+# 对应关系见 tests/upgrade-matrix/host-features.json。
 [features]
 default = ["current-engine"]
-current-engine = []
+current-engine = [
+  "connectivity-opportunity",
+  "device-group-choices",
+  "join-status",
+  "network-recovery",
+  "process-observability",
+  "startup-progress",
+  "test-network-config",
+]
+connectivity-opportunity = []
+device-group-choices = []
+join-status = []
+network-recovery = []
+process-observability = []
+startup-progress = []
+test-network-config = []
 
 [dependencies]
 anyhow = "1"
 serde_json = "1"
+sha2 = "0.10"
 tokio = { version = "1", features = ["full"] }
 uc-engine = { path = "../../../crates/uc-engine", features = ["dev-tools"] }
 

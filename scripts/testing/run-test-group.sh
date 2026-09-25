@@ -6,7 +6,7 @@ readonly GROUP="${1:-}"
 readonly BUILD_SCOPE="${UC_TEST_BUILD_SCOPE:-group}"
 
 if [[ -z "${GROUP}" ]]; then
-  printf 'usage: %s <workspace|fast|evidence|persistence-provider|engine-smoke|process|membership-e2e|real-network|device> [group arguments]\n' "$0" >&2
+  printf 'usage: %s <workspace|fast|evidence|persistence-provider|engine-smoke|process|membership-e2e|upgrade-matrix|real-network|device> [group arguments]\n' "$0" >&2
   exit 2
 fi
 shift
@@ -161,6 +161,35 @@ case "${GROUP}" in
       'package(uc-engine) & binary(space_membership_auto_pairing_e2e)' \
       "$@" || status=$?
     printf 'scenario artifacts: %s/membership-e2e\n' "${artifact_root}"
+    printf 'nextest JUnit: target/nextest/ci/junit.xml\n'
+    exit "${status}"
+    ;;
+  upgrade-matrix)
+    # 升级兼容矩阵：旧版宿主按 rev 缓存，入口自行确保所需锚点已构建；--smoke 只跑上一个锚点到当前源码。
+    smoke=false
+    if [[ "${1:-}" == --smoke ]]; then
+      smoke=true
+      shift
+    fi
+    artifact_root="$(artifact_root)"
+    export UC_TEST_ARTIFACTS_DIR="${artifact_root}"
+    UC_UPGRADE_TARGET_DIR="$(cargo metadata --locked --no-deps --format-version 1 |
+      node -e 'let s="";process.stdin.on("data",x=>s+=x).on("end",()=>process.stdout.write(JSON.parse(s).target_directory))')"
+    export UC_UPGRADE_TARGET_DIR
+    cargo build --locked -p uc-connectivity-host
+    filter='package(uc-upgrade-matrix)'
+    if [[ "${smoke}" == true ]]; then
+      latest="$(node -e 'const a=JSON.parse(require("fs").readFileSync("tests/upgrade-matrix/anchors.json","utf8")).anchors;process.stdout.write(a[a.length-1].id)')"
+      bash scripts/testing/build-upgrade-anchors.sh "${latest}"
+      filter="${filter} & test(/::${latest}_to_head(_old_inviter|_new_inviter)?\$/)"
+    else
+      bash scripts/testing/build-upgrade-anchors.sh --all
+    fi
+    status=0
+    run_nextest -p uc-upgrade-matrix -E "${filter}" "$@" || status=$?
+    node scripts/testing/summarize-upgrade-matrix.mjs "${artifact_root}/upgrade-matrix" \
+      $([[ "${smoke}" == true ]] && printf -- '--smoke') || status=$?
+    printf 'matrix artifacts: %s/upgrade-matrix\n' "${artifact_root}"
     printf 'nextest JUnit: target/nextest/ci/junit.xml\n'
     exit "${status}"
     ;;
