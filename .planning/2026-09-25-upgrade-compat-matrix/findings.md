@@ -7,3 +7,7 @@
   git archive + overlay current tests/hosts/connectivity + scripts/testing/rc15-test-host.patch (10 lines).
 - uc-connectivity-host already supports secure storage export/import via start field and `secure_storage` command.
 - Engine GitHub releases: 27 (v0.20.0-rc.11 onward). DB migrations: 48 (v1.0.0-rc.1) -> 61 (rc.16+).
+- API generations: a01 base | a02 +RecoverNetwork/NetworkRecoveryChanged | a03-a04 +with_test_relay_fallback/bind_port |
+  a05-a06 +observability runtime, QueryDeviceGroupChoices, full_invitation, JoinSpace status | a07+ +ConnectivityOpportunity, start_with_progress.
+- a01/a02 default allow_relay_fallback=true, relay/pkarr bound at Engine::start from settings.json; no public pre-start override.
+- Desktop user builds: GitHub API is the anchor source (releases non-draft v1.x); a06 rev only reachable via refs/pull/57/head.
