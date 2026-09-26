@@ -9,6 +9,7 @@
 use std::collections::HashMap;
 use std::future::Future;
 use std::sync::{Arc, Mutex};
+use std::time::Duration;
 
 use hkdf::Hkdf;
 use sha2::Sha256;
@@ -112,6 +113,8 @@ impl ResolvedContentKey {
 #[derive(Clone)]
 pub struct InMemorySession {
     state: Arc<Mutex<SessionState>>,
+    /// 会话变为可读或未提交事务结束（提交、回滚、清理、关闭）时唤醒等待者；
+    /// 等待者被唤醒后必须重新检查状态。
     ready: Arc<Notify>,
 }
 
@@ -235,6 +238,8 @@ impl Drop for SessionTransaction<'_> {
             if !state.closed && Arc::ptr_eq(&state.generation, &previous.generation) {
                 state.pending_material = None;
             }
+            drop(state);
+            self.session.ready.notify_waiters();
         }
     }
 }
@@ -285,6 +290,25 @@ impl InMemorySession {
             }
             notified.await;
         }
+    }
+
+    /// 等待未提交的会话事务结束，返回等待结束时是否已没有未提交事务。
+    ///
+    /// 事务只是 Infra 内部替换安全材料的短暂窗口，不代表 Space 被锁定；外部读取者
+    /// 在此等待提交或回滚后再按实际状态判断。超过 `limit` 仍未结束时返回 `false`，
+    /// 由调用方按当前不可读状态处理，避免事务负责人异常时读取者无限挂起。
+    pub(crate) async fn settle_pending_transaction(&self, limit: Duration) -> bool {
+        tokio::time::timeout(limit, async {
+            loop {
+                let notified = self.ready.notified();
+                if self.lock_state().pending_material.is_none() {
+                    return;
+                }
+                notified.await;
+            }
+        })
+        .await
+        .is_ok()
     }
 
     pub fn get_master_key(&self) -> Result<MasterKey, EncryptionError> {
@@ -827,6 +851,8 @@ impl InMemorySession {
         let mut state = self.lock_state();
         state.closed = true;
         Self::clear_state(&mut state);
+        drop(state);
+        self.ready.notify_waiters();
     }
 
     pub fn clear(&self) {
@@ -836,6 +862,7 @@ impl InMemorySession {
             Self::clear_state(&mut state);
             debug!("master key cleared");
         });
+        self.ready.notify_waiters();
     }
     fn clear_state(state: &mut SessionState) {
         state.generation = Arc::new(());
