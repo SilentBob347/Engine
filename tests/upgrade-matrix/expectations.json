@@ -420,11 +420,7 @@
     },
     {
       "cell": "d4-a13-head",
-      "expected": "known-incompatible",
-      "stage": "downgrade",
-      "condition": "downgrade-queries-failed",
-      "reason": "User decision 2026-09-27: accepted as a breaking change. The released anchor opens a profile upgraded by the current source, reports ready, but treats the current membership state as corrupt and answers device queries with 1392 (workspace convergence unavailable); it does not rewrite the profile, and the current source reopens it unchanged. No compatibility fix is planned; revisit when plan 043 delivers version rollback.",
-      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+      "expected": "pass"
     }
   ]
 }
