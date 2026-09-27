@@ -40,16 +40,19 @@ function cellDirectories(directory, depth = 0) {
 
 function readCells() {
   const cells = new Map()
-  for (const directory of roots.flatMap(root => cellDirectories(root))) {
+  // 多个根目录按传入顺序合并：同一单元以后传入的根目录中的结果为准。
+  for (const [rootIndex, directory] of roots.flatMap((root, index) => cellDirectories(root).map(path => [index, path]))) {
     const entry = { name: basename(directory) }
     const cell = JSON.parse(readFileSync(join(directory, 'cell.json'), 'utf8'))
     const result = JSON.parse(readFileSync(join(directory, 'result.json'), 'utf8'))
     // 同一单元多次运行（例如冒烟重复）时保留全部结果，矩阵表取最后一次并报告不一致次数。
     const list = cells.get(cell.cell) ?? []
-    list.push({ ...cell, artifact: entry.name, elapsed_ms: result.total_elapsed_ms, stages: result.stages })
+    list.push({ ...cell, artifact: entry.name, rootIndex, elapsed_ms: result.total_elapsed_ms, stages: result.stages })
     cells.set(cell.cell, list)
   }
-  for (const list of cells.values()) list.sort((left, right) => left.artifact.localeCompare(right.artifact))
+  for (const list of cells.values()) {
+    list.sort((left, right) => left.rootIndex - right.rootIndex || left.artifact.localeCompare(right.artifact))
+  }
   return cells
 }
 
