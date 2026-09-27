@@ -145,6 +145,10 @@ bash scripts/testing/run-test-group.sh upgrade-matrix -E 'test(=d1::a05_to_head)
 bash scripts/testing/build-upgrade-anchors.sh --clean
 ```
 
+A03、A04 在仅局域网模式下只经 mDNS 解析邀请码并发现对端，因此矩阵要求本机允许回环组播；在屏蔽组播的命令沙箱中
+运行时，这两个锚点的配对单元会以 `join`（错误码 1234）或 `peer-not-paired` 失败，属于环境问题，不能作为产品结论。
+由这两个锚点完成配对的 D2/D3 单元在 nextest 中独占运行，避免并发负载使邀请方广播错过加入方的 5 秒窗口。
+
 每个单元目录除 `result.json`、`summary.txt` 外还有 `cell.json`（登记、实际结果、宿主身份与能力、脱敏事实）；
 失败或跳过时附宿主 stderr 与 Engine 日志尾部。入口结束时汇总为同目录的 `matrix.md` 与 `matrix.json`。实际结果与
 登记不一致（包括登记为已知不兼容却通过、未登记的跳过）时测试失败；不得通过修改登记掩盖产品失败。旧版公开接口的
