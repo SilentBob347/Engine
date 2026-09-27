@@ -126,9 +126,7 @@ impl HostProcess {
         writeln!(input, "{start}").expect("start host request");
         input.flush().expect("flush start request");
         let mut output = BufReader::new(output);
-        let mut line = String::new();
-        output.read_line(&mut line).expect("read host readiness");
-        let ready: Value = serde_json::from_str(&line).expect("host readiness JSON");
+        let ready = read_protocol_reply(&mut output);
         assert_eq!(ready["ready"], true, "host did not start: {ready}");
         (child, input, output)
     }
@@ -144,9 +142,7 @@ impl HostProcess {
     }
 
     fn read_response(&mut self) -> Value {
-        let mut line = String::new();
-        self.output.read_line(&mut line).expect("read host reply");
-        serde_json::from_str(&line).expect("host reply JSON")
+        read_protocol_reply(&mut self.output)
     }
 
     fn shutdown(&mut self) {
@@ -331,4 +327,22 @@ async fn retryable_failure_recovers_after_sponsor_restart() {
     wait_for_phase(&mut sponsor, "completed");
     sponsor.shutdown();
     joiner.shutdown();
+}
+
+/// 读取下一条宿主控制应答。
+///
+/// 宿主与 Engine 的系统日志共用 stdout（非 Apple 平台的系统输出写 JSON 到 stdout），
+/// 控制应答以 `uc_connectivity` 标记区分，其余行不属于控制协议。
+fn read_protocol_reply(output: &mut BufReader<ChildStdout>) -> Value {
+    loop {
+        let mut line = String::new();
+        let read = output.read_line(&mut line).expect("read host output");
+        assert_ne!(read, 0, "host closed its output before replying");
+        let Ok(value) = serde_json::from_str::<Value>(&line) else {
+            continue;
+        };
+        if value["uc_connectivity"] == 1 {
+            return value;
+        }
+    }
 }
