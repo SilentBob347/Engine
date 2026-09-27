@@ -125,3 +125,37 @@ slow-timeout = { period = "30s", terminate-after = 4 }
 [[profile.ci.overrides]]
 filter = "package(uc-infra) & binary(node_lifecycle)"
 threads-required = "num-test-threads"
+
+# 接收方进程崩溃后重启并续传文件，单项本身约 22 秒，不是卡死。
+[[profile.default.overrides]]
+filter = "package(uc-engine) & test(/host_adapter_contract::offline_lifecycle::crash::/)"
+slow-timeout = { period = "30s", terminate-after = 3 }
+
+# 慢 collector 用固定的响应延迟与导出超时验证 flush 期限；满载并行时调度抖动会让结果偏离预期，因此独占运行。
+[[profile.default.overrides]]
+filter = "package(uc-observability-runtime) & binary(collector_slow)"
+threads-required = "num-test-threads"
+
+# 接收方进程崩溃后重启并续传文件，单项本身约 22 秒，不是卡死。
+[[profile.ci.overrides]]
+filter = "package(uc-engine) & test(/host_adapter_contract::offline_lifecycle::crash::/)"
+slow-timeout = { period = "30s", terminate-after = 3 }
+
+# 慢 collector 用固定的响应延迟与导出超时验证 flush 期限；满载并行时调度抖动会让结果偏离预期，因此独占运行。
+[[profile.ci.overrides]]
+filter = "package(uc-observability-runtime) & binary(collector_slow)"
+threads-required = "num-test-threads"
+
+# 每项启动多个真实 Engine 宿主进程，单独运行约 5–10 秒；满载并行时会被拖过 20 秒。测试自身等待上限为 30 秒，
+# 期限需大于它，且同组多进程场景之间不并发。
+[[profile.default.overrides]]
+filter = "package(uc-connectivity-host) & binary(space_device_update_recovery)"
+test-group = "process"
+slow-timeout = { period = "30s", terminate-after = 2 }
+
+# 每项启动多个真实 Engine 宿主进程，单独运行约 5–10 秒；满载并行时会被拖过 20 秒。测试自身等待上限为 30 秒，
+# 期限需大于它，且同组多进程场景之间不并发。
+[[profile.ci.overrides]]
+filter = "package(uc-connectivity-host) & binary(space_device_update_recovery)"
+test-group = "process"
+slow-timeout = { period = "30s", terminate-after = 2 }

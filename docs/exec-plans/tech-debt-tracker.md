@@ -14,5 +14,6 @@
 | 已有空间设备的网络身份文件在两次运行之间消失 | 原因未查明（`dev` 现场一次） | 资料与身份存储负责人查明删除来源（疑似开发构建未设 `UC_PROFILE` 落到 `dev` 资料目录）；复现后修复并保留诊断 | [发现记录](completed/2026-09-23-inbound-peer-admission.md#实施记录) |
 | Core 规则外泄、效果义务无约束力、存储格式与运行时依赖在 Core | 已盘点，修复未开始 | 清单逐项修复或登记为规范例外；Core 自动检查在 CI 阻断 | [计划](active/2026-09-23-core-boundary-remediation.md) |
 | 新会话发布前的出站连接被本机拒绝，每次加入的最终确认多等约 1 秒 | 已定位，候选方案因暴露重启补传问题暂缓 | 先修复同身份重启后握手超时及投递恢复只尝试一次的问题；`interrupted_file_transfer_recovers_after_receiver_process_restart` 连续 10 次通过，且最终确认首连不再 `locally_rejected` | [发现记录](../../.planning/2026-09-26-session-outbound-before-publish/findings.md) |
+| 接收方以同一身份、同一端口重启后，文件续传偶发等不到投递 | 已复现，原因即上一行记录的两个既有问题；该测试已进入 PR 必需门禁 | 本机 nextest 全工作区构建下 `interrupted_file_transfer_recovers_after_receiver_process_restart` 失败 2/10（1381 修复前）与 3/10（修复后），单包构建 1/10，均为等待投递超时；网络与投递恢复负责人修复同身份重启握手超时及投递恢复只尝试一次，之后连续 10 次通过 | [发现记录](../../.planning/2026-09-26-session-outbound-before-publish/findings.md) |
 
 关闭项目时记录验证证据，更新稳定文档，并将对应计划移入 `completed/`。

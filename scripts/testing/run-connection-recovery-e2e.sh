@@ -2,20 +2,23 @@
 set -euo pipefail
 
 usage() {
-  echo "Usage: $0 [--suite all|local|network] [--repeat N] [--mode all|direct|known-peer|relay|legacy] [--case PREFIX]"
+  echo "Usage: $0 [--suite all|local|network] [--repeat N] [--mode all|direct|known-peer|relay|legacy] [--case PREFIX] [--prebuilt]"
   echo "  --repeat applies to the network scenarios only; the local suite always runs once."
+  echo "  --prebuilt reuses the test host already built in the cargo target directory, such as by the workspace test build."
 }
 
 suite=all
 repeat=3
 mode=all
 case_prefix=
+prebuilt=0
 while (($#)); do
   case "$1" in
     --suite) suite=$2; shift 2 ;;
     --repeat) repeat=$2; shift 2 ;;
     --mode) mode=$2; shift 2 ;;
     --case) case_prefix=$2; shift 2 ;;
+    --prebuilt) prebuilt=1; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown argument: $1" >&2; usage >&2; exit 2 ;;
   esac
@@ -28,21 +31,27 @@ repo=$(cd "$(dirname "$0")/../.." && pwd)
 cd "$repo"
 
 # 本地部分是确定性测试，只跑一轮；--repeat 只作用于真实网络场景。
-# 同一测试目标的多个过滤条件合并为一次调用，避免每条命令重复编译。
+# 三个包的测试在一次构建中完成特性解析，避免分次调用时按不同特性组合重复编译共同依赖。
 if [[ "$suite" != network ]]; then
-  cargo test -p uc-infra --lib --locked -- --test-threads=1 \
-    peer_reachability protocol_router rejecting_new_dials_keeps_established_streams_usable
-  cargo test -p uc-application --lib --locked space::connectivity -- --test-threads=1
-  cargo test -p uc-engine --features dev-tools --test space_membership_auto_pairing_e2e --locked -- --test-threads=1 \
-    automatic_connections::existing_connections_survive_rejected_new_dials \
-    automatic_connections::failed_content_dial_preserves_peer_connection
+  cargo nextest run --profile ci --locked --test-threads 1 \
+    -p uc-infra -p uc-application -p uc-engine --features uc-engine/dev-tools \
+    --lib --test space_membership_auto_pairing_e2e \
+    -E '(package(uc-infra) & kind(lib) & (test(peer_reachability) | test(protocol_router) | test(rejecting_new_dials_keeps_established_streams_usable)))
+      | (package(uc-application) & kind(lib) & test(space::connectivity))
+      | (package(uc-engine) & binary(space_membership_auto_pairing_e2e)
+        & (test(=automatic_connections::existing_connections_survive_rejected_new_dials)
+          | test(=automatic_connections::failed_content_dial_preserves_peer_connection)))'
 fi
 [[ "$suite" != local ]] || exit 0
 [[ $(uname -s) == Linux ]] || { echo 'Network validation requires Linux.' >&2; exit 2; }
 
-cargo build -p uc-connectivity-host -p uc-connectivity-relay --locked
+hosts=(-p uc-connectivity-host)
+if ((prebuilt)); then hosts=(); fi
+if [[ "$mode" == all || "$mode" == relay ]]; then hosts+=(-p uc-connectivity-relay); fi
+if ((${#hosts[@]})); then cargo build "${hosts[@]}" --locked; fi
 target=$(cargo metadata --locked --no-deps --format-version 1 | node -e 'let s="";process.stdin.on("data",x=>s+=x).on("end",()=>process.stdout.write(JSON.parse(s).target_directory))')
 evidence="$target/connection-recovery-evidence"
+[[ -x "$target/debug/uc-connectivity-host" ]] || { echo 'The test host has not been built; run without --prebuilt.' >&2; exit 2; }
 mkdir -p "$evidence"
 legacy_revision=f6f305d9689e4e79e7ab6d0e4921061f9416e4a6
 legacy=$(mktemp -d "${TMPDIR:-/tmp}/uc-connectivity-rc15.XXXXXX")
