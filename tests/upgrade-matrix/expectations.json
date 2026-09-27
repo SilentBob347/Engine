@@ -1723,11 +1723,19 @@
     },
     {
       "cell": "d3-a05-head-old-inviter",
-      "expected": "pass"
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-head-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-a07-old-inviter",
@@ -1787,11 +1795,19 @@
     },
     {
       "cell": "d3-a06-head-old-inviter",
-      "expected": "pass"
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-head-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a07-a08-old-inviter",
@@ -1843,11 +1859,19 @@
     },
     {
       "cell": "d3-a07-head-old-inviter",
-      "expected": "pass"
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a07-head-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a08-a09-old-inviter",
@@ -1891,11 +1915,19 @@
     },
     {
       "cell": "d3-a08-head-old-inviter",
-      "expected": "pass"
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a08-head-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a09-a10-old-inviter",
@@ -1931,11 +1963,19 @@
     },
     {
       "cell": "d3-a09-head-old-inviter",
-      "expected": "pass"
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a09-head-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a10-a11-old-inviter",
@@ -1963,11 +2003,19 @@
     },
     {
       "cell": "d3-a10-head-old-inviter",
-      "expected": "pass"
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a10-head-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a11-a12-old-inviter",
@@ -1987,11 +2035,19 @@
     },
     {
       "cell": "d3-a11-head-old-inviter",
-      "expected": "pass"
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a11-head-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a12-a13-old-inviter",
@@ -2003,19 +2059,35 @@
     },
     {
       "cell": "d3-a12-head-old-inviter",
-      "expected": "pass"
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a12-head-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a13-head-old-inviter",
-      "expected": "pass"
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a13-head-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a01-a02",

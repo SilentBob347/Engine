@@ -249,6 +249,26 @@ bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
   `downgrade-queries-failed`；共 147 秒。因 3 个单元与登记不一致，冒烟不能记为“通过”。
 - 交付前检查（metadata、全工作区 check、fmt、Rust 规范、仓库规则、diff check）通过。CI 定义已实现，未在远端运行。
 
+### 2026-09-26（t-0054，D3 跨版本拒绝原因）
+
+- 根因：
+  - 旧版邀请、当前源码加入（A05–A08）：旧版 sponsor 按 `InitialHelloV1` 解析当前 hello，必然解码失败并以协议错误
+    （`0x55`）关闭；此时尚未进入凭据与证明校验。当前源码加入方在等待 `OpaqueResponse` 时把 `0x55` 当成未知关闭码，
+    回落为 `authentication_rejected`。
+  - 当前源码邀请、旧版加入（A05–A13）：当前 sponsor 在 hello 阶段以 `0x54` 拒绝，但各旧版加入方在这一阶段不读取
+    关闭码，一律报告 `authentication_rejected`；只能按“已确认的决定”第 6 项登记。
+- 修复：加入方只在“已发出初次 hello、尚未收到 `OpaqueResponse`”这一阶段把 `0x55` 解释为需要对端升级；所有版本的
+  真实认证失败都以 `0x52` 关闭，保持 `authentication_rejected`，Engine 单元测试同时固定这两种结果。
+- 观测：sponsor 的初次 hello 版本不符不再记为 `initial_version`/`identity_mismatch`，改为
+  `receive_hello`/`peer_upgrade_required`（错误类型 `peer_incompatible`），并删除只被此处使用的身份检查分类。
+- 登记：按“已确认的决定”第 6、7 项，当前源码邀请旧版的 9 个单元登记为已知不兼容，旧版邀请当前源码的 9 个单元登记为
+  `rejected`（`peer_upgrade_required`）。
+- 验证：受影响的 18 个 D3 单元加入方原因全部符合登记；冒烟连续 10 次结论相同（D1、D2 通过，D3 两格与登记一致，
+  D4 仍为 1392）。全矩阵 457/457 重跑（锚点宿主按新构建脚本重建，单元累计 5832 秒）：跳过 125、通过 91、按原因拒绝 9、
+  已知不兼容 89、与登记不一致 143。与上一轮相比，除上述 18 个单元外只有旧版之间的 7 个单元结论变化（D2 A09/A10/A11
+  → A12 转为通过；D3 A09–A12、A10–A13、A11–A13、A12–A13 新版邀请在继续阶段失败），均不涉及当前源码，属旧版不稳定
+  行为；D1、D4 无变化。
+
 ## 已确认的决定
 
 2026-09-25 由用户确认：
@@ -261,3 +281,10 @@ bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
 4. **A03、A04 不修复**（2026-09-25）：Desktop v1.0.0-alpha.4、alpha.5 相关的失败单元按最终实测阶段与条件登记为
    已知不兼容（80 个）；D2 完整链排除 A03、A04。
 5. **最终矩阵等 t-0031 合并后再跑**（2026-09-25）：已于 2026-09-26 在合并后的 main `78ca5a33` 上执行。
+6. **当前源码邀请旧版不修复**（2026-09-26）：A05–A13 的加入方在收到 `OpaqueResponse` 前的任何失败都报告
+   `authentication_rejected`，只有完成旧版 OPAQUE 握手后才会识别 `peer_upgrade_required`；当前源码的认证上下文绑定
+   协议版本，不为此运行旧版握手。`d3-a05-head-new-inviter` 至 `d3-a13-head-new-inviter` 共 9 个单元按实测
+   `pair`/`join-rejected` 登记为已知不兼容，加入方原因为 `authentication_rejected`。
+7. **跨版本从零配对按拒绝原因登记**（2026-09-26）：期望登记新增 `rejected`，要求加入方在指定阶段明确拒绝且公开
+   原因一致，汇总表记为 `R`。`d3-a05-head-old-inviter` 至 `d3-a13-head-old-inviter` 共 9 个单元登记为 `pair` 阶段
+   以 `peer_upgrade_required` 拒绝。
