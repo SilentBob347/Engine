@@ -28,6 +28,14 @@ max-threads = 1
 [test-groups.device]
 max-threads = 1
 
+# 以下两组测试在进程内用 ENGINE_TEST_LOCK 串行启动完整 Engine；nextest 每个测试一个进程，进程内锁失效，
+# 由测试组恢复同样的串行约束。
+[test-groups.engine-host-contract]
+max-threads = 1
+
+[test-groups.binding-contract]
+max-threads = 1
+
 # 成员多节点真实场景每项启动 2–10 个完整 Engine，单项常超过 20 秒；限制并发避免负载放大时序误差。
 [test-groups.membership-e2e]
 max-threads = 4
@@ -159,3 +167,19 @@ slow-timeout = { period = "30s", terminate-after = 2 }
 filter = "package(uc-connectivity-host) & binary(space_device_update_recovery)"
 test-group = "process"
 slow-timeout = { period = "30s", terminate-after = 2 }
+
+[[profile.default.overrides]]
+filter = "package(uc-engine) & kind(lib) & test(/^testing::host_adapter_contract::/)"
+test-group = "engine-host-contract"
+
+[[profile.default.overrides]]
+filter = "package(uc-engine-uniffi) & binary(public_contract)"
+test-group = "binding-contract"
+
+[[profile.ci.overrides]]
+filter = "package(uc-engine) & kind(lib) & test(/^testing::host_adapter_contract::/)"
+test-group = "engine-host-contract"
+
+[[profile.ci.overrides]]
+filter = "package(uc-engine-uniffi) & binary(public_contract)"
+test-group = "binding-contract"
