@@ -68,7 +68,9 @@ if [[ "$mode" == all || "$mode" == legacy ]]; then
   git archive "$legacy_revision" | tar -x -C "$legacy"
   cp -R tests/hosts/connectivity "$legacy/tests/hosts/connectivity"
   git -C "$legacy" apply "$repo/scripts/testing/rc15-test-host.patch"
-  CARGO_TARGET_DIR="$target/rc15" cargo build --manifest-path "$legacy/Cargo.toml" -p uc-connectivity-host --no-default-features --offline
+  # 旧版宿主来自另一棵源码树，调用方为当前树提供的构建来源不适用；以固定修订加补丁如实记录。
+  UC_ENGINE_SOURCE_COMMIT="$legacy_revision" UC_ENGINE_SOURCE_STATE=modified \
+    CARGO_TARGET_DIR="$target/rc15" cargo build --manifest-path "$legacy/Cargo.toml" -p uc-connectivity-host --no-default-features --offline
 fi
 
 git rev-parse HEAD > "$evidence/current-revision.txt"

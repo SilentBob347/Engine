@@ -247,6 +247,9 @@ impl Scenario {
 
 - 所有 Rust job 通过 `.github/actions/rust-ci-setup` 使用固定工具链、依赖缓存、sccache 与全部逻辑核；仓库
   `.cargo/config.toml` 的两路并行限制只约束本地构建。
+- CI 通过 `UC_ENGINE_SOURCE_COMMIT`/`UC_ENGINE_SOURCE_STATE` 显式提供构建来源。显式来源时
+  `uc-observability-runtime` 的 build script 只以这两个变量为重跑条件，同一 job 内多次 cargo 调用不会因
+  git 或源码目录的修改时间变化而连锁重编。
 - 只有插桩覆盖率 job 取消 `uc-infra` 的 `opt-level = 3` 覆盖以缩短编译：该 job 已按 release 口径校验诊断栈，
   而未插桩的诊断栈符号校验与真实网络、多设备时序都依赖产品实际使用的优化级别。
 - 全工作区测试由 nextest 并行执行；依赖满载时序的测试在 `.config/nextest.toml` 中独占运行或放宽期限，不靠全局串行。

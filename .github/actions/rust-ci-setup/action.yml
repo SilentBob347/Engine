@@ -43,6 +43,18 @@ runs:
           echo "CARGO_BUILD_JOBS=default"
         } >> "$GITHUB_ENV"
 
+    # 显式提供构建来源后，uc-observability-runtime 的 build script 不再跟踪 git 与源码目录的修改时间；
+    # 否则同一 job 内每次 cargo 调用都可能重跑它，并连锁重编 uc-infra、uc-engine 与全部宿主。
+    - name: Record build provenance
+      shell: bash
+      run: |
+        state=clean
+        if [[ -n "$(git status --porcelain)" ]]; then state=modified; fi
+        {
+          echo "UC_ENGINE_SOURCE_COMMIT=$(git rev-parse HEAD)"
+          echo "UC_ENGINE_SOURCE_STATE=$state"
+        } >> "$GITHUB_ENV"
+
     # Cargo.toml 为移动端开发构建把 uc-infra 设为 opt-level 3，测试构建因此多花一倍以上编译时间。
     # 诊断栈符号校验与真实网络、多设备时序都依赖该优化级别，只有已按 release 口径校验诊断栈的
     # 插桩覆盖率 job 恢复为 dev 默认值。
