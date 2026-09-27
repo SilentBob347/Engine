@@ -218,26 +218,39 @@ impl Scenario {
 
 | 组 | 边界 | 当前映射原则 | 默认执行 |
 | --- | --- | --- | --- |
+| `workspace` | 全工作区测试 | 全部测试目标，排除基准测试与成员多设备全集 | PR 必需门禁 |
 | `fast` | Core/Application 纯规则与 uc-testkit 自测 | package/binary 默认集合，排除下面慢组 | 本地与 PR |
 | `persistence-provider` | SQLite、AEAD、OpenMLS、Iroh provider contract | Infra 指定 binary/name pattern | PR 按影响，主线完整 |
 | `engine-smoke` | Engine 公开装配和短链路 | `uc-engine` 指定 integration binary | PR |
 | `process` | 独立进程、崩溃、重启 | host package/binary | 相关 PR 与主线 |
-| `real-network` | namespace、relay、真实丢包、兼容版本 | 独立脚本/workflow，不伪装普通 nextest 单测 | 相关 PR smoke、nightly 完整 |
+| `real-network` | namespace、relay、真实丢包、兼容版本 | 独立脚本/workflow，不伪装普通 nextest 单测 | PR 跑 E01/E02 配对 smoke；完整检查各模式一轮；nightly 各模式三轮 |
 | `device` | 模拟器与实体设备 | 平台脚本和 device matrix | RC/release |
 
 ## Configuration Format
 
 - `.config/nextest.toml` 保存 profile、test group、override、JUnit、slow timeout 和 retry。
 - `scripts/testing/run-test-group.sh <group>` 是统一本地入口，只翻译稳定组名为 nextest expression 或现有脚本。
+  每组分别声明构建范围与选择条件：本地默认只构建本组涉及的包；设置 `UC_TEST_BUILD_SCOPE=workspace` 后各组统一按
+  全工作区构建，同一 job 内依次运行多个组只编译一次。调用方追加的 `-E` 与组条件取交集。
 - nextest 缺失时脚本明确失败并给出固定安装命令，不静默退回不同语义。
 - `cargo test` 继续可直接运行；本轮不修改其测试集合。
 - `UC_TEST_ARTIFACTS_DIR` 只控制工件根目录，不改变测试行为。
 
 ## CI Integration
 
-- PR workflow 新增独立 `testkit` job：安装固定 cargo-nextest 版本，运行 `fast` 中的 `uc-testkit` 自测与示范，上传 JUnit 和结构化工件。
-- 现有 checks、coverage 和 connection-recovery job 保持不变。
-- 后续组迁移必须先双轨运行并核对测试数量、耗时和失败差异，再决定是否替换旧入口。
+`.github/workflows/pr-check.yml` 分两层：
+
+| 层 | 触发 | 内容 |
+| --- | --- | --- |
+| 必需门禁 | 每个 PR、合并队列与主线推送 | macOS `checks`：metadata、全目标 `cargo check`、fmt、仓库规则与空白检查。Linux `tests`：一次全工作区测试构建后依次运行 `workspace`、`evidence`、成员多设备 smoke 与隔离网络 E01/E02 配对 smoke，汇总上传 JUnit 与结构化工件 |
+| 完整检查 | 合并队列、主线推送、手工触发，或带 `full-ci` 标签的 PR | Linux 覆盖率（`cargo llvm-cov nextest`）与四种真实网络模式各一轮 |
+
+- 所有 Rust job 通过 `.github/actions/rust-ci-setup` 使用固定工具链、依赖缓存、sccache 与全部逻辑核；仓库
+  `.cargo/config.toml` 的两路并行限制只约束本地构建。
+- 只有插桩覆盖率 job 取消 `uc-infra` 的 `opt-level = 3` 覆盖以缩短编译：该 job 已按 release 口径校验诊断栈，
+  而未插桩的诊断栈符号校验与真实网络、多设备时序都依赖产品实际使用的优化级别。
+- 全工作区测试由 nextest 并行执行；依赖满载时序的测试在 `.config/nextest.toml` 中独占运行或放宽期限，不靠全局串行。
+- 各模式三轮重复与成员多设备全集由 `engine-real-environment.yml` 的 nightly 负责。
 - CI retry 仅由 nextest profile 配置；默认 profile 不重试。环境型 nightly 未来最多重试一次，retry-pass 单独统计。
 
 # 6. Implementation Plan
