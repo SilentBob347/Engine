@@ -281,13 +281,10 @@ jobs:
           fetch-depth: 0
       - name: Install build tools
         run: sudo apt-get update && sudo apt-get install -y clang libclang-dev cmake
-      - name: Install pinned Rust toolchain
-        run: rustup show active-toolchain
-      - name: Cache Rust dependencies
-        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32
+      - name: Prepare Rust build
+        uses: ./.github/actions/rust-ci-setup
         with:
-          workspaces: . -> target
-          shared-key: engine-real-environment-upgrade-matrix
+          cache-key: engine-real-environment-upgrade-matrix
       - name: Cache anchor hosts
         uses: actions/cache@v4
         with:
@@ -328,13 +325,10 @@ jobs:
           fetch-depth: 0
       - name: Install build tools
         run: sudo apt-get update && sudo apt-get install -y clang libclang-dev cmake
-      - name: Install pinned Rust toolchain
-        run: rustup show active-toolchain
-      - name: Cache Rust dependencies
-        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32
+      - name: Prepare Rust build
+        uses: ./.github/actions/rust-ci-setup
         with:
-          workspaces: . -> target
-          shared-key: engine-real-environment-upgrade-matrix
+          cache-key: engine-real-environment-upgrade-matrix
       - name: Cache anchor hosts
         uses: actions/cache@v4
         with:
