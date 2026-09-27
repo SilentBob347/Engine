@@ -138,10 +138,13 @@ RUST_LOG=warn,uc_application::space::membership=debug \
 `tests/hosts/connectivity` 宿主驱动各版本的公开 Engine 操作，使用本地 rendezvous 与本机回环直连，不访问外部服务。
 入口先用 `scripts/testing/build-upgrade-anchors.sh` 按 rev 构建并缓存旧版宿主（`<target>/upgrade-anchors/<rev>/bin`，
 宿主源码或补丁变化时自动重建，`--clean` 回收），再交给 nextest 的 `upgrade-matrix` 测试组。`--smoke` 只跑上一个
-锚点到当前源码的 5 个单元，`--dimension d1|d2|d3|d4` 只跑一个维度，其余参数交给 nextest：
+锚点到当前源码的 5 个单元，`--head` 只跑涉及当前源码的单元（各锚点到当前源码与两条完整链），`--dimension d1|d2|d3|d4`
+只跑一个维度，其余参数交给 nextest。已发布锚点之间的单元不随当前源码变化，CI 夜间只跑 `--head`，全矩阵只在
+锚点定义（`anchors.json`、`host-features.json`、`anchors/`）变化的 PR 与手动触发时运行：
 
 ```bash
 bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
+bash scripts/testing/run-test-group.sh upgrade-matrix --head
 bash scripts/testing/run-test-group.sh upgrade-matrix --dimension d4
 bash scripts/testing/run-test-group.sh upgrade-matrix -E 'test(=d1::a05_to_head)'
 bash scripts/testing/build-upgrade-anchors.sh --clean

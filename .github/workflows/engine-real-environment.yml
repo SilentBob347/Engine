@@ -3,6 +3,12 @@ name: Engine real environment
 on:
   schedule:
     - cron: "30 2 * * *"
+  # 锚点定义变化的 PR 运行一次升级兼容全矩阵；其余 job 只响应定时与手动触发。
+  pull_request:
+    paths:
+      - tests/upgrade-matrix/anchors.json
+      - tests/upgrade-matrix/host-features.json
+      - tests/upgrade-matrix/anchors/**
   workflow_dispatch:
     inputs:
       mode:
@@ -270,9 +276,11 @@ jobs:
           retention-days: 14
 
   # 升级兼容矩阵：先按 rev 构建并缓存全部旧版宿主，再按维度分片运行，最后合并矩阵表。
+  # 夜间只跑涉及当前源码的单元（--head）；已发布锚点之间的结果不随当前源码变化，全矩阵只在锚点定义变化的 PR
+  # 与手动触发时运行。
   upgrade-anchors:
     name: Upgrade matrix anchor hosts
-    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'upgrade-matrix')
+    if: github.event_name == 'schedule' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'upgrade-matrix')
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -348,7 +356,7 @@ jobs:
         run: |
           started_at=$(date +%s)
           set +e
-          bash scripts/testing/run-test-group.sh upgrade-matrix --dimension ${{ matrix.dimension }}
+          bash scripts/testing/run-test-group.sh upgrade-matrix --dimension ${{ matrix.dimension }} ${{ github.event_name == 'schedule' && '--head' || '' }}
           result=$?
           set -e
           echo "- ${{ matrix.dimension }} wall time: $(( $(date +%s) - started_at ))s, result $result" >> "$GITHUB_STEP_SUMMARY"
@@ -382,7 +390,8 @@ jobs:
         run: |
           mkdir -p target/upgrade-matrix-report
           set +e
-          node scripts/testing/summarize-upgrade-matrix.mjs target/upgrade-matrix-report target/upgrade-matrix-shards
+          node scripts/testing/summarize-upgrade-matrix.mjs target/upgrade-matrix-report target/upgrade-matrix-shards \
+            ${{ github.event_name == 'schedule' && '--partial' || '' }}
           result=$?
           set -e
           cat target/upgrade-matrix-report/matrix.md >> "$GITHUB_STEP_SUMMARY"

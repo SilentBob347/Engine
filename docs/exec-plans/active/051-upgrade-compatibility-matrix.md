@@ -19,7 +19,7 @@
     `uc_testkit::Scenario`。
   - 矩阵展开、过滤、并发与总期限：cargo-nextest 与 `.config/nextest.toml`。
   - 本计划顺序与验收：本计划。
-- **调用方唯一动作**：`bash scripts/testing/run-test-group.sh upgrade-matrix [--smoke] [nextest 参数]`；CI 通过同一入口。
+- **调用方唯一动作**：`bash scripts/testing/run-test-group.sh upgrade-matrix [--smoke | --head] [--dimension dN] [nextest 参数]`；CI 通过同一入口。
   入口自行确保所需旧版宿主已构建。
 - **成功结果**：每个矩阵单元的实际结果与期望登记一致，并留下 `result.json`、`summary.txt` 与汇总矩阵表
   （行 = 起始版本，列 = 目标版本，按维度分表）。
@@ -82,7 +82,10 @@ Desktop 版本使用时只算一个锚点。共 14 个点（13 个旧 rev 与当
 ### 运行方式
 
 - **PR 冒烟**：只跑“上一个锚点 → 当前源码”（A13 → HEAD）的 D1、D2、D3（两种方向）与 D4，共 5 个单元。
-- **夜间与手动**：全矩阵，约 457 个单元；按维度与起始版本分片并行，旧版宿主按 rev 缓存复用。
+- **夜间**：只跑涉及当前源码的单元（`--head`：各锚点到当前源码与两条完整链，n = 14 时 67 个），随锚点数线性增长；
+  按维度分片并行，旧版宿主按 rev 缓存复用。
+- **全矩阵**：约 457 个单元，随锚点数平方增长；已发布锚点之间的结果不随当前源码变化，只在锚点定义变化的 PR
+  与手动触发时运行。
 - 旧版宿主构建在仓库 `target` 下的可再生目录 `target/upgrade-anchors/<rev>/`，与 rc15 先例一致；
   入口提供清理命令，并在 CI 结束时回收。
 
@@ -170,7 +173,8 @@ A01、A02 的公开接口无法在 Engine 启动前关闭默认 n0 relay 与 pka
 
 ### S6 CI
 
-- PR 检查增加冒烟 5 个单元；夜间与手动工作流运行全矩阵，上传矩阵表、JUnit 与失败单元工件，缓存旧版宿主。
+- PR 检查增加冒烟 5 个单元；夜间运行涉及当前源码的单元，锚点定义变化的 PR 与手动触发运行全矩阵；上传矩阵表、
+  JUnit 与失败单元工件，缓存旧版宿主。
 - **验证**：冒烟本地连续运行 10 次全部通过；全矩阵在本地或 CI 完整跑通一次并记录总耗时。
 
 ### S7 文档与发布流程
@@ -268,6 +272,13 @@ bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
   已知不兼容 89、与登记不一致 143。与上一轮相比，除上述 18 个单元外只有旧版之间的 7 个单元结论变化（D2 A09/A10/A11
   → A12 转为通过；D3 A09–A12、A10–A13、A11–A13、A12–A13 新版邀请在继续阶段失败），均不涉及当前源码，属旧版不稳定
   行为；D1、D4 无变化。
+
+### 2026-09-27（t-0054，锚点自动提案）
+
+- 新增 `upgrade-matrix-anchors` 工作流与 `scripts/testing/propose-upgrade-anchors.sh`：每日检查 Desktop 公开发布，
+  出现新版本时在 `automation/upgrade-matrix-anchors` 分支提出追加锚点的 PR，并在该分支启动全矩阵；只提案不合并。
+- 凭据按用户决定使用 `GITHUB_TOKEN`，需要仓库开启“允许 GitHub Actions 创建 PR”。
+- 本地以模拟远端演练 `--dry-run`：新发布（去掉 A13 后重新发现）、无变化、新锚点未登记宿主能力三种情况结果正确。
 
 ## 已确认的决定
 
