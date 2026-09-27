@@ -62,11 +62,23 @@ pub(crate) async fn pair(
             "join-failed",
         )
         .await?;
+    // 加入方公开的加入状态进入拒绝或终止即为明确结果，记录原因后立即结束，不等到期限。
     let deadline = Deadline::new("pairing-not-completed");
     loop {
         let setup = joiner.raw("setup", Value::Null).await?;
         if setup["ok"]["has_completed"] == true {
             break;
+        }
+        if joiner.supports("device-group-choices") {
+            let choices = joiner.raw("eligibility", Value::Null).await?;
+            let join = &choices["ok"]["device_trust"]["current_join"];
+            if join["status"] == "rejected" || join["status"] == "terminated" {
+                run.fact(
+                    &format!("join-rejected-{}", joiner.label),
+                    json!({ "status": join["status"], "reason": join["reason"] }),
+                );
+                return Err(failure(FailureKind::ProductInvariant, "join-rejected"));
+            }
         }
         deadline.tick().await?;
     }
