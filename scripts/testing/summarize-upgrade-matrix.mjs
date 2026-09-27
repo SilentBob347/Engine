@@ -30,8 +30,9 @@ const points = [...anchors.map(anchor => anchor.id), 'head']
 const registered = new Map(expectations.cells.map(cell => [cell.cell, cell]))
 const expanded = expandCells(anchors.map(anchor => anchor.id))
 
+// CI 下载的分片工件为 <分片>/test-artifacts/ci/upgrade-matrix/<单元>，单元目录位于根目录下第 5 层。
 function cellDirectories(directory, depth = 0) {
-  if (!existsSync(directory) || depth > 3) return []
+  if (!existsSync(directory) || depth > 6) return []
   if (existsSync(join(directory, 'cell.json'))) return [directory]
   return readdirSync(directory, { withFileTypes: true })
     .filter(entry => entry.isDirectory())
