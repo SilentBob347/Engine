@@ -1,0 +1,34 @@
+name: Upgrade matrix anchors
+
+# 发现新的 Desktop 公开发布后提出追加锚点的 PR，并在该分支上启动全矩阵；只提出变更，不合并。
+# 需要仓库设置 Actions → General 中允许 GitHub Actions 创建 PR。
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: upgrade-matrix-anchors
+  cancel-in-progress: false
+
+jobs:
+  propose:
+    name: Propose upgrade matrix anchors
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Propose anchors for new Desktop releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/testing/propose-upgrade-anchors.sh
