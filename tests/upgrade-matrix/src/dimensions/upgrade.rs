@@ -77,9 +77,13 @@ pub(crate) async fn continue_using(
 }
 
 /// 完整链：同一资料依次由每个版本打开；无法在本地网络运行的版本记入跳过点。
-pub(crate) async fn chain(run: &mut CellRun, points: &[Point]) -> Result<(), ScenarioFailure> {
+pub(crate) async fn chain(
+    run: &mut CellRun,
+    points: &[Point],
+    excluded: Vec<String>,
+) -> Result<(), ScenarioFailure> {
     let mut device = Device::new(run, "a", "Device A")?;
-    let mut skipped = Vec::new();
+    let mut skipped = excluded;
     let mut previous: Option<Value> = None;
     for (step, point) in points.iter().enumerate() {
         run.fact("current_point", json!(point.id));

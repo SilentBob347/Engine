@@ -26,7 +26,7 @@ pub(crate) async fn pair(
         let _stage = run.stage("pair");
         a.start(run, inviter_point).await?;
         b.start(run, joiner_point).await?;
-        pair_devices(&mut a, &mut b, true).await?;
+        pair_devices(run, &mut a, &mut b, true).await?;
     }
     {
         let _stage = run.stage("interop");

@@ -34,10 +34,9 @@ pub(crate) async fn pair(
         let _stage = run.stage("old-write");
         a.start(run, from).await?;
         b.start(run, from).await?;
-        pair_devices(&mut a, &mut b, true).await?;
+        pair_devices(run, &mut a, &mut b, true).await?;
         write_representative_content(&mut a, &representative("a-0")).await?;
         exchange(run, &mut a, &mut b, "old").await?;
-        remove_and_rejoin(run, &mut a, &mut b, "old-rejoined").await?;
     }
     upgrade_one(run, &mut a, to).await?;
     {
@@ -48,6 +47,8 @@ pub(crate) async fn pair(
     {
         let _stage = run.stage("continue");
         exchange(run, &mut a, &mut b, "new").await?;
+        // 移除后重新加入在双方都升级后验证：旧版自身的重新加入缺陷不应遮住升级兼容结果。
+        remove_and_rejoin(run, &mut a, &mut b, "new-rejoined").await?;
         remove(run, &mut a, &mut b).await?;
     }
     let _stage = run.stage("cleanup");
@@ -56,10 +57,14 @@ pub(crate) async fn pair(
 }
 
 /// 完整链：两台设备同步逐级走完所有版本点，每级先升 A、互通，再升 B、互通。
-pub(crate) async fn chain(run: &mut CellRun, points: &[Point]) -> Result<(), ScenarioFailure> {
+pub(crate) async fn chain(
+    run: &mut CellRun,
+    points: &[Point],
+    excluded: Vec<String>,
+) -> Result<(), ScenarioFailure> {
     let mut a = Device::new(run, "a", "Device A")?;
     let mut b = Device::new(run, "b", "Device B")?;
-    let mut skipped = Vec::new();
+    let mut skipped = excluded;
     let mut started = false;
     for point in points {
         run.fact("current_point", json!(point.id));
@@ -76,10 +81,9 @@ pub(crate) async fn chain(run: &mut CellRun, points: &[Point]) -> Result<(), Sce
                 }
             }
             b.start(run, point).await?;
-            pair_devices(&mut a, &mut b, true).await?;
+            pair_devices(run, &mut a, &mut b, true).await?;
             write_representative_content(&mut a, &representative("a-0")).await?;
             exchange(run, &mut a, &mut b, &format!("{}-start", point.id)).await?;
-            remove_and_rejoin(run, &mut a, &mut b, &format!("{}-rejoined", point.id)).await?;
             started = true;
             continue;
         }
@@ -109,6 +113,7 @@ pub(crate) async fn chain(run: &mut CellRun, points: &[Point]) -> Result<(), Sce
     run.fact("skipped_points", json!(skipped));
     {
         let _stage = run.stage("continue");
+        remove_and_rejoin(run, &mut a, &mut b, "final-rejoined").await?;
         remove(run, &mut a, &mut b).await?;
     }
     let _stage = run.stage("cleanup");

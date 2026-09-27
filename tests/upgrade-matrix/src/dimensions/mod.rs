@@ -9,7 +9,7 @@ use serde_json::{Value, json};
 use uc_testkit::{FailureKind, ScenarioFailure};
 
 use crate::{
-    catalog::{CellSpec, Dimension, Versions},
+    catalog::{CellSpec, Dimension, Expected, Point, Versions},
     cell::CellRun,
     device::failure,
 };
@@ -17,12 +17,16 @@ use crate::{
 pub(crate) async fn run(run: &mut CellRun, spec: &CellSpec) -> Result<(), ScenarioFailure> {
     match (&spec.versions, spec.dimension) {
         (Versions::Pair { from, to }, Dimension::Upgrade) => upgrade::pair(run, from, to).await,
-        (Versions::Chain(points), Dimension::Upgrade) => upgrade::chain(run, points).await,
+        (Versions::Chain(points), Dimension::Upgrade) => {
+            let (points, excluded) = registered_chain(spec, points);
+            upgrade::chain(run, &points, excluded).await
+        }
         (Versions::Pair { from, to }, Dimension::SequentialUpgrade) => {
             sequential_upgrade::pair(run, from, to).await
         }
         (Versions::Chain(points), Dimension::SequentialUpgrade) => {
-            sequential_upgrade::chain(run, points).await
+            let (points, excluded) = registered_chain(spec, points);
+            sequential_upgrade::chain(run, &points, excluded).await
         }
         (Versions::Pair { from, to }, Dimension::MixedVersions) => {
             let inviter = spec
@@ -36,6 +40,23 @@ pub(crate) async fn run(run: &mut CellRun, spec: &CellSpec) -> Result<(), Scenar
             "cell-shape-unsupported",
         )),
     }
+}
+
+/// 完整链按登记排除版本点：登记的排除点不启动，直接记为跳过点；其余点若在运行中才发现不可用，
+/// 同样记入跳过点，并由单元运行器与登记比对。
+fn registered_chain(spec: &CellSpec, points: &[Point]) -> (Vec<Point>, Vec<String>) {
+    let excluded = match &spec.expected {
+        Expected::Pass {
+            excluded_points, ..
+        } => excluded_points.clone(),
+        _ => Vec::new(),
+    };
+    let runnable = points
+        .iter()
+        .filter(|point| !excluded.contains(&point.id))
+        .cloned()
+        .collect();
+    (runnable, excluded)
 }
 
 /// 升级、降级前后必须保持一致的可观察字段。
@@ -70,6 +91,14 @@ pub(crate) fn require_preserved(
     if changed.is_empty() {
         return Ok(());
     }
-    run.fact(condition, json!({ "changed_fields": changed }));
+    let error_codes: serde_json::Map<String, Value> = changed
+        .iter()
+        .filter(|field| after[**field].get("error").is_some())
+        .map(|field| ((*field).to_owned(), after[*field]["code"].clone()))
+        .collect();
+    run.fact(
+        condition,
+        json!({ "changed_fields": changed, "error_codes": error_codes }),
+    );
     Err(failure(FailureKind::ProductInvariant, condition))
 }

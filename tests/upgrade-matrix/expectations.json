@@ -893,9 +893,11 @@
       "expected": "pass",
       "excluded_points": [
         "a01",
-        "a02"
+        "a02",
+        "a03",
+        "a04"
       ],
-      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services."
+      "reason": "a01/a02: Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup. a03/a04: user decision 2026-09-25 marks Desktop v1.0.0-alpha.4/alpha.5 as won't-fix; profiles paired on them cannot be carried through the chain."
     },
     {
       "cell": "d3-a01-a02-old-inviter",

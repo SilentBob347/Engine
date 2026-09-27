@@ -151,6 +151,18 @@ impl Device {
         Ok(())
     }
 
+    /// 记录公开操作返回的错误码，供 `cell.json` 判定。
+    pub(crate) fn record_error(&self, command: &str, reply: &Value) {
+        if let Ok(mut errors) = self.errors.lock() {
+            errors.push(json!({
+                "device": self.label,
+                "point": self.point.as_ref().map(|point| point.id.clone()),
+                "command": command,
+                "code": reply["code"],
+            }));
+        }
+    }
+
     pub(crate) fn supports(&self, capability: &str) -> bool {
         self.capabilities.iter().any(|name| name == capability)
     }
@@ -176,14 +188,7 @@ impl Device {
         match reply.get("ok") {
             Some(value) => Ok(value.clone()),
             None => {
-                if let Ok(mut errors) = self.errors.lock() {
-                    errors.push(json!({
-                        "device": self.label,
-                        "point": self.point.as_ref().map(|point| point.id.clone()),
-                        "command": command,
-                        "code": reply["code"],
-                    }));
-                }
+                self.record_error(command, &reply);
                 Err(failure(FailureKind::ProductInvariant, condition))
             }
         }
