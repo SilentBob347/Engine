@@ -276,7 +276,8 @@ bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
 ### 2026-09-27（t-0054，锚点自动提案）
 
 - 新增 `upgrade-matrix-anchors` 工作流与 `scripts/testing/propose-upgrade-anchors.sh`：每日检查 Desktop 公开发布，
-  出现新版本时在 `automation/upgrade-matrix-anchors` 分支提出追加锚点的 PR，并在该分支启动全矩阵；只提案不合并。
+  出现新版本时在 `automation/upgrade-matrix-anchors` 分支提出追加锚点的 PR；只提案不合并。全矩阵不由提案脚本启动，
+  由审阅者重新打开 PR 后按锚点定义变化触发，避免一次新发布运行两遍。
 - 凭据按用户决定使用 `GITHUB_TOKEN`，需要仓库开启“允许 GitHub Actions 创建 PR”。
 - 本地以模拟远端演练 `--dry-run`：新发布（去掉 A13 后重新发现）、无变化、新锚点未登记宿主能力三种情况结果正确。
 

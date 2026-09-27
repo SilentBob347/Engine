@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
-# 发现新的 Desktop 公开发布后，提出追加升级兼容矩阵锚点的 PR，并在该分支上启动一次全矩阵。
+# 发现新的 Desktop 公开发布后，提出追加升级兼容矩阵锚点的 PR。
 #
 # 用法（CI 中由 .github/workflows/upgrade-matrix-anchors.yml 调用）：
 #   bash scripts/testing/propose-upgrade-anchors.sh [--dry-run]
 #
 # 需要已认证的 gh（CI 中为 GH_TOKEN）与包含全部 Engine rev 的完整克隆。
 # - 已有打开的锚点 PR 时在其分支上追加提交，保留审阅者补充的宿主能力等改动；否则从 main 重新开分支。
-# - 解析结果与分支内容一致时什么也不做，不重复启动矩阵。
+# - 解析结果与分支内容一致时什么也不做。
+# - GITHUB_TOKEN 的推送与 PR 不触发其他工作流；由审阅者关闭再重新打开 PR，触发 PR 检查与锚点定义变化时的全矩阵。
 # - 只提出变更，不合并：新单元默认登记为“通过”，与登记不一致的单元须由人判断。
-# --dry-run 只生成提交与 PR 正文，不推送、不开 PR、不启动矩阵。
+# --dry-run 只生成提交与 PR 正文，不推送、不开 PR。
 set -euo pipefail
 
 repo=$(cd "$(dirname "$0")/../.." && pwd)
@@ -69,8 +70,8 @@ const lines = [
   unregistered.length
     ? `- [ ] 在 \`tests/upgrade-matrix/host-features.json\` 登记 ${unregistered.map(id => `\`${id}\``).join('、')} 的宿主能力（未登记时沿用最后一个已登记锚点的能力）。`
     : '- 所有锚点都已登记宿主能力。',
-  '- [ ] 读取本分支上 `Engine real environment`（mode `upgrade-matrix`）的矩阵表；与登记不一致的单元按产品问题处理，不以修改登记代替判断。',
-  '- [ ] 本 PR 由 `GITHUB_TOKEN` 创建，不会自动触发 PR 检查；关闭再重新打开 PR 即可触发。',
+  '- [ ] 关闭再重新打开本 PR，触发 PR 检查与 `Engine real environment` 的升级兼容全矩阵（本 PR 由 `GITHUB_TOKEN` 创建或更新，不会自动触发；工作流之后追加提交时需再次重开）。',
+  '- [ ] 读取全矩阵的 `matrix.md`；与登记不一致的单元按产品问题处理，不以修改登记代替判断。',
 ]
 process.stdout.write(`${lines.join('\n')}\n`)
 EOF
@@ -91,5 +92,3 @@ else
   gh pr create --base "$base" --head "$branch" \
     --title "test(upgrade-matrix): append anchors for new Desktop releases" --body-file "$body"
 fi
-# GITHUB_TOKEN 的推送不会触发其他工作流，只能显式启动矩阵。
-gh workflow run engine-real-environment.yml --ref "$branch" -f mode=upgrade-matrix

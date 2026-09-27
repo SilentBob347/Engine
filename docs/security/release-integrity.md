@@ -36,10 +36,10 @@ LAN 兼容线使用独立的 `uc-mobile-v*` 标签和工作流，其资产不得
 
 Desktop 发布新的公开版本后，`upgrade-matrix-anchors` 工作流（每日与手动触发）运行
 `scripts/testing/propose-upgrade-anchors.sh`：以 `resolve-desktop-anchors.mjs --write` 追加升级兼容矩阵锚点，
-在固定分支 `automation/upgrade-matrix-anchors` 上提出 PR（已有打开的 PR 时在其分支上追加提交），并以
-`workflow_dispatch`（mode `upgrade-matrix`）在该分支上完整运行一次矩阵。工作流只提出变更、不合并，需要仓库允许
-GitHub Actions 创建 PR；该 PR 由 `GITHUB_TOKEN` 创建，不会自动触发 PR 检查，须关闭再重新打开。合并前由人在
-`tests/upgrade-matrix/host-features.json` 登记新 rev 的宿主能力，读取 `matrix.md`；与登记不一致的单元按产品问题
+在固定分支 `automation/upgrade-matrix-anchors` 上提出 PR（已有打开的 PR 时在其分支上追加提交）。工作流只提出变更、
+不合并，需要仓库允许 GitHub Actions 创建 PR；该 PR 由 `GITHUB_TOKEN` 创建或更新，不会自动触发其他工作流，须由人关闭
+再重新打开，触发 PR 检查与锚点定义变化时的升级兼容全矩阵。合并前由人在 `tests/upgrade-matrix/host-features.json`
+登记新 rev 的宿主能力，读取 `matrix.md`；与登记不一致的单元按产品问题
 处理，不以修改登记代替判断。工作流不可用时，可在本地运行同样的解析脚本与矩阵。见
 [计划 051](../exec-plans/active/051-upgrade-compatibility-matrix.md)。
 

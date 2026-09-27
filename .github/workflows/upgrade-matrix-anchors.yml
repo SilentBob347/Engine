@@ -1,6 +1,6 @@
 name: Upgrade matrix anchors
 
-# 发现新的 Desktop 公开发布后提出追加锚点的 PR，并在该分支上启动全矩阵；只提出变更，不合并。
+# 发现新的 Desktop 公开发布后提出追加锚点的 PR；只提出变更，不合并。全矩阵由重新打开 PR 后的锚点定义变化触发。
 # 需要仓库设置 Actions → General 中允许 GitHub Actions 创建 PR。
 on:
   schedule:
@@ -22,7 +22,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      actions: write
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
