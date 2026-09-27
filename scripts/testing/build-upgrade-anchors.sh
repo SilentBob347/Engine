@@ -134,11 +134,12 @@ for id in "${ids[@]}"; do
     cargo fetch --quiet
     # 旧版宿主来自锚点 rev 的源码快照并覆盖了当前宿主，如实记录构建来源，不沿用调用方为当前树设置的值。
     # 快照构建目录用完即删，增量编译没有复用价值，关闭后各 rev 的工作区 crate 才能命中共享编译缓存，
-    # 只改宿主时不必整棵重编。
+    # 只改宿主时不必整棵重编。诊断只输出单行：rustc 1.95.0 在 x86_64 Linux 上渲染 A03 的 dead code 警告片段时
+    # 内部崩溃（annotate_snippet_emitter 切片越界），旧版源码的警告本就不需要完整片段。
     UC_HOST_ANCHOR="$id" UC_HOST_ENGINE_REV="$rev" \
       UC_ENGINE_SOURCE_COMMIT="$rev" UC_ENGINE_SOURCE_STATE=modified \
       CARGO_BUILD_JOBS="$build_jobs" CARGO_INCREMENTAL=0 \
-      cargo build --offline -p uc-connectivity-host --no-default-features --features "$features"
+      cargo build --offline --message-format short -p uc-connectivity-host --no-default-features --features "$features"
   ) >"$log" 2>&1 || build_status=$?
   build=$(target_directory --manifest-path "$source/Cargo.toml")
   elapsed=$(($(date +%s) - started))
