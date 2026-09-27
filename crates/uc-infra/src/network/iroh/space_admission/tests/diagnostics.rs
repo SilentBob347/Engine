@@ -158,46 +158,47 @@ async fn stalled_pre_authentication_records_one_unassociated_timeout() {
     }));
 }
 
-#[tokio::test]
-async fn rejected_continuation_diagnostics_distinguish_identity_credentials_and_proof() {
-    #[derive(Debug)]
-    struct DetailProbe(Arc<std::sync::Mutex<Vec<(&'static str, &'static str)>>>);
-    impl opentelemetry_sdk::logs::LogProcessor for DetailProbe {
-        fn emit(
-            &self,
-            data: &mut opentelemetry_sdk::logs::SdkLogRecord,
-            _: &opentelemetry::InstrumentationScope,
-        ) {
-            let field = |name: &str| {
-                data.attributes_iter()
-                    .find_map(|(key, value)| {
-                        if key.as_str() == name {
-                            if let AnyValue::String(value) = value {
-                                return Some(value.as_str());
-                            }
+#[derive(Debug)]
+struct DetailProbe(Arc<std::sync::Mutex<Vec<(&'static str, &'static str)>>>);
+impl opentelemetry_sdk::logs::LogProcessor for DetailProbe {
+    fn emit(
+        &self,
+        data: &mut opentelemetry_sdk::logs::SdkLogRecord,
+        _: &opentelemetry::InstrumentationScope,
+    ) {
+        let field = |name: &str| {
+            data.attributes_iter()
+                .find_map(|(key, value)| {
+                    if key.as_str() == name {
+                        if let AnyValue::String(value) = value {
+                            return Some(value.as_str());
                         }
-                        None
-                    })
-                    .unwrap_or_default()
-            };
-            if let Some(detail) =
-                uc_observability_contract::diagnostics::connectivity::take_local_completion_detail(
-                    field("uc.domain"),
-                    field("uc.operation"),
-                    field("uc.role"),
-                    field("uc.outcome"),
-                )
-            {
-                self.0.lock().expect("details").push(detail.local_fields());
-            }
-        }
-        fn force_flush(&self) -> opentelemetry_sdk::error::OTelSdkResult {
-            Ok(())
-        }
-        fn shutdown_with_timeout(&self, _: Duration) -> opentelemetry_sdk::error::OTelSdkResult {
-            Ok(())
+                    }
+                    None
+                })
+                .unwrap_or_default()
+        };
+        if let Some(detail) =
+            uc_observability_contract::diagnostics::connectivity::take_local_completion_detail(
+                field("uc.domain"),
+                field("uc.operation"),
+                field("uc.role"),
+                field("uc.outcome"),
+            )
+        {
+            self.0.lock().expect("details").push(detail.local_fields());
         }
     }
+    fn force_flush(&self) -> opentelemetry_sdk::error::OTelSdkResult {
+        Ok(())
+    }
+    fn shutdown_with_timeout(&self, _: Duration) -> opentelemetry_sdk::error::OTelSdkResult {
+        Ok(())
+    }
+}
+
+#[tokio::test]
+async fn rejected_continuation_diagnostics_distinguish_identity_credentials_and_proof() {
     for (wrong_identity, stored_credential, expected_stage, expected_reason) in [
         (true, None, "continuation_identity", "identity_mismatch"),
         (
@@ -286,6 +287,78 @@ async fn rejected_continuation_diagnostics_distinguish_identity_credentials_and_
         assert!(record.body().is_none());
         assert!(record.trace_context().is_none());
     }
+}
+
+#[tokio::test]
+async fn old_joiner_version_is_reported_as_hello_upgrade_not_identity_mismatch() {
+    let exporter = InMemoryLogExporter::default();
+    let details = Arc::new(std::sync::Mutex::new(Vec::new()));
+    let logs = SdkLoggerProvider::builder()
+        .with_simple_exporter(exporter.clone())
+        .with_log_processor(DetailProbe(details.clone()))
+        .build();
+    let subscriber = tracing_subscriber::registry().with(
+        OpenTelemetryTracingBridge::new(&logs)
+            .with_filter(filter_fn(|metadata| metadata.target() == "uc.telemetry")),
+    );
+    let _subscriber = tracing::subscriber::set_default(subscriber);
+    let sponsor = bound_endpoint().await;
+    wait_for_direct_addrs(&sponsor).await;
+    let joiner = bound_endpoint().await;
+    wait_for_direct_addrs(&joiner).await;
+    let endpoint = Arc::new(HangingLoopbackEndpoint {
+        calls: AtomicUsize::new(0),
+        entered: Notify::new(),
+    });
+    let credentials = Arc::new(LoopbackCredentials {
+        initial: Mutex::new(None),
+        continuation: Mutex::new(None),
+    });
+    let handler = Arc::new(
+        IrohSpaceAdmissionHandler::new(&sponsor, endpoint.clone(), credentials).expect("handler"),
+    );
+    let router = Router::builder((*sponsor).clone())
+        .accept(SPACE_ADMISSION_ALPN, handler)
+        .spawn();
+    let connection = connect(&joiner, sponsor.addr()).await.expect("connection");
+    let (mut send, _receive) = open_stream(&connection).await.expect("stream");
+    write_typed(
+        &mut send,
+        FrameKind::InitialHello,
+        &InitialHelloV2 {
+            protocol_version: SpaceAdmissionProtocolVersion::V2.as_u16(),
+            admission_id: [0x71; 32],
+            invitation_id: [0x72; 32],
+            joiner_peer_id: *joiner.id().as_bytes(),
+            attempt_started_at_ms: 1_000,
+            attempt_expires_at_ms: 301_000,
+            ke1: vec![0x73],
+        },
+        AUTH_FRAME_LIMIT,
+    )
+    .await
+    .expect("old hello");
+    let closed = tokio::time::timeout(Duration::from_secs(2), connection.closed())
+        .await
+        .expect("rejected");
+    assert!(
+        matches!(closed, iroh::endpoint::ConnectionError::ApplicationClosed(ref close) if close.error_code == CLOSE_PEER_UPGRADE_REQUIRED.into())
+    );
+    router.shutdown().await.expect("router");
+    joiner.close().await;
+    sponsor.close().await;
+    logs.force_flush().expect("flush");
+    let records = exporter.get_emitted_logs().expect("diagnostics");
+    assert_eq!(records.len(), 1);
+    assert_eq!(
+        *details.lock().expect("details"),
+        vec![("receive_hello", "peer_upgrade_required")]
+    );
+    assert!(records[0]
+        .record
+        .attributes_iter()
+        .any(|(key, value)| key.as_str() == "error.type"
+            && matches!(value, AnyValue::String(value) if value.as_str() == "peer_incompatible")));
 }
 
 #[test]

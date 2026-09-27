@@ -43,7 +43,6 @@ pub enum ProofFailure {
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IdentityCheck {
-    InitialVersion,
     InitialPeer,
     ContinuationPeer,
     RequestBinding,
@@ -141,7 +140,6 @@ impl AuthenticationFailure {
             Self::DeadlineExceeded(stage) => (stage.as_str(), "timed_out"),
             Self::IdentityMismatch(check) => (
                 match check {
-                    IdentityCheck::InitialVersion => "initial_version",
                     IdentityCheck::InitialPeer => "initial_identity",
                     IdentityCheck::ContinuationPeer => "continuation_identity",
                     IdentityCheck::RequestBinding => "request_identity",

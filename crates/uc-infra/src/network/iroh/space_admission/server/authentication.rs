@@ -61,7 +61,6 @@ impl IrohSpaceAdmissionHandler {
                 FrameKind::InitialHello => {
                     let (protocol_version, _) = postcard::take_from_bytes::<u16>(&payload)
                         .map_err(HandlerError::protocol_from)?;
-                    diagnostic_stage = AuthenticationStep::InitialVersion;
                     if protocol_version != SpaceAdmissionProtocolVersion::CURRENT.as_u16() {
                         return Err(HandlerError::PeerUpgradeRequired);
                     }

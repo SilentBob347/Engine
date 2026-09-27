@@ -190,7 +190,6 @@ pub(super) fn server_operation_span() -> tracing::Span {
 #[derive(Clone, Copy)]
 pub(super) enum AuthenticationStep {
     ReceiveHello,
-    InitialVersion,
     InitialIdentity,
     InitialCredential,
     InitialProof,
@@ -225,9 +224,6 @@ impl AuthenticationStep {
         match self {
             Self::ReceiveHello => AuthenticationFailure::ReadHello(read),
             Self::ReceiveRequest => AuthenticationFailure::ReadRequest(read),
-            Self::InitialVersion => {
-                AuthenticationFailure::IdentityMismatch(IdentityCheck::InitialVersion)
-            }
             Self::InitialIdentity => {
                 AuthenticationFailure::IdentityMismatch(IdentityCheck::InitialPeer)
             }
