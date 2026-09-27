@@ -87,6 +87,18 @@ else
   ids=("$@")
 fi
 
+fetch_attempts=3
+fetch_rev() {
+  # 本地缺少的锚点 rev 按 SHA 从 origin 补取；网络抖动（如 TLS 握手中断）只让该次尝试失败，退避后重试，
+  # 仍失败时只记该锚点失败，不中止其余锚点。
+  local attempt
+  for ((attempt = 1; attempt <= fetch_attempts; attempt++)); do
+    git fetch --no-tags --quiet origin "$1" && return 0
+    ((attempt < fetch_attempts)) && sleep $((attempt * 5))
+  done
+  return 1
+}
+
 mkdir -p "$root"
 status=0
 for id in "${ids[@]}"; do
@@ -102,8 +114,10 @@ for id in "${ids[@]}"; do
   source="$out/src"
   rm -rf -- "$source" "$out/bin" "$out/host.json"
   mkdir -p "$source" "$out/bin"
-  if ! git cat-file -e "$rev^{commit}" 2>/dev/null; then
-    git fetch --no-tags --quiet origin "$rev"
+  if ! git cat-file -e "$rev^{commit}" 2>/dev/null && ! fetch_rev "$rev"; then
+    printf '%s %s: fetch failed after %s attempts\n' "$id" "${rev:0:12}" "$fetch_attempts" >&2
+    status=1
+    continue
   fi
   git archive "$rev" | tar -x -C "$source"
   rm -rf -- "$source/tests/hosts/connectivity"
