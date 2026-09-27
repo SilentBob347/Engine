@@ -202,7 +202,7 @@ case "${GROUP}" in
       summary_mode=(--partial)
     fi
     status=0
-    run_nextest -p uc-upgrade-matrix -E "${filter}" "$@" || status=$?
+    run_group 2 -p uc-upgrade-matrix "${filter}" "$@" || status=$?
     node scripts/testing/summarize-upgrade-matrix.mjs "${artifact_root}/upgrade-matrix" \
       ${summary_mode[@]+"${summary_mode[@]}"} || status=$?
     printf 'matrix artifacts: %s/upgrade-matrix\n' "${artifact_root}"

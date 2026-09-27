@@ -8,7 +8,7 @@
 // 未执行的单元记为“未运行”；完整模式下存在未运行或与登记不一致的单元时以非零退出。
 
 import { execFileSync } from 'node:child_process'
-import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
@@ -105,6 +105,7 @@ const summary = {
   total_cell_elapsed_ms: executed.reduce((sum, cell) => sum + (cell.elapsed_ms ?? 0), 0),
   cells,
 }
+mkdirSync(root, { recursive: true })
 writeFileSync(join(root, 'matrix.json'), `${JSON.stringify(summary, null, 2)}\n`)
 
 function table(dimension, suffixes) {
