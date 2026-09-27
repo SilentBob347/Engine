@@ -6,7 +6,7 @@ readonly GROUP="${1:-}"
 readonly BUILD_SCOPE="${UC_TEST_BUILD_SCOPE:-group}"
 
 if [[ -z "${GROUP}" ]]; then
-  printf 'usage: %s <workspace|fast|evidence|persistence-provider|engine-smoke|process|membership-e2e|real-network|device> [group arguments]\n' "$0" >&2
+  printf 'usage: %s <workspace|fast|evidence|persistence-provider|engine-smoke|process|membership-e2e|upgrade-matrix|real-network|device> [group arguments]\n' "$0" >&2
   exit 2
 fi
 shift
@@ -96,11 +96,12 @@ require_scenario_result() {
 
 case "${GROUP}" in
   workspace)
-    # PR 必需门禁：全工作区测试，基准测试只由 cargo check 验证编译，完整成员多设备场景属于 nightly。
+    # PR 必需门禁：全工作区测试，基准测试只由 cargo check 验证编译，完整成员多设备场景属于 nightly；
+    # 升级兼容矩阵依赖先构建的旧版宿主，只经 upgrade-matrix 分组运行。
     artifact_root="$(artifact_root)"
     export UC_TEST_ARTIFACTS_DIR="${artifact_root}"
     run_group 2 --workspace --all-targets \
-      'not kind(bench) & not (package(uc-engine) & binary(space_membership_auto_pairing_e2e))' \
+      'not kind(bench) & not (package(uc-engine) & binary(space_membership_auto_pairing_e2e)) & not package(uc-upgrade-matrix)' \
       "$@"
     printf 'workspace artifacts: %s\n' "${artifact_root}"
     printf 'nextest JUnit: target/nextest/ci/junit.xml\n'
@@ -161,6 +162,51 @@ case "${GROUP}" in
       'package(uc-engine) & binary(space_membership_auto_pairing_e2e)' \
       "$@" || status=$?
     printf 'scenario artifacts: %s/membership-e2e\n' "${artifact_root}"
+    printf 'nextest JUnit: target/nextest/ci/junit.xml\n'
+    exit "${status}"
+    ;;
+  upgrade-matrix)
+    # 升级兼容矩阵（各锚点到当前源码与 D1 完整链）：旧版宿主按 rev 缓存，入口自行确保所需锚点已构建；
+    # --smoke 只跑上一个锚点到当前源码，--dimension d1|d2|d3|d4 只跑一个维度（CI 分片），其余参数原样交给 nextest。
+    smoke=false
+    dimension=
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --smoke) smoke=true; shift ;;
+        --dimension)
+          [[ "${2:-}" =~ ^d[1-4]$ ]] || { printf -- '--dimension expects d1, d2, d3 or d4\n' >&2; exit 2; }
+          dimension=$2
+          shift 2
+          ;;
+        *) break ;;
+      esac
+    done
+    artifact_root="$(artifact_root)"
+    export UC_TEST_ARTIFACTS_DIR="${artifact_root}"
+    UC_UPGRADE_TARGET_DIR="$(cargo metadata --locked --no-deps --format-version 1 |
+      node -e 'let s="";process.stdin.on("data",x=>s+=x).on("end",()=>process.stdout.write(JSON.parse(s).target_directory))')"
+    export UC_UPGRADE_TARGET_DIR
+    cargo build --locked -p uc-connectivity-host
+    filter='package(uc-upgrade-matrix)'
+    if [[ "${smoke}" == true ]]; then
+      latest="$(node -e 'const a=JSON.parse(require("fs").readFileSync("tests/upgrade-matrix/anchors.json","utf8")).anchors;process.stdout.write(a[a.length-1].id)')"
+      bash scripts/testing/build-upgrade-anchors.sh "${latest}"
+      filter="${filter} & test(/::${latest}_to_head(_old_inviter|_new_inviter)?\$/)"
+    else
+      bash scripts/testing/build-upgrade-anchors.sh --all
+    fi
+    if [[ -n "${dimension}" ]]; then
+      filter="${filter} & test(/^${dimension}::/)"
+    fi
+    summary_mode=()
+    if [[ "${smoke}" == true || -n "${dimension}" || $# -gt 0 ]]; then
+      summary_mode=(--partial)
+    fi
+    status=0
+    run_group 2 -p uc-upgrade-matrix "${filter}" "$@" || status=$?
+    node scripts/testing/summarize-upgrade-matrix.mjs "${artifact_root}/upgrade-matrix" \
+      ${summary_mode[@]+"${summary_mode[@]}"} || status=$?
+    printf 'matrix artifacts: %s/upgrade-matrix\n' "${artifact_root}"
     printf 'nextest JUnit: target/nextest/ci/junit.xml\n'
     exit "${status}"
     ;;

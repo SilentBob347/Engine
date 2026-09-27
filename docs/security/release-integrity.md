@@ -34,6 +34,15 @@ LAN 兼容线使用独立的 `uc-mobile-v*` 标签和工作流，其资产不得
 
 不可变 Release 发布成功后，流程通知产品仓库；试运行或发布失败时不得通知。历史提交 `0ff09048` 已移除新旧版本联通门禁，当前发布成功不证明跨版本配对或内容同步通过；需要这类结论时必须另行验证，不得从通知成功推断。
 
+Desktop 发布新的公开版本后，`upgrade-matrix-anchors` 工作流（每日与手动触发）运行
+`scripts/testing/propose-upgrade-anchors.sh`：以 `resolve-desktop-anchors.mjs --write` 追加升级兼容矩阵锚点，
+在固定分支 `automation/upgrade-matrix-anchors` 上提出 PR（已有打开的 PR 时在其分支上追加提交）。工作流只提出变更、
+不合并，需要仓库允许 GitHub Actions 创建 PR；该 PR 由 `GITHUB_TOKEN` 创建或更新，不会自动触发其他工作流，须由人关闭
+再重新打开，触发 PR 检查与锚点定义变化时的升级兼容矩阵（各锚点到当前源码）。合并前由人在 `tests/upgrade-matrix/host-features.json`
+登记新 rev 的宿主能力，读取 `matrix.md`；与登记不一致的单元按产品问题
+处理，不以修改登记代替判断。工作流不可用时，可在本地运行同样的解析脚本与矩阵。见
+[计划 051](../exec-plans/active/051-upgrade-compatibility-matrix.md)。
+
 Engine 使用组织安装的 GitHub App 向桌面端和移动端发送版本号与完整源码提交。两个产品仓库必须重新读取公开发布清单并独立核对，不得直接信任通知中的产物信息。
 
 GitHub App 仅安装到 `UniClipboard`、`UniClip` 两个目标仓库，仓库权限只开放“元数据：只读”“内容：读写”和“拉取请求：读写”。Engine 用它触发两个产品仓库，产品仓库再用同一个 App 推送固定版本分支并创建或更新拉取请求。Actions Secrets `ENGINE_RELEASE_APP_CLIENT_ID` 和 `ENGINE_RELEASE_APP_PRIVATE_KEY` 只向 Engine 及两个产品仓库开放；不得使用个人访问密钥。

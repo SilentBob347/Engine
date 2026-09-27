@@ -6,7 +6,7 @@ use super::super::space_admission_wire::{
 use super::connection::{connect, open_stream};
 use super::crypto::{calculate_mac, copy_credential, peer_id, random_nonce};
 use super::diagnostics::record_client_completion;
-use super::errors::application_close_error;
+use super::errors::initial_hello_close_error;
 use super::exchange::EstablishedExchange;
 use super::route::decode_route;
 use crate::security::{SpaceAdmissionAuth, SpaceAdmissionAuthContext, SpaceAdmissionKe2};
@@ -114,7 +114,7 @@ impl SpaceAdmissionTransportPort for IrohSpaceAdmissionTransport {
                 match read_typed(&mut receive, FrameKind::OpaqueResponse, AUTH_FRAME_LIMIT).await {
                     Ok(response) => response,
                     Err(_) => {
-                        return Err(application_close_error(&connection)
+                        return Err(initial_hello_close_error(&connection)
                             .await
                             .unwrap_or(SpaceAdmissionTransportError::authentication_rejected()));
                     }

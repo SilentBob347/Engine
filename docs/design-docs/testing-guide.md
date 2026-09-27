@@ -107,6 +107,7 @@ bash scripts/testing/run-test-group.sh persistence-provider
 bash scripts/testing/run-test-group.sh engine-smoke
 bash scripts/testing/run-test-group.sh process
 bash scripts/testing/run-test-group.sh membership-e2e
+bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
 ```
 
 `membership-e2e` 运行 `crates/uc-engine/tests/space_membership_auto_pairing_e2e.rs`：每个场景启动 2–10 个完整
@@ -127,6 +128,41 @@ bash scripts/testing/run-test-group.sh membership-e2e -E 'test(f7_)'
 RUST_LOG=warn,uc_application::space::membership=debug \
   bash scripts/testing/run-test-group.sh membership-e2e -E 'test(removal_convergence)' --no-capture
 ```
+
+`upgrade-matrix` 运行升级兼容矩阵（[计划 051](../exec-plans/active/051-upgrade-compatibility-matrix.md)）：
+`tests/upgrade-matrix/anchors.json` 列出各 Desktop 公开发布锁定的 Engine rev。矩阵只覆盖当前源码：每个锚点到当前
+源码的四个维度（D3 分两种邀请方向），加一条单设备经过全部可运行锚点到当前源码的完整链，锚点数为 n 时共 5n + 1 个
+单元；已发布锚点之间的组合不随当前源码变化，不纳入矩阵。`expectations.json` 登记每个单元的
+期望（`pass`、`rejected`、`known-incompatible` 或 `skip`，后三者必须写明原因与链接）。`rejected` 用于配对本应
+失败的单元：登记阶段与加入方公开拒绝原因（`rejection_reason`），只有失败条件为 `join-rejected` 且原因一致才算相符；
+`known-incompatible` 与 `skip` 另须登记失败条件。`build.rs` 把清单展开为具名测试，
+例如 `d1::a13_to_head`、`d3::a13_to_head_old_inviter`、`d1::chain`；每个单元一个 `uc_testkit::Scenario`，经
+`tests/hosts/connectivity` 宿主驱动各版本的公开 Engine 操作，使用本地 rendezvous 与本机回环直连，不访问外部服务。
+入口先用 `scripts/testing/build-upgrade-anchors.sh` 按 rev 构建并缓存旧版宿主（`<target>/upgrade-anchors/<rev>/bin`，
+宿主源码或补丁变化时自动重建，`--clean` 回收），再交给 nextest 的 `upgrade-matrix` 测试组。`--smoke` 只跑上一个
+锚点到当前源码的 5 个单元，`--dimension d1|d2|d3|d4` 只跑一个维度，其余参数交给 nextest。CI 在 PR 上运行冒烟，
+在夜间、锚点定义（`anchors.json`、`host-features.json`、`anchors/`）变化的 PR 与手动触发时运行整个矩阵：
+
+```bash
+bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
+bash scripts/testing/run-test-group.sh upgrade-matrix
+bash scripts/testing/run-test-group.sh upgrade-matrix --dimension d4
+bash scripts/testing/run-test-group.sh upgrade-matrix -E 'test(=d1::a05_to_head)'
+bash scripts/testing/build-upgrade-anchors.sh --clean
+```
+
+A03、A04 在仅局域网模式下只经 mDNS 解析邀请码并发现对端，因此矩阵要求本机允许回环组播；在屏蔽组播的命令沙箱中
+运行时，这两个锚点的配对单元会以 `join`（错误码 1234）或 `peer-not-paired` 失败，属于环境问题，不能作为产品结论。
+由这两个锚点完成配对的 D2/D3 单元在 nextest 中独占运行，避免并发负载使邀请方广播错过加入方的 5 秒窗口。
+
+发送前测试台等待双方公开快照稳定（对端关系、进行中的成员变更、加入状态），只发送一次并以接收方收到为准；
+加入方公开加入状态为拒绝或终止时立即记为 `join-rejected` 并保留原因。
+
+每个单元目录除 `result.json`、`summary.txt` 外还有 `cell.json`（登记、实际结果、宿主身份与能力、脱敏事实）；
+失败或跳过时附宿主 stderr 与 Engine 日志尾部。入口结束时汇总为同目录的 `matrix.md` 与 `matrix.json`。实际结果与
+登记不一致（包括登记为已知不兼容却通过、未登记的跳过）时测试失败；不得通过修改登记掩盖产品失败。旧版公开接口的
+差异由宿主按能力划分的 feature 表达，锚点与能力的对应见 `tests/upgrade-matrix/host-features.json`；只有能力分层
+无法覆盖时才为锚点新增 `tests/upgrade-matrix/anchors/<锚点>.patch`，且只能改宿主与工作区成员声明。
 
 `real-network` 会转交现有 Linux 网络脚本；`device` 要求明确平台与设备，不会自动运行。cargo-nextest 必须为脚本声明的固定版本；脚本不会静默退回语义不同的 runner。
 

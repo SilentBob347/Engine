@@ -62,6 +62,55 @@ jobs:
       - name: Validate captured diagnostic stacks
         run: cargo test -p uc-infra --test peer_address_read_diagnostics --locked
 
+  # 升级兼容冒烟：上一个 Desktop 锚点到当前源码的 5 个单元；旧版宿主按 rev 与宿主摘要缓存，命中时不重建。
+  upgrade-matrix-smoke:
+    name: Upgrade compatibility smoke
+    if: github.event.action != 'labeled'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      UC_TEST_ARTIFACTS_DIR: target/test-artifacts/ci
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y clang libclang-dev cmake
+
+      - name: Prepare Rust build
+        uses: ./.github/actions/rust-ci-setup
+        with:
+          cache-key: rust-upgrade-matrix-linux
+
+      - name: Cache anchor hosts
+        uses: actions/cache@v4
+        with:
+          path: |
+            target/upgrade-anchors/*/bin
+            target/upgrade-anchors/*/host.json
+          key: upgrade-anchors-${{ runner.os }}-${{ hashFiles('tests/upgrade-matrix/anchors.json', 'tests/upgrade-matrix/host-features.json', 'tests/upgrade-matrix/anchors/**', 'tests/hosts/connectivity/**', 'scripts/testing/build-upgrade-anchors.sh') }}
+          restore-keys: upgrade-anchors-${{ runner.os }}-
+
+      - name: Install cargo-nextest
+        uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532
+        with:
+          tool: cargo-nextest@0.9.145
+
+      - name: Run upgrade compatibility smoke
+        run: bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
+
+      - name: Retain upgrade smoke evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: engine-upgrade-matrix-smoke
+          path: |
+            target/nextest/ci/junit.xml
+            target/test-artifacts/ci/upgrade-matrix
+            target/upgrade-anchors/*/host.json
+          if-no-files-found: error
+
   tests:
     name: Engine tests
     if: github.event.action != 'labeled'
@@ -162,12 +211,13 @@ jobs:
           tool: cargo-llvm-cov,cargo-nextest@0.9.145
 
       # 插桩改变内联，部分符号按设计报告 unresolved；完整符号栈由 tests job 的未插桩构建验证。
+      # 升级兼容矩阵依赖先构建的旧版宿主，只经 upgrade-matrix 分组运行，不计入覆盖率。
       - name: Generate Rust coverage
         run: >-
           cargo llvm-cov nextest --workspace --all-targets --locked
           --ignore-filename-regex 'crates/uc-engine/src/dev/'
           --lcov --output-path lcov.info
-          -E 'not kind(bench)'
+          -E 'not kind(bench) & not package(uc-upgrade-matrix)'
         env:
           NEXTEST_PROFILE: ci
           UC_EXPECT_DIAGNOSTIC_STACK: release

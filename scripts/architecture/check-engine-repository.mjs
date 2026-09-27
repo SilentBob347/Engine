@@ -37,6 +37,7 @@ const EXPECTED_PACKAGES = [
   'uc-observability-runtime',
   'uc-ohos-napi',
   'uc-testkit',
+  'uc-upgrade-matrix',
 ]
 
 const INTERNAL_PACKAGES = new Set([

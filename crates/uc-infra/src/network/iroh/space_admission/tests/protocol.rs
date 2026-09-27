@@ -24,6 +24,22 @@ fn old_layout_and_close_codes_keep_upgrade_authentication_and_protocol_distinct(
     ));
     assert!(map_application_close_code(u64::from(CLOSE_PROTOCOL)).is_none());
     assert!(matches!(
+        map_initial_hello_close_code(u64::from(CLOSE_PROTOCOL)),
+        Some(SpaceAdmissionTransportError::PeerUpgradeRequired)
+    ));
+    assert!(matches!(
+        map_initial_hello_close_code(u64::from(CLOSE_AUTHENTICATION)),
+        Some(SpaceAdmissionTransportError::AuthenticationRejected { .. })
+    ));
+    assert!(matches!(
+        map_initial_hello_close_code(u64::from(CLOSE_PEER_UPGRADE_REQUIRED)),
+        Some(SpaceAdmissionTransportError::PeerUpgradeRequired)
+    ));
+    assert!(matches!(
+        map_initial_hello_close_code(u64::from(CLOSE_BUSY)),
+        Some(SpaceAdmissionTransportError::Deferred { .. })
+    ));
+    assert!(matches!(
         map_application_close_code(u64::from(LEGACY_CLOSE_PROTOCOL)),
         Some(SpaceAdmissionTransportError::PeerUpgradeRequired)
     ));
@@ -165,6 +181,59 @@ async fn new_joiner_rejects_an_old_sponsor_before_authentication() {
     router.shutdown().await.expect("router shutdown");
     joiner.close().await;
     sponsor.close().await;
+}
+
+async fn establish_against<H: ProtocolHandler>(
+    handler: H,
+    seed: u8,
+) -> Result<(), SpaceAdmissionTransportError> {
+    let sponsor = bound_endpoint().await;
+    wait_for_direct_addrs(&sponsor).await;
+    let joiner = bound_endpoint().await;
+    wait_for_direct_addrs(&joiner).await;
+    let invitation = InvitationId::from_bytes([seed; 32]).expect("invitation id");
+    let admission = SpaceAdmissionId::from_bytes([seed + 1; 32]).expect("admission id");
+    let derived = SpaceAdmissionAuth::derive_password_equivalent(b"hello-close", invitation);
+    let password = AdmissionEncryptedPasswordEquivalent::from_bytes(derived.as_bytes().to_vec())
+        .expect("password equivalent");
+    let route = SpaceAdmissionRoute::from_bytes(
+        encode_space_admission_route(&sponsor.addr(), Some(invitation)).expect("route encoding"),
+    )
+    .expect("route");
+    let router = Router::builder((*sponsor).clone())
+        .accept(SPACE_ADMISSION_ALPN, handler)
+        .spawn();
+
+    let result = IrohSpaceAdmissionTransport::new(joiner.clone())
+        .establish_initial(
+            admission,
+            AdmissionAttemptTimeline::start(1_000).expect("valid attempt timeline"),
+            &route,
+            &password,
+        )
+        .await
+        .map(|_| ());
+
+    router.shutdown().await.expect("router shutdown");
+    joiner.close().await;
+    sponsor.close().await;
+    result
+}
+
+#[tokio::test]
+async fn new_joiner_reports_upgrade_when_a_v1_hello_sponsor_cannot_read_its_hello() {
+    assert!(matches!(
+        establish_against(V1HelloSponsorHandler, 0x68).await,
+        Err(SpaceAdmissionTransportError::PeerUpgradeRequired)
+    ));
+}
+
+#[tokio::test]
+async fn new_joiner_keeps_a_hello_stage_authentication_rejection() {
+    assert!(matches!(
+        establish_against(HelloAuthenticationRejectingHandler, 0x6a).await,
+        Err(SpaceAdmissionTransportError::AuthenticationRejected { .. })
+    ));
 }
 
 #[tokio::test]

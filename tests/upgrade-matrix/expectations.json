@@ -1,0 +1,426 @@
+{
+  "schema_version": 1,
+  "cells": [
+    {
+      "cell": "d1-a01-head",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a02-head",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d1-a03-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a04-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a05-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a06-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a07-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a08-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a09-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a10-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a11-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a12-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-a13-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d1-chain",
+      "expected": "pass",
+      "excluded_points": [
+        "a01",
+        "a02",
+        "a03",
+        "a04"
+      ],
+      "reason": "a01/a02: Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup. a03/a04: user decision 2026-09-25 marks Desktop v1.0.0-alpha.4/alpha.5 as won't-fix; a profile created on a03 and upgraded by a04 intermittently fails the a05 profile storage upgrade (host-start-failed), so the chain starts at a05."
+    },
+    {
+      "cell": "d2-a01-head",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a02-head",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d2-a03-head",
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d2-a04-head",
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d2-a05-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a06-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a07-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a08-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a09-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a10-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a11-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a12-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d2-a13-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d3-a01-head-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a01-head-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-head-old-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a02-head-new-inviter",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d3-a03-head-old-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a03-head-new-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a04-head-old-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a04-head-new-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a05-head-old-inviter",
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a05-head-new-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a06-head-old-inviter",
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a06-head-new-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a07-head-old-inviter",
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a07-head-new-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a08-head-old-inviter",
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a08-head-new-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a09-head-old-inviter",
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a09-head-new-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a10-head-old-inviter",
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a10-head-new-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a11-head-old-inviter",
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a11-head-new-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a12-head-old-inviter",
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a12-head-new-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a13-head-old-inviter",
+      "expected": "rejected",
+      "stage": "pair",
+      "rejection_reason": "peer_upgrade_required",
+      "reason": "Released anchors and current sources use incompatible admission protocols; a fresh pairing must end with the joiner's public status rejected for peer_upgrade_required.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d3-a13-head-new-inviter",
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-26: released joiners (a05-a13) map every failure before OpaqueResponse to authentication_rejected and only recognise peer_upgrade_required after the old OPAQUE handshake, which current sources must not run; the joiner therefore reports authentication_rejected.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d4-a01-head",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a02-head",
+      "expected": "skip",
+      "condition": "local-network-unavailable",
+      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#外部依赖跳过"
+    },
+    {
+      "cell": "d4-a03-head",
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d4-a04-head",
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d4-a05-head",
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-queries-failed",
+      "reason": "User decision 2026-09-27: accepted as a breaking change. The released anchor opens a profile upgraded by the current source, reports ready, but treats the current membership state as corrupt and answers device queries with 1392 (workspace convergence unavailable); it does not rewrite the profile, and the current source reopens it unchanged. No compatibility fix is planned; revisit when plan 043 delivers version rollback.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d4-a06-head",
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-queries-failed",
+      "reason": "User decision 2026-09-27: accepted as a breaking change. The released anchor opens a profile upgraded by the current source, reports ready, but treats the current membership state as corrupt and answers device queries with 1392 (workspace convergence unavailable); it does not rewrite the profile, and the current source reopens it unchanged. No compatibility fix is planned; revisit when plan 043 delivers version rollback.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d4-a07-head",
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-queries-failed",
+      "reason": "User decision 2026-09-27: accepted as a breaking change. The released anchor opens a profile upgraded by the current source, reports ready, but treats the current membership state as corrupt and answers device queries with 1392 (workspace convergence unavailable); it does not rewrite the profile, and the current source reopens it unchanged. No compatibility fix is planned; revisit when plan 043 delivers version rollback.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d4-a08-head",
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-queries-failed",
+      "reason": "User decision 2026-09-27: accepted as a breaking change. The released anchor opens a profile upgraded by the current source, reports ready, but treats the current membership state as corrupt and answers device queries with 1392 (workspace convergence unavailable); it does not rewrite the profile, and the current source reopens it unchanged. No compatibility fix is planned; revisit when plan 043 delivers version rollback.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
+    },
+    {
+      "cell": "d4-a09-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a10-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a11-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a12-head",
+      "expected": "pass"
+    },
+    {
+      "cell": "d4-a13-head",
+      "expected": "pass"
+    }
+  ]
+}
