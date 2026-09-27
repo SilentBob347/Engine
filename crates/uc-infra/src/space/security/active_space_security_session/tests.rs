@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
+use std::time::Duration;
 
 use serde::Serialize;
 use tempfile::tempdir;
@@ -624,4 +625,100 @@ async fn starting_reuse_during_a_transient_read_requires_a_new_owned_load() {
         contender.search_catalog().await,
         Err(crate::security::ProfileContentKeyVaultError::Storage { .. })
     ));
+}
+
+#[tokio::test]
+async fn pending_transaction_wait_resumes_readers_after_commit() {
+    let (_directory, session, vault, active) = active_fixture();
+    active
+        .activate(
+            &SpaceId::from("space-a"),
+            MasterKey::from_bytes(&[32; 32]).unwrap(),
+            Some(&ready_material("space-a", "group-a", "key-a")),
+        )
+        .await
+        .unwrap();
+    let transaction = session.begin_transaction(None).unwrap();
+    let waiting_session = Arc::clone(&session);
+    let waiter = tokio::spawn(async move {
+        waiting_session
+            .settle_pending_transaction(Duration::from_secs(5))
+            .await
+    });
+    tokio::time::sleep(Duration::from_millis(20)).await;
+    assert!(!waiter.is_finished());
+
+    transaction.commit(&vault).unwrap();
+
+    assert!(tokio::time::timeout(Duration::from_secs(1), waiter)
+        .await
+        .unwrap()
+        .unwrap());
+    assert!(session
+        .derive_stable_subkey(b"profile", b"relationships")
+        .is_ok());
+}
+
+#[tokio::test]
+async fn pending_transaction_wait_resumes_readers_after_rollback_or_clear() {
+    let (_directory, session, _vault, active) = active_fixture();
+    active
+        .activate(
+            &SpaceId::from("space-a"),
+            MasterKey::from_bytes(&[32; 32]).unwrap(),
+            None,
+        )
+        .await
+        .unwrap();
+
+    let transaction = session.begin_transaction(None).unwrap();
+    let waiting_session = Arc::clone(&session);
+    let waiter = tokio::spawn(async move {
+        waiting_session
+            .settle_pending_transaction(Duration::from_secs(5))
+            .await
+    });
+    tokio::time::sleep(Duration::from_millis(20)).await;
+    drop(transaction);
+    assert!(tokio::time::timeout(Duration::from_secs(1), waiter)
+        .await
+        .unwrap()
+        .unwrap());
+    assert!(session.is_ready());
+
+    let _transaction = session.begin_transaction(None).unwrap();
+    let waiting_session = Arc::clone(&session);
+    let waiter = tokio::spawn(async move {
+        waiting_session
+            .settle_pending_transaction(Duration::from_secs(5))
+            .await
+    });
+    tokio::time::sleep(Duration::from_millis(20)).await;
+    session.clear();
+    assert!(tokio::time::timeout(Duration::from_secs(1), waiter)
+        .await
+        .unwrap()
+        .unwrap());
+    assert!(!session.is_ready());
+}
+
+#[tokio::test]
+async fn pending_transaction_wait_is_bounded() {
+    let (_directory, session, _vault, active) = active_fixture();
+    active
+        .activate(
+            &SpaceId::from("space-a"),
+            MasterKey::from_bytes(&[32; 32]).unwrap(),
+            None,
+        )
+        .await
+        .unwrap();
+    let _transaction = session.begin_transaction(None).unwrap();
+
+    assert!(
+        !session
+            .settle_pending_transaction(Duration::from_millis(20))
+            .await
+    );
+    assert!(!session.is_ready());
 }

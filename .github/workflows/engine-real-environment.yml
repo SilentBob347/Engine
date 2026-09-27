@@ -39,8 +39,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # PR Check 的完整检查每种模式只跑一轮；nightly 负责三轮重复，暴露偶发的恢复失败。
   nightly:
-    name: Nightly real Engine (${{ matrix.mode }})
+    # 名称不引用矩阵变量：job 级 if 先于矩阵展开求值，被跳过时引用无法展开；运行时 GitHub 自动追加矩阵值。
+    name: Nightly real Engine
     if: github.event_name == 'schedule'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
@@ -54,13 +56,10 @@ jobs:
           fetch-depth: 0
       - name: Install network test tools
         run: sudo apt-get update && sudo apt-get install -y iproute2 nftables iputils-ping file clang libclang-dev cmake
-      - name: Install pinned Rust toolchain
-        run: rustup show active-toolchain
-      - name: Cache Rust dependencies
-        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32
+      - name: Prepare Rust build
+        uses: ./.github/actions/rust-ci-setup
         with:
-          workspaces: . -> target
-          shared-key: engine-real-environment-${{ matrix.mode }}
+          cache-key: engine-real-environment-${{ matrix.mode }}
       - name: Build real Engine hosts
         id: build
         shell: bash
@@ -76,7 +75,7 @@ jobs:
           timeout --signal=TERM --kill-after=30s 30m \
             bash scripts/testing/run-connection-recovery-e2e.sh \
             --suite network \
-            --repeat 1 \
+            --repeat 3 \
             --mode "${{ matrix.mode }}"
           result=$?
           set -e
@@ -84,7 +83,7 @@ jobs:
           {
             echo "## Real Engine nightly"
             echo "- mode: ${{ matrix.mode }}"
-            echo "- repetitions: 1"
+            echo "- repetitions: 3"
             echo "- compile wall time: ${{ steps.build.outputs.seconds }}s"
             echo "- scenario and cleanup wall time: ${elapsed}s"
             echo "- total measured wall time: $(( ${{ steps.build.outputs.seconds }} + elapsed ))s"
@@ -111,13 +110,10 @@ jobs:
           fetch-depth: 0
       - name: Install network test tools
         run: sudo apt-get update && sudo apt-get install -y iproute2 nftables iputils-ping file clang libclang-dev cmake
-      - name: Install pinned Rust toolchain
-        run: rustup show active-toolchain
-      - name: Cache Rust dependencies
-        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32
+      - name: Prepare Rust build
+        uses: ./.github/actions/rust-ci-setup
         with:
-          workspaces: . -> target
-          shared-key: engine-real-environment-${{ inputs.mode }}
+          cache-key: engine-real-environment-${{ inputs.mode }}
       - name: Build real Engine hosts
         id: build
         shell: bash
@@ -170,13 +166,10 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-      - name: Install pinned Rust toolchain
-        run: rustup show active-toolchain
-      - name: Cache Rust dependencies
-        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32
+      - name: Prepare Rust build
+        uses: ./.github/actions/rust-ci-setup
         with:
-          workspaces: . -> target
-          shared-key: engine-real-environment-profile-upgrade
+          cache-key: engine-real-environment-profile-upgrade
       - name: Install cargo-nextest
         uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532
         with:
@@ -230,13 +223,10 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-      - name: Install pinned Rust toolchain
-        run: rustup show active-toolchain
-      - name: Cache Rust dependencies
-        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32
+      - name: Prepare Rust build
+        uses: ./.github/actions/rust-ci-setup
         with:
-          workspaces: . -> target
-          shared-key: engine-real-environment-membership-e2e
+          cache-key: engine-real-environment-membership-e2e
       - name: Install cargo-nextest
         uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532
         with:

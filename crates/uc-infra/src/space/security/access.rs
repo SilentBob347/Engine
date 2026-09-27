@@ -15,6 +15,7 @@ use std::collections::HashSet;
 use std::error::Error;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+use std::time::Duration;
 
 use async_trait::async_trait;
 use rand::RngCore;
@@ -77,6 +78,9 @@ use super::scope_identifier::scope_identifier;
 use super::session::InMemorySession;
 
 const MAX_STALLED_REVOCATION_ITERATIONS: usize = 3;
+/// 读取者等待内部会话事务结束的上限。事务只包含本机安全材料的持久化与安装，
+/// 正常在毫秒级完成；超过上限按未解锁处理，不让读取无限挂起。
+const SESSION_TRANSACTION_SETTLE_LIMIT: Duration = Duration::from_secs(2);
 
 #[derive(Serialize, Deserialize)]
 struct StagedMembershipBranchRecoveryRecipientV1 {
@@ -2107,6 +2111,18 @@ impl SpaceAccessStore for RuntimeSpaceAccessAdapter {
 
     async fn derive_subkey(&self, salt: &[u8], info: &[u8]) -> Result<[u8; 32], SpaceAccessError> {
         const PATH: &str = "derive_subkey";
+        if !self
+            .session
+            .settle_pending_transaction(SESSION_TRANSACTION_SETTLE_LIMIT)
+            .await
+        {
+            warn!(
+                path = PATH,
+                error_kind = "session_transaction_pending",
+                "derive_subkey gave up waiting for a pending session transaction"
+            );
+            return Err(SpaceAccessError::NotUnlocked);
+        }
         if !self.session.is_ready() {
             warn!(path = PATH, "derive_subkey called while session not ready");
             return Err(SpaceAccessError::NotUnlocked);

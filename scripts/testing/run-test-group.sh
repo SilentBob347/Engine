@@ -3,12 +3,18 @@ set -euo pipefail
 
 readonly NEXTEST_VERSION="0.9.145"
 readonly GROUP="${1:-}"
+readonly BUILD_SCOPE="${UC_TEST_BUILD_SCOPE:-group}"
 
 if [[ -z "${GROUP}" ]]; then
-  printf 'usage: %s <fast|evidence|persistence-provider|engine-smoke|process|membership-e2e|real-network|device> [group arguments]\n' "$0" >&2
+  printf 'usage: %s <workspace|fast|evidence|persistence-provider|engine-smoke|process|membership-e2e|real-network|device> [group arguments]\n' "$0" >&2
   exit 2
 fi
 shift
+
+if [[ "${BUILD_SCOPE}" != group && "${BUILD_SCOPE}" != workspace ]]; then
+  printf 'UC_TEST_BUILD_SCOPE must be group or workspace\n' >&2
+  exit 2
+fi
 
 require_nextest() {
   local installed
@@ -23,9 +29,50 @@ require_nextest() {
   fi
 }
 
-run_nextest() {
+# 组的构建范围与选择条件分开声明：本地默认只构建本组涉及的包；CI 设置
+# UC_TEST_BUILD_SCOPE=workspace 后，各组统一按整个工作区构建，同一 job 内依次运行多个组也只编译一次。
+# 调用方追加的 -E/--filterset 与组条件取交集；nextest 对多个 -E 取并集，不能直接追加。
+# 用法：run_group <组构建参数数量> <组构建参数...> <组过滤条件> [调用方参数...]
+run_group() {
+  local count="$1"
+  shift
+  local -a group_build=("${@:1:count}")
+  shift "${count}"
+  local filter="$1"
+  shift
+  local -a passthrough=()
+  while (($#)); do
+    case "$1" in
+      -E | --filterset | --filter-expr)
+        filter="(${filter}) & (${2})"
+        shift 2
+        ;;
+      -E=* | --filterset=* | --filter-expr=*)
+        filter="(${filter}) & (${1#*=})"
+        shift
+        ;;
+      *)
+        passthrough+=("$1")
+        shift
+        ;;
+    esac
+  done
+  local -a build=("${group_build[@]}")
+  if [[ "${BUILD_SCOPE}" == workspace ]]; then
+    build=(--workspace --all-targets)
+  fi
   require_nextest
-  cargo nextest run --profile ci --locked "$@"
+  cargo nextest run --profile ci --locked "${build[@]}" -E "${filter}" ${passthrough[@]+"${passthrough[@]}"}
+}
+
+# 统一构建范围下直接执行已构建的示例，避免按单包重新解析特性后重复编译。
+run_testkit_demo() {
+  if [[ "${BUILD_SCOPE}" == workspace ]]; then
+    cargo build --quiet --locked --workspace --examples
+    target/debug/examples/scenario_demo "$1"
+  else
+    cargo run --quiet --locked -p uc-testkit --example scenario_demo -- "$1"
+  fi
 }
 
 artifact_root() {
@@ -48,6 +95,16 @@ require_scenario_result() {
 }
 
 case "${GROUP}" in
+  workspace)
+    # PR 必需门禁：全工作区测试，基准测试只由 cargo check 验证编译，完整成员多设备场景属于 nightly。
+    artifact_root="$(artifact_root)"
+    export UC_TEST_ARTIFACTS_DIR="${artifact_root}"
+    run_group 2 --workspace --all-targets \
+      'not kind(bench) & not (package(uc-engine) & binary(space_membership_auto_pairing_e2e))' \
+      "$@"
+    printf 'workspace artifacts: %s\n' "${artifact_root}"
+    printf 'nextest JUnit: target/nextest/ci/junit.xml\n'
+    ;;
   fast)
     if [[ $# -ne 0 ]]; then
       printf 'fast does not accept additional arguments\n' >&2
@@ -55,12 +112,10 @@ case "${GROUP}" in
     fi
     artifact_root="$(artifact_root)"
     export UC_TEST_ARTIFACTS_DIR="${artifact_root}"
-    run_nextest \
-      -p uc-testkit \
-      -p uc-application \
-      -E 'package(uc-testkit) | package(uc-application) & (test(admission_recovery_scenarios) | test(device_trust_recovery_scenario) | test(legacy_candidate_convergence_scenario) | test(virtual_membership_network) | test(file_transfer_completion_scenario_reports_final_state) | test(text_transfer_scenario))'
-    cargo run --quiet --locked -p uc-testkit --example scenario_demo -- success
-    cargo run --quiet --locked -p uc-testkit --example scenario_demo -- failure
+    run_group 4 -p uc-testkit -p uc-application \
+      'package(uc-testkit) | package(uc-application) & (test(admission_recovery_scenarios) | test(device_trust_recovery_scenario) | test(legacy_candidate_convergence_scenario) | test(virtual_membership_network) | test(file_transfer_completion_scenario_reports_final_state) | test(text_transfer_scenario))'
+    run_testkit_demo success
+    run_testkit_demo failure
     printf 'testkit artifacts: %s\n' "${artifact_root}"
     printf 'nextest JUnit: target/nextest/ci/junit.xml\n'
     ;;
@@ -71,34 +126,30 @@ case "${GROUP}" in
     fi
     artifact_root="$(artifact_root)"
     export UC_TEST_ARTIFACTS_DIR="${artifact_root}"
-    run_nextest \
-      -p uc-testkit \
-      -p uc-application \
-      -p uc-infra \
-      -E 'package(uc-testkit) | package(uc-application) & (test(admission_recovery_scenarios) | test(device_trust_recovery_scenario) | test(legacy_candidate_convergence_scenario) | test(virtual_membership_network) | test(file_transfer_completion_scenario_reports_final_state) | test(text_transfer_scenario)) | package(uc-infra) & (test(provider_dependency_evidence) | binary(profile_storage_upgrade_crash))'
+    run_group 6 -p uc-testkit -p uc-application -p uc-infra \
+      'package(uc-testkit) | package(uc-application) & (test(admission_recovery_scenarios) | test(device_trust_recovery_scenario) | test(legacy_candidate_convergence_scenario) | test(virtual_membership_network) | test(file_transfer_completion_scenario_reports_final_state) | test(text_transfer_scenario)) | package(uc-infra) & (test(provider_dependency_evidence) | binary(profile_storage_upgrade_crash))'
     require_scenario_result "${artifact_root}" "text-transfer-dispatch"
     require_scenario_result "${artifact_root}" "file-transfer-completion"
-    cargo run --quiet --locked -p uc-testkit --example scenario_demo -- success
-    cargo run --quiet --locked -p uc-testkit --example scenario_demo -- failure
+    run_testkit_demo success
+    run_testkit_demo failure
     printf 'testkit artifacts: %s\n' "${artifact_root}"
     printf 'membership artifacts: target/test-artifacts/membership-recovery\n'
     printf 'real dependency artifacts: target/test-artifacts/real-dependencies\n'
     printf 'nextest JUnit: target/nextest/ci/junit.xml\n'
     ;;
   persistence-provider)
-    run_nextest \
-      -p uc-infra \
-      -E 'package(uc-infra) & (binary(membership_record) | binary(profile_storage_upgrade) | binary(space_admission_state) | test(provider_dependency_evidence))' \
+    run_group 2 -p uc-infra \
+      'package(uc-infra) & (binary(membership_record) | binary(profile_storage_upgrade) | binary(space_admission_state) | test(provider_dependency_evidence))' \
       "$@"
     ;;
   engine-smoke)
-    run_nextest -p uc-engine --test public_contract "$@"
+    run_group 4 -p uc-engine --test public_contract \
+      'package(uc-engine) & binary(public_contract)' \
+      "$@"
     ;;
   process)
-    run_nextest \
-      -p uc-engine \
-      -p uc-infra \
-      -E 'package(uc-engine) & binary(host_contract) | package(uc-infra) & binary(profile_storage_upgrade_crash)' \
+    run_group 4 -p uc-engine -p uc-infra \
+      'package(uc-engine) & binary(host_contract) | package(uc-infra) & binary(profile_storage_upgrade_crash)' \
       "$@"
     ;;
   membership-e2e)
@@ -106,10 +157,8 @@ case "${GROUP}" in
     artifact_root="$(artifact_root)"
     export UC_TEST_ARTIFACTS_DIR="${artifact_root}"
     status=0
-    run_nextest \
-      -p uc-engine \
-      --features dev-tools \
-      --test space_membership_auto_pairing_e2e \
+    run_group 6 -p uc-engine --features dev-tools --test space_membership_auto_pairing_e2e \
+      'package(uc-engine) & binary(space_membership_auto_pairing_e2e)' \
       "$@" || status=$?
     printf 'scenario artifacts: %s/membership-e2e\n' "${artifact_root}"
     printf 'nextest JUnit: target/nextest/ci/junit.xml\n'

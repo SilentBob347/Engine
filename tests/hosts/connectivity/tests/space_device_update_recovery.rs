@@ -1,7 +1,9 @@
 use std::collections::HashMap;
 use std::io::{BufRead, BufReader, Write};
 use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
+use std::sync::mpsc::{self, Receiver};
 use std::sync::{Arc, Mutex, MutexGuard};
+use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 
 use serde_json::{json, Value};
@@ -84,7 +86,8 @@ async fn mount_rendezvous() -> MockServer {
 struct HostProcess {
     child: Child,
     input: ChildStdin,
-    output: BufReader<ChildStdout>,
+    replies: Receiver<Value>,
+    reader: Option<JoinHandle<()>>,
     root: TempDir,
     rendezvous: String,
 }
@@ -92,11 +95,12 @@ struct HostProcess {
 impl HostProcess {
     fn start(rendezvous: &str) -> Self {
         let root = TempDir::new().expect("host root");
-        let (child, input, output) = Self::spawn(root.path(), rendezvous, None);
+        let (child, input, replies, reader) = Self::spawn(root.path(), rendezvous, None);
         Self {
             child,
             input,
-            output,
+            replies,
+            reader: Some(reader),
             root,
             rendezvous: rendezvous.to_owned(),
         }
@@ -106,7 +110,7 @@ impl HostProcess {
         root: &std::path::Path,
         rendezvous: &str,
         secure_storage: Option<Value>,
-    ) -> (Child, ChildStdin, BufReader<ChildStdout>) {
+    ) -> (Child, ChildStdin, Receiver<Value>, JoinHandle<()>) {
         let mut child = Command::new(env!("CARGO_BIN_EXE_uc-connectivity-host"))
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
@@ -125,12 +129,10 @@ impl HostProcess {
         }
         writeln!(input, "{start}").expect("start host request");
         input.flush().expect("flush start request");
-        let mut output = BufReader::new(output);
-        let mut line = String::new();
-        output.read_line(&mut line).expect("read host readiness");
-        let ready: Value = serde_json::from_str(&line).expect("host readiness JSON");
+        let (replies, reader) = read_protocol_replies(output);
+        let ready = next_reply(&replies);
         assert_eq!(ready["ready"], true, "host did not start: {ready}");
-        (child, input, output)
+        (child, input, replies, reader)
     }
 
     fn request(&mut self, request: Value) -> Value {
@@ -144,9 +146,7 @@ impl HostProcess {
     }
 
     fn read_response(&mut self) -> Value {
-        let mut line = String::new();
-        self.output.read_line(&mut line).expect("read host reply");
-        serde_json::from_str(&line).expect("host reply JSON")
+        next_reply(&self.replies)
     }
 
     fn shutdown(&mut self) {
@@ -160,11 +160,20 @@ impl HostProcess {
         let _ = self.request(json!({ "command": "shutdown" }));
         let status = self.child.wait().expect("wait for stopped host");
         assert!(status.success(), "host exit before restart: {status}");
-        let (child, input, output) =
+        self.join_reader();
+        let (child, input, replies, reader) =
             Self::spawn(self.root.path(), &self.rendezvous, Some(secure_storage));
         self.child = child;
         self.input = input;
-        self.output = output;
+        self.replies = replies;
+        self.reader = Some(reader);
+    }
+
+    /// 宿主退出后其 stdout 关闭，读取线程随之结束。
+    fn join_reader(&mut self) {
+        if let Some(reader) = self.reader.take() {
+            reader.join().expect("host output reader");
+        }
     }
 }
 
@@ -173,6 +182,9 @@ impl Drop for HostProcess {
         if self.child.try_wait().ok().flatten().is_none() {
             let _ = self.child.kill();
             let _ = self.child.wait();
+        }
+        if let Some(reader) = self.reader.take() {
+            let _ = reader.join();
         }
     }
 }
@@ -331,4 +343,32 @@ async fn retryable_failure_recovers_after_sponsor_restart() {
     wait_for_phase(&mut sponsor, "completed");
     sponsor.shutdown();
     joiner.shutdown();
+}
+
+/// 持续读取宿主 stdout，只把控制应答交给测试。
+///
+/// 宿主与 Engine 的系统日志共用 stdout（非 Apple 平台的系统输出写 JSON 到 stdout），控制应答以
+/// `uc_connectivity` 标记区分。必须持续读取：测试在两次请求之间不读时，日志会写满管道并阻塞宿主。
+fn read_protocol_replies(output: ChildStdout) -> (Receiver<Value>, JoinHandle<()>) {
+    let (sender, replies) = mpsc::channel();
+    let reader = thread::spawn(move || {
+        for line in BufReader::new(output).lines() {
+            let Ok(line) = line else {
+                return;
+            };
+            let Ok(value) = serde_json::from_str::<Value>(&line) else {
+                continue;
+            };
+            if value["uc_connectivity"] == 1 && sender.send(value).is_err() {
+                return;
+            }
+        }
+    });
+    (replies, reader)
+}
+
+fn next_reply(replies: &Receiver<Value>) -> Value {
+    replies
+        .recv_timeout(WAIT_TIMEOUT)
+        .expect("host must reply before the wait deadline")
 }
