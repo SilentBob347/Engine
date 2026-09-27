@@ -300,3 +300,7 @@ bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
 7. **跨版本从零配对按拒绝原因登记**（2026-09-26）：期望登记新增 `rejected`，要求加入方在指定阶段明确拒绝且公开
    原因一致，汇总表记为 `R`。`d3-a05-head-old-inviter` 至 `d3-a13-head-old-inviter` 共 9 个单元登记为 `pair` 阶段
    以 `peer_upgrade_required` 拒绝。
+8. **降级到已发布旧版按 break change 接受**（2026-09-27）：当前源码升级后的资料由 A05–A08、A13 打开时，旧版启动报告
+   就绪，但把当前成员状态视为损坏，设备查询返回 1392（`workspace_convergence_unavailable`）；旧版不改写资料，
+   再用当前源码打开内容一致。不做兼容修复，`d4-a05-head` 至 `d4-a08-head` 与 `d4-a13-head` 共 5 个单元按实测
+   `downgrade`/`downgrade-queries-failed` 登记为已知不兼容；计划 043 完成版本回退后按其结果更新登记。
