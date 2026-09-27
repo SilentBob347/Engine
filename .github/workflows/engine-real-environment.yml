@@ -41,7 +41,8 @@ concurrency:
 jobs:
   # PR Check 的完整检查每种模式只跑一轮；nightly 负责三轮重复，暴露偶发的恢复失败。
   nightly:
-    name: Nightly real Engine (${{ matrix.mode }})
+    # 名称不引用矩阵变量：job 级 if 先于矩阵展开求值，被跳过时引用无法展开；运行时 GitHub 自动追加矩阵值。
+    name: Nightly real Engine
     if: github.event_name == 'schedule'
     runs-on: ubuntu-24.04
     timeout-minutes: 40

@@ -174,7 +174,8 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   connection-recovery:
-    name: Connection recovery on isolated Linux networks (${{ matrix.mode }})
+    # 名称不引用矩阵变量：job 级 if 先于矩阵展开求值，被跳过时引用无法展开；运行时 GitHub 自动追加矩阵值。
+    name: Connection recovery on isolated Linux networks
     if: >-
       github.event_name != 'pull_request'
       || (contains(github.event.pull_request.labels.*.name, 'full-ci')
