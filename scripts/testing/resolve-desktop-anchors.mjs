@@ -94,23 +94,18 @@ function resolveAnchors() {
   }
 }
 
-// 与测试台 build.rs 的展开规则一致：锚点按发布顺序排列，最后追加当前源码 head。
+// 矩阵只覆盖当前源码：每个已发布锚点到 head 的单元，加一条单设备经过全部可运行锚点到 head 的完整链。已发布锚点
+// 之间的组合不随当前源码变化，不再展开；单元数随锚点数线性增长。
 export function expandCells(anchorIds) {
-  const points = [...anchorIds, 'head']
-  const pairs = []
-  for (let from = 0; from < points.length; from++) {
-    for (let to = from + 1; to < points.length; to++) pairs.push([points[from], points[to]])
-  }
   const cells = []
-  for (const [from, to] of pairs) cells.push(`d1-${from}-${to}`)
+  for (const from of anchorIds) cells.push(`d1-${from}-head`)
   cells.push('d1-chain')
-  for (const [from, to] of pairs) cells.push(`d2-${from}-${to}`)
-  cells.push('d2-chain')
-  for (const [from, to] of pairs) {
-    cells.push(`d3-${from}-${to}-old-inviter`)
-    cells.push(`d3-${from}-${to}-new-inviter`)
+  for (const from of anchorIds) cells.push(`d2-${from}-head`)
+  for (const from of anchorIds) {
+    cells.push(`d3-${from}-head-old-inviter`)
+    cells.push(`d3-${from}-head-new-inviter`)
   }
-  for (const [from, to] of pairs) cells.push(`d4-${from}-${to}`)
+  for (const from of anchorIds) cells.push(`d4-${from}-head`)
   return cells
 }
 

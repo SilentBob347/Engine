@@ -166,16 +166,13 @@ case "${GROUP}" in
     exit "${status}"
     ;;
   upgrade-matrix)
-    # 升级兼容矩阵：旧版宿主按 rev 缓存，入口自行确保所需锚点已构建；--smoke 只跑上一个锚点到当前源码，
-    # --head 只跑涉及当前源码的单元（各锚点到当前源码与完整链，夜间运行），--dimension d1|d2|d3|d4 只跑一个
-    # 维度（CI 分片），其余参数原样交给 nextest。已发布锚点之间的单元只在全矩阵中运行。
+    # 升级兼容矩阵（各锚点到当前源码与 D1 完整链）：旧版宿主按 rev 缓存，入口自行确保所需锚点已构建；
+    # --smoke 只跑上一个锚点到当前源码，--dimension d1|d2|d3|d4 只跑一个维度（CI 分片），其余参数原样交给 nextest。
     smoke=false
-    head=false
     dimension=
     while [[ $# -gt 0 ]]; do
       case "$1" in
         --smoke) smoke=true; shift ;;
-        --head) head=true; shift ;;
         --dimension)
           [[ "${2:-}" =~ ^d[1-4]$ ]] || { printf -- '--dimension expects d1, d2, d3 or d4\n' >&2; exit 2; }
           dimension=$2
@@ -197,15 +194,12 @@ case "${GROUP}" in
       filter="${filter} & test(/::${latest}_to_head(_old_inviter|_new_inviter)?\$/)"
     else
       bash scripts/testing/build-upgrade-anchors.sh --all
-      if [[ "${head}" == true ]]; then
-        filter="${filter} & (test(/_to_head(_old_inviter|_new_inviter)?\$/) | test(/::chain\$/))"
-      fi
     fi
     if [[ -n "${dimension}" ]]; then
       filter="${filter} & test(/^${dimension}::/)"
     fi
     summary_mode=()
-    if [[ "${smoke}" == true || "${head}" == true || -n "${dimension}" || $# -gt 0 ]]; then
+    if [[ "${smoke}" == true || -n "${dimension}" || $# -gt 0 ]]; then
       summary_mode=(--partial)
     fi
     status=0

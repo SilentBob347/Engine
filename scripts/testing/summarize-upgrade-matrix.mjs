@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// 汇总升级兼容矩阵各单元的 cell.json，输出 matrix.json 与 matrix.md（行 = 起始版本，列 = 目标版本，按维度分表）。
+// 汇总升级兼容矩阵各单元的 cell.json，输出 matrix.json 与 matrix.md（行 = 起始锚点，列 = 维度，目标均为当前源码）。
 //
 // 用法：node scripts/testing/summarize-upgrade-matrix.mjs <单元工件根目录…> [--partial]
 //
@@ -140,17 +140,22 @@ const summary = {
 mkdirSync(root, { recursive: true })
 writeFileSync(join(root, 'matrix.json'), `${JSON.stringify(summary, null, 2)}\n`)
 
-function table(dimension, suffixes) {
-  const header = `| 起始 \\ 目标 | ${points.slice(1).join(' | ')} |`
-  const rule = `| --- | ${points.slice(1).map(() => '---').join(' | ')} |`
-  const rows = points.slice(0, -1).map((from, row) => {
-    const columns = points.slice(1).map((to, column) => {
-      if (column < row) return ' '
-      return suffixes
-        .map(suffix => SYMBOL[cells.find(cell => cell.cell === `${dimension}-${from}-${to}${suffix}`)?.status ?? 'not-run'])
-        .join('/')
-    })
-    return `| ${from} | ${columns.join(' | ')} |`
+// 行为已发布锚点，列为各维度（均以当前源码为目标）。
+function table() {
+  const columns = [
+    ['D1 单设备升级', 'd1', ''],
+    ['D2 先后升级', 'd2', ''],
+    ['D3 旧版邀请', 'd3', '-old-inviter'],
+    ['D3 新版邀请', 'd3', '-new-inviter'],
+    ['D4 降级回退', 'd4', ''],
+  ]
+  const header = `| 起始版本 → head | ${columns.map(([title]) => title).join(' | ')} |`
+  const rule = `| --- | ${columns.map(() => '---').join(' | ')} |`
+  const rows = points.slice(0, -1).map(from => {
+    const marks = columns.map(
+      ([, dimension, suffix]) => SYMBOL[cells.find(cell => cell.cell === `${dimension}-${from}-head${suffix}`)?.status ?? 'not-run'],
+    )
+    return `| ${from} | ${marks.join(' | ')} |`
   })
   return [header, rule, ...rows].join('\n')
 }
@@ -176,25 +181,11 @@ const markdown = `# 升级兼容矩阵结果
 - 单元累计耗时：${Math.round(summary.total_cell_elapsed_ms / 1000)} 秒
 - 图例：P 通过，R 按登记原因被明确拒绝，K 已知不兼容（与登记一致），S 跳过（与登记一致），F 与登记不一致，· 未运行
 
-## D1 单设备资料升级
+## 各锚点到当前源码
 
-${table('d1', [''])}
+${table()}
 
-${chain('d1')}
-
-## D2 两台设备先后升级
-
-${table('d2', [''])}
-
-${chain('d2')}
-
-## D3 新旧设备混用（旧版邀请/新版邀请）
-
-${table('d3', ['-old-inviter', '-new-inviter'])}
-
-## D4 降级回退
-
-${table('d4', [''])}
+- D1 ${chain('d1')}
 
 ## 非通过单元
 

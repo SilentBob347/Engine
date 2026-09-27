@@ -24,10 +24,6 @@ pub(crate) async fn run(run: &mut CellRun, spec: &CellSpec) -> Result<(), Scenar
         (Versions::Pair { from, to }, Dimension::SequentialUpgrade) => {
             sequential_upgrade::pair(run, from, to).await
         }
-        (Versions::Chain(points), Dimension::SequentialUpgrade) => {
-            let (points, excluded) = registered_chain(spec, points);
-            sequential_upgrade::chain(run, &points, excluded).await
-        }
         (Versions::Pair { from, to }, Dimension::MixedVersions) => {
             let inviter = spec
                 .inviter

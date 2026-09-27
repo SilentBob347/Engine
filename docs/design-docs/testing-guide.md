@@ -130,21 +130,22 @@ RUST_LOG=warn,uc_application::space::membership=debug \
 ```
 
 `upgrade-matrix` 运行升级兼容矩阵（[计划 051](../exec-plans/active/051-upgrade-compatibility-matrix.md)）：
-`tests/upgrade-matrix/anchors.json` 列出各 Desktop 公开发布锁定的 Engine rev，`expectations.json` 登记每个单元的
+`tests/upgrade-matrix/anchors.json` 列出各 Desktop 公开发布锁定的 Engine rev。矩阵只覆盖当前源码：每个锚点到当前
+源码的四个维度（D3 分两种邀请方向），加一条单设备经过全部可运行锚点到当前源码的完整链，锚点数为 n 时共 5n + 1 个
+单元；已发布锚点之间的组合不随当前源码变化，不纳入矩阵。`expectations.json` 登记每个单元的
 期望（`pass`、`rejected`、`known-incompatible` 或 `skip`，后三者必须写明原因与链接）。`rejected` 用于配对本应
 失败的单元：登记阶段与加入方公开拒绝原因（`rejection_reason`），只有失败条件为 `join-rejected` 且原因一致才算相符；
 `known-incompatible` 与 `skip` 另须登记失败条件。`build.rs` 把清单展开为具名测试，
-例如 `d1::a13_to_head`、`d3::a13_to_head_old_inviter`、`d2::chain`；每个单元一个 `uc_testkit::Scenario`，经
+例如 `d1::a13_to_head`、`d3::a13_to_head_old_inviter`、`d1::chain`；每个单元一个 `uc_testkit::Scenario`，经
 `tests/hosts/connectivity` 宿主驱动各版本的公开 Engine 操作，使用本地 rendezvous 与本机回环直连，不访问外部服务。
 入口先用 `scripts/testing/build-upgrade-anchors.sh` 按 rev 构建并缓存旧版宿主（`<target>/upgrade-anchors/<rev>/bin`，
 宿主源码或补丁变化时自动重建，`--clean` 回收），再交给 nextest 的 `upgrade-matrix` 测试组。`--smoke` 只跑上一个
-锚点到当前源码的 5 个单元，`--head` 只跑涉及当前源码的单元（各锚点到当前源码与两条完整链），`--dimension d1|d2|d3|d4`
-只跑一个维度，其余参数交给 nextest。已发布锚点之间的单元不随当前源码变化，CI 夜间只跑 `--head`，全矩阵只在
-锚点定义（`anchors.json`、`host-features.json`、`anchors/`）变化的 PR 与手动触发时运行：
+锚点到当前源码的 5 个单元，`--dimension d1|d2|d3|d4` 只跑一个维度，其余参数交给 nextest。CI 在 PR 上运行冒烟，
+在夜间、锚点定义（`anchors.json`、`host-features.json`、`anchors/`）变化的 PR 与手动触发时运行整个矩阵：
 
 ```bash
 bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
-bash scripts/testing/run-test-group.sh upgrade-matrix --head
+bash scripts/testing/run-test-group.sh upgrade-matrix
 bash scripts/testing/run-test-group.sh upgrade-matrix --dimension d4
 bash scripts/testing/run-test-group.sh upgrade-matrix -E 'test(=d1::a05_to_head)'
 bash scripts/testing/build-upgrade-anchors.sh --clean
