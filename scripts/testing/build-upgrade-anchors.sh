@@ -9,14 +9,17 @@
 # tests/upgrade-matrix/anchors/<锚点>.patch（仅在按能力分层仍无法覆盖时存在），然后以
 # --no-default-features 加 tests/upgrade-matrix/host-features.json 中该锚点的能力 feature 构建。
 # 补丁只允许改宿主与工作区成员声明。产物位于 <target>/upgrade-anchors/<rev>/bin/uc-connectivity-host，host.json 记录
-# 缓存键、补丁摘要与构建耗时；缓存键不变时直接复用。构建默认用满全部逻辑核并关闭增量编译，
-# 可用 CARGO_BUILD_JOBS 限制并行度。
+# 缓存键、补丁摘要与构建耗时；缓存键不变时直接复用。构建并行度沿用当前仓库的设置（本地为
+# .cargo/config.toml 的 jobs，CI 由 rust-ci-setup 设置 CARGO_BUILD_JOBS），并关闭增量编译。
 set -euo pipefail
 
 repo=$(cd "$(dirname "$0")/../.." && pwd)
 cd "$repo"
 anchors_json=tests/upgrade-matrix/anchors.json
 patch_dir=tests/upgrade-matrix/anchors
+# 快照自带的 .cargo/config.toml 随 rev 变化（A01–A05 没有并行限制），锚点构建统一沿用当前仓库的并行度。
+build_jobs=${CARGO_BUILD_JOBS:-$(sed -n 's/^jobs *= *\([0-9][0-9]*\).*/\1/p' .cargo/config.toml)}
+build_jobs=${build_jobs:-default}
 features_json=tests/upgrade-matrix/host-features.json
 
 target_directory() {
@@ -130,12 +133,11 @@ for id in "${ids[@]}"; do
     cd "$source"
     cargo fetch --quiet
     # 旧版宿主来自锚点 rev 的源码快照并覆盖了当前宿主，如实记录构建来源，不沿用调用方为当前树设置的值。
-    # 快照自带的 .cargo/config.toml（A06 起为 jobs = 2）只为本地开发限峰，不决定锚点构建的并行度；调用方
-    # 显式设置的 CARGO_BUILD_JOBS 仍然优先。快照构建目录用完即删，增量编译没有复用价值，关闭后各 rev 的
-    # 工作区 crate 才能命中共享编译缓存，只改宿主时不必整棵重编。
+    # 快照构建目录用完即删，增量编译没有复用价值，关闭后各 rev 的工作区 crate 才能命中共享编译缓存，
+    # 只改宿主时不必整棵重编。
     UC_HOST_ANCHOR="$id" UC_HOST_ENGINE_REV="$rev" \
       UC_ENGINE_SOURCE_COMMIT="$rev" UC_ENGINE_SOURCE_STATE=modified \
-      CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-default}" CARGO_INCREMENTAL=0 \
+      CARGO_BUILD_JOBS="$build_jobs" CARGO_INCREMENTAL=0 \
       cargo build --offline -p uc-connectivity-host --no-default-features --features "$features"
   ) >"$log" 2>&1 || build_status=$?
   build=$(target_directory --manifest-path "$source/Cargo.toml")
