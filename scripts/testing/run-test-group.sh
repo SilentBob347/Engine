@@ -96,11 +96,12 @@ require_scenario_result() {
 
 case "${GROUP}" in
   workspace)
-    # PR 必需门禁：全工作区测试，基准测试只由 cargo check 验证编译，完整成员多设备场景属于 nightly。
+    # PR 必需门禁：全工作区测试，基准测试只由 cargo check 验证编译，完整成员多设备场景属于 nightly；
+    # 升级兼容矩阵依赖先构建的旧版宿主，只经 upgrade-matrix 分组运行。
     artifact_root="$(artifact_root)"
     export UC_TEST_ARTIFACTS_DIR="${artifact_root}"
     run_group 2 --workspace --all-targets \
-      'not kind(bench) & not (package(uc-engine) & binary(space_membership_auto_pairing_e2e))' \
+      'not kind(bench) & not (package(uc-engine) & binary(space_membership_auto_pairing_e2e)) & not package(uc-upgrade-matrix)' \
       "$@"
     printf 'workspace artifacts: %s\n' "${artifact_root}"
     printf 'nextest JUnit: target/nextest/ci/junit.xml\n'
