@@ -39,8 +39,8 @@ use super::connection::{connect, open_stream};
 use super::crypto::{calculate_mac, peer_id, verify_mac};
 use super::diagnostics::{record_client_completion, server_error_type};
 use super::errors::{
-    map_application_close_code, map_reply_wire_error, map_request_wire_error,
-    map_server_wire_error, HandlerError, CLOSE_AUTHENTICATION, CLOSE_BUSY,
+    map_application_close_code, map_initial_hello_close_code, map_reply_wire_error,
+    map_request_wire_error, map_server_wire_error, HandlerError, CLOSE_AUTHENTICATION, CLOSE_BUSY,
     CLOSE_PEER_UPGRADE_REQUIRED, CLOSE_PROTOCOL, LEGACY_CLOSE_PROTOCOL,
 };
 use super::server::read_peer_acknowledgement;
@@ -173,6 +173,47 @@ impl ProtocolHandler for LegacyVersionHandler {
             SpaceAdmissionProtocolVersion::CURRENT.as_u16()
         );
         connection.close(CLOSE_PEER_UPGRADE_REQUIRED.into(), b"peer_upgrade_required");
+        Ok(())
+    }
+}
+
+/// 复现 a05–a08 sponsor：按 V1 hello 布局解析，失败即以协议错误关闭。
+#[derive(Debug)]
+struct V1HelloSponsorHandler;
+
+#[derive(serde::Deserialize)]
+struct InitialHelloV1Layout {
+    _protocol_version: u16,
+    _admission_id: [u8; 32],
+    _invitation_id: [u8; 32],
+    _joiner_peer_id: [u8; 32],
+    _ke1: Vec<u8>,
+}
+
+impl ProtocolHandler for V1HelloSponsorHandler {
+    async fn accept(&self, connection: Connection) -> Result<(), AcceptError> {
+        let (_send, mut receive) = connection.accept_bi().await.expect("v1 sponsor stream");
+        let (kind, payload) = read_raw_with_limit(&mut receive, AUTH_FRAME_LIMIT)
+            .await
+            .expect("current initial hello");
+        assert_eq!(kind, FrameKind::InitialHello);
+        assert!(postcard::from_bytes::<InitialHelloV1Layout>(&payload).is_err());
+        connection.close(CLOSE_PROTOCOL.into(), b"protocol_rejected");
+        Ok(())
+    }
+}
+
+/// 读取 hello 后按真实认证失败关闭，用于确认该结果不会被解释为需要升级。
+#[derive(Debug)]
+struct HelloAuthenticationRejectingHandler;
+
+impl ProtocolHandler for HelloAuthenticationRejectingHandler {
+    async fn accept(&self, connection: Connection) -> Result<(), AcceptError> {
+        let (_send, mut receive) = connection.accept_bi().await.expect("sponsor stream");
+        read_raw_with_limit(&mut receive, AUTH_FRAME_LIMIT)
+            .await
+            .expect("current initial hello");
+        connection.close(CLOSE_AUTHENTICATION.into(), b"authentication_rejected");
         Ok(())
     }
 }

@@ -128,9 +128,35 @@ pub(super) fn map_application_close_code(code: u64) -> Option<SpaceAdmissionTran
     }
 }
 
+/// Joiner 发出初次 hello、尚未收到 `OpaqueResponse` 时的关闭码解释。
+///
+/// 此时 sponsor 还没有进入凭据与证明校验；所有已发布版本对真实认证失败都关闭为
+/// `CLOSE_AUTHENTICATION`。在这个阶段收到 `CLOSE_PROTOCOL`，只可能是 sponsor 读不懂本端
+/// hello：a05–a08 按 `InitialHelloV1` 解析当前布局必然失败，且这些版本从未发送过版本不符信号。
+pub(super) fn map_initial_hello_close_code(code: u64) -> Option<SpaceAdmissionTransportError> {
+    if code == u64::from(CLOSE_PROTOCOL) {
+        return Some(SpaceAdmissionTransportError::PeerUpgradeRequired);
+    }
+    map_application_close_code(code)
+}
+
 pub(super) async fn application_close_error(
     connection: &iroh::endpoint::Connection,
 ) -> Option<SpaceAdmissionTransportError> {
+    application_close_code(connection)
+        .await
+        .and_then(map_application_close_code)
+}
+
+pub(super) async fn initial_hello_close_error(
+    connection: &iroh::endpoint::Connection,
+) -> Option<SpaceAdmissionTransportError> {
+    application_close_code(connection)
+        .await
+        .and_then(map_initial_hello_close_code)
+}
+
+async fn application_close_code(connection: &iroh::endpoint::Connection) -> Option<u64> {
     let close_reason = match connection.close_reason() {
         Some(reason) => Some(reason),
         None => tokio::time::timeout(Duration::from_millis(100), connection.closed())
@@ -140,5 +166,5 @@ pub(super) async fn application_close_error(
     let Some(iroh::endpoint::ConnectionError::ApplicationClosed(close)) = close_reason else {
         return None;
     };
-    map_application_close_code(close.error_code.into_inner())
+    Some(close.error_code.into_inner())
 }
