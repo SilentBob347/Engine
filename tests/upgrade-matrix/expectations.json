@@ -274,23 +274,43 @@
     },
     {
       "cell": "d1-a05-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a05-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a05-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a05-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a05-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a05-head",
@@ -306,23 +326,43 @@
     },
     {
       "cell": "d1-a06-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a06-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a06-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a06-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a06-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a06-head",
@@ -334,23 +374,43 @@
     },
     {
       "cell": "d1-a07-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a07-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a07-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a07-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a07-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a07-head",
@@ -358,23 +418,43 @@
     },
     {
       "cell": "d1-a08-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a08-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a08-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a08-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a08-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d1-a08-head",
@@ -445,9 +525,11 @@
       "expected": "pass",
       "excluded_points": [
         "a01",
-        "a02"
+        "a02",
+        "a03",
+        "a04"
       ],
-      "reason": "Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup; the host refuses to start rather than contact external services."
+      "reason": "a01/a02: Engine at this anchor has no public way to disable the default n0 relay and pkarr discovery before the endpoint binds at startup. a03/a04: user decision 2026-09-25 marks Desktop v1.0.0-alpha.4/alpha.5 as won't-fix; a profile created on a03 and upgraded by a04 intermittently fails the a05 profile storage upgrade (host-start-failed), so the chain starts at a05."
     },
     {
       "cell": "d2-a01-a02",
@@ -794,7 +876,11 @@
     },
     {
       "cell": "d2-a05-a07",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a05-a08",
@@ -802,23 +888,43 @@
     },
     {
       "cell": "d2-a05-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a05-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a05-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a05-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a05-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a05-head",
@@ -826,7 +932,11 @@
     },
     {
       "cell": "d2-a06-a07",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a06-a08",
@@ -834,23 +944,43 @@
     },
     {
       "cell": "d2-a06-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a06-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a06-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a06-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a06-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a06-head",
@@ -858,27 +988,51 @@
     },
     {
       "cell": "d2-a07-a08",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a07-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a07-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a07-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a07-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a07-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a07-head",
@@ -886,23 +1040,43 @@
     },
     {
       "cell": "d2-a08-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a08-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a08-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a08-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a08-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a08-head",
@@ -910,11 +1084,19 @@
     },
     {
       "cell": "d2-a09-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a09-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a09-a12",
@@ -930,7 +1112,11 @@
     },
     {
       "cell": "d2-a10-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a10-a12",
@@ -1659,7 +1845,11 @@
     },
     {
       "cell": "d3-a05-a06-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-a06-new-inviter",
@@ -1675,7 +1865,11 @@
     },
     {
       "cell": "d3-a05-a08-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-a08-new-inviter",
@@ -1683,43 +1877,83 @@
     },
     {
       "cell": "d3-a05-a09-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-a09-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-a10-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-a10-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-a11-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-a11-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-a12-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-a12-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-a13-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-a13-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-head-old-inviter",
@@ -1743,11 +1977,19 @@
     },
     {
       "cell": "d3-a06-a07-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "peers-query-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-a08-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-a08-new-inviter",
@@ -1755,43 +1997,83 @@
     },
     {
       "cell": "d3-a06-a09-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-a09-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-a10-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-a10-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-a11-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-a11-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-a12-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-a12-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-a13-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-a13-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a06-head-old-inviter",
@@ -1819,43 +2101,83 @@
     },
     {
       "cell": "d3-a07-a09-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a07-a09-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a07-a10-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a07-a10-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a07-a11-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a07-a11-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a07-a12-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a07-a12-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a07-a13-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a07-a13-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a07-head-old-inviter",
@@ -1875,43 +2197,83 @@
     },
     {
       "cell": "d3-a08-a09-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a08-a09-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a08-a10-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a08-a10-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a08-a11-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a08-a11-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a08-a12-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a08-a12-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a08-a13-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a08-a13-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-rejected",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a08-head-old-inviter",
@@ -1935,19 +2297,35 @@
     },
     {
       "cell": "d3-a09-a10-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a09-a11-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a09-a11-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a09-a12-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a09-a12-new-inviter",
@@ -1955,11 +2333,19 @@
     },
     {
       "cell": "d3-a09-a13-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a09-a13-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a09-head-old-inviter",
@@ -1979,11 +2365,19 @@
     },
     {
       "cell": "d3-a10-a11-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a10-a11-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a10-a12-old-inviter",
@@ -1995,7 +2389,11 @@
     },
     {
       "cell": "d3-a10-a13-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a10-a13-new-inviter",
@@ -2019,7 +2417,11 @@
     },
     {
       "cell": "d3-a11-a12-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a11-a12-new-inviter",
@@ -2027,7 +2429,11 @@
     },
     {
       "cell": "d3-a11-a13-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a11-a13-new-inviter",
@@ -2055,7 +2461,11 @@
     },
     {
       "cell": "d3-a12-a13-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "continue",
+      "condition": "sent-text-not-received",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a12-head-old-inviter",
@@ -2442,23 +2852,43 @@
     },
     {
       "cell": "d4-a05-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a05-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a05-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a05-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a05-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a05-head",
@@ -2478,23 +2908,43 @@
     },
     {
       "cell": "d4-a06-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a06-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a06-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a06-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a06-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a06-head",
@@ -2510,23 +2960,43 @@
     },
     {
       "cell": "d4-a07-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a07-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a07-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a07-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a07-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a07-head",
@@ -2538,23 +3008,43 @@
     },
     {
       "cell": "d4-a08-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a08-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a08-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a08-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a08-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-27: failures between released anchors are accepted as known incompatibilities; both builds are released and cannot change. Measured identically in two full CI runs.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a08-head",

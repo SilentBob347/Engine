@@ -291,7 +291,8 @@ bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
 3. **单元内容范围**：文本、文件与图片历史、同步偏好，以及配对、双向同步、移除与重新加入已足够，不另加大文件、
    大量历史或多 Space 切换。
 4. **A03、A04 不修复**（2026-09-25）：Desktop v1.0.0-alpha.4、alpha.5 相关的失败单元按最终实测阶段与条件登记为
-   已知不兼容（80 个）；D2 完整链排除 A03、A04。
+   已知不兼容（80 个）；D2 完整链排除 A03、A04。2026-09-27 起 D1 完整链同样排除：A03 建立、A04 升级的资料交给
+   A05 时偶发 `profile storage upgrade failed`（`host-start-failed`），同一路径其他运行通过，无法稳定登记。
 5. **最终矩阵等 t-0031 合并后再跑**（2026-09-25）：已于 2026-09-26 在合并后的 main `78ca5a33` 上执行。
 6. **当前源码邀请旧版不修复**（2026-09-26）：A05–A13 的加入方在收到 `OpaqueResponse` 前的任何失败都报告
    `authentication_rejected`，只有完成旧版 OPAQUE 握手后才会识别 `peer_upgrade_required`；当前源码的认证上下文绑定
@@ -304,3 +305,7 @@ bash scripts/testing/run-test-group.sh upgrade-matrix --smoke
    就绪，但把当前成员状态视为损坏，设备查询返回 1392（`workspace_convergence_unavailable`）；旧版不改写资料，
    再用当前源码打开内容一致。不做兼容修复，`d4-a05-head` 至 `d4-a08-head` 与 `d4-a13-head` 共 5 个单元按实测
    `downgrade`/`downgrade-queries-failed` 登记为已知不兼容；计划 043 完成版本回退后按其结果更新登记。
+9. **已发布锚点之间的失败登记为已知不兼容**（2026-09-27）：两端都是已发布构建，不再修改。以 CI 两次全矩阵
+   （`797db7b8`、`bc96eafc`）结论完全一致的 122 个单元按实测阶段与条件登记：A05–A08 资料由 A09–A13 打开时存储
+   升级失败（D1/D2/D4 各 20）、A05–A08 与 A09 及以后从零配对被拒（40）、旧版之间继续阶段互通失败（D2 6、D3 16）。
+   两次结论不同的单元另行处理，不以任一次结果登记。
