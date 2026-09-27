@@ -53,10 +53,25 @@ function readCells() {
   return cells
 }
 
-function status(runs) {
+// 与测试台 cell.rs 相同的比对规则，按当前登记重新判定；运行时判定保留在各单元的 cell.json。
+function matchesRegistration(expected, actual, facts) {
+  if (!expected || !actual) return false
+  if (expected.expected === 'pass') {
+    const skipped = facts?.skipped_points ?? []
+    const excluded = expected.excluded_points ?? []
+    return actual.result === 'pass' && JSON.stringify(skipped) === JSON.stringify(excluded)
+  }
+  if (expected.expected === 'known-incompatible') {
+    return actual.result === 'fail' && actual.stage === expected.stage && actual.condition === expected.condition
+  }
+  if (expected.expected === 'skip') return actual.result === 'skip' && actual.condition === expected.condition
+  return false
+}
+
+function status(runs, expected) {
   if (!runs?.length) return 'not-run'
   const last = runs[runs.length - 1]
-  if (!last.matches) return 'mismatch'
+  if (!matchesRegistration(expected, last.actual, last.facts)) return 'mismatch'
   if (last.actual.result === 'pass') return 'pass'
   if (last.actual.result === 'skip') return 'skip'
   return 'known-incompatible'
@@ -80,9 +95,10 @@ const cells = expanded.map(id => {
   const last = list?.[list.length - 1]
   return {
     cell: id,
-    status: status(list),
+    status: status(list, registered.get(id)),
     runs: list?.length ?? 0,
-    mismatched_runs: list?.filter(run => !run.matches).length ?? 0,
+    mismatched_runs: list?.filter(run => !matchesRegistration(registered.get(id), run.actual, run.facts)).length ?? 0,
+    runtime_matches: last?.matches ?? null,
     expected: registered.get(id)?.expected ?? null,
     actual: last?.actual ?? null,
     elapsed_ms: last?.elapsed_ms ?? null,

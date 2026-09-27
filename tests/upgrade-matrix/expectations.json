@@ -630,83 +630,163 @@
     },
     {
       "cell": "d2-a03-a05",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a03-a06",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a03-a07",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a03-a08",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a03-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a03-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a03-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a03-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a03-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a03-head",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a04-a05",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "upgrade",
+      "condition": "host-start-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a04-a06",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a04-a07",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a04-a08",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a04-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a04-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a04-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a04-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a04-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a04-head",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "verify",
+      "condition": "state-changed-by-upgrade",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d2-a05-a06",
@@ -1259,163 +1339,323 @@
     },
     {
       "cell": "d3-a03-a05-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a05-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a06-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a06-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a07-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a07-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a08-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a08-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a09-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a09-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a10-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a10-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a11-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a11-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a12-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a12-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a13-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-a13-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-head-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a03-head-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a05-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a05-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a06-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a06-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a07-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a07-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a08-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a08-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a09-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a09-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a10-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a10-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a11-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a11-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a12-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a12-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a13-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-a13-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-head-old-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "pairing-not-completed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a04-head-new-inviter",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "pair",
+      "condition": "join-failed",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d3-a05-a06-old-inviter",
@@ -1958,83 +2198,163 @@
     },
     {
       "cell": "d4-a03-a05",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a03-a06",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a03-a07",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a03-a08",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a03-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a03-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a03-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a03-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a03-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a03-head",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a04-a05",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a04-a06",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a04-a07",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a04-a08",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a04-a09",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a04-a10",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a04-a11",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a04-a12",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a04-a13",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a04-head",
-      "expected": "pass"
+      "expected": "known-incompatible",
+      "stage": "downgrade",
+      "condition": "downgrade-silently-inconsistent",
+      "reason": "User decision 2026-09-25: Desktop v1.0.0-alpha.4 and alpha.5 (anchors a03, a04) are marked won't-fix; this cell records their measured incompatibility instead of a defect to fix.",
+      "link": "docs/exec-plans/active/051-upgrade-compatibility-matrix.md#已确认的决定"
     },
     {
       "cell": "d4-a05-a06",
