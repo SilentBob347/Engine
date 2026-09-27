@@ -242,7 +242,7 @@ impl Scenario {
 
 | 层 | 触发 | 内容 |
 | --- | --- | --- |
-| 必需门禁 | 每个 PR、合并队列与主线推送 | macOS `checks`：metadata、全目标 `cargo check`、fmt、仓库规则与空白检查。Linux `tests`：一次全工作区测试构建后依次运行 `workspace`、`evidence`、成员多设备 smoke 与隔离网络 E01/E02 配对 smoke，汇总上传 JUnit 与结构化工件 |
+| 必需门禁 | 每个 PR、合并队列与主线推送 | macOS `checks`：metadata、全目标 `cargo check`、fmt、仓库规则、空白检查与诊断栈真实符号校验。Linux `tests`：一次全工作区测试构建后依次运行 `workspace`、`evidence`、成员多设备 smoke 与隔离网络 E01/E02 配对 smoke，汇总上传 JUnit 与结构化工件 |
 | 完整检查 | 合并队列、主线推送、手工触发，或带 `full-ci` 标签的 PR | Linux 覆盖率（`cargo llvm-cov nextest`）与四种真实网络模式各一轮 |
 
 - 所有 Rust job 通过 `.github/actions/rust-ci-setup` 使用固定工具链、依赖缓存、sccache 与全部逻辑核；仓库

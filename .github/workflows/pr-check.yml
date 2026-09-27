@@ -58,6 +58,10 @@ jobs:
       - name: Check patch whitespace
         run: git diff --check
 
+      # 未插桩构建必须能解析出真实符号；Linux 的内联帧只有短名称，该项只在 macOS 校验。
+      - name: Validate captured diagnostic stacks
+        run: cargo test -p uc-infra --test peer_address_read_diagnostics --locked
+
   tests:
     name: Engine tests
     if: github.event.action != 'labeled'
@@ -88,6 +92,9 @@ jobs:
 
       - name: Run workspace tests
         run: bash scripts/testing/run-test-group.sh workspace
+        env:
+          # Linux 内联帧只有短名称，诊断栈按符号丢失口径校验；真实符号由 macOS checks job 校验。
+          UC_EXPECT_DIAGNOSTIC_STACK: release
 
       - name: Keep workspace test report
         if: always()
