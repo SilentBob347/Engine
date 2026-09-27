@@ -131,7 +131,9 @@ RUST_LOG=warn,uc_application::space::membership=debug \
 
 `upgrade-matrix` 运行升级兼容矩阵（[计划 051](../exec-plans/active/051-upgrade-compatibility-matrix.md)）：
 `tests/upgrade-matrix/anchors.json` 列出各 Desktop 公开发布锁定的 Engine rev，`expectations.json` 登记每个单元的
-期望（`pass`、`known-incompatible` 或 `skip`，后两者必须写明条件、原因与链接）。`build.rs` 把清单展开为具名测试，
+期望（`pass`、`rejected`、`known-incompatible` 或 `skip`，后三者必须写明原因与链接）。`rejected` 用于配对本应
+失败的单元：登记阶段与加入方公开拒绝原因（`rejection_reason`），只有失败条件为 `join-rejected` 且原因一致才算相符；
+`known-incompatible` 与 `skip` 另须登记失败条件。`build.rs` 把清单展开为具名测试，
 例如 `d1::a13_to_head`、`d3::a13_to_head_old_inviter`、`d2::chain`；每个单元一个 `uc_testkit::Scenario`，经
 `tests/hosts/connectivity` 宿主驱动各版本的公开 Engine 操作，使用本地 rendezvous 与本机回环直连，不访问外部服务。
 入口先用 `scripts/testing/build-upgrade-anchors.sh` 按 rev 构建并缓存旧版宿主（`<target>/upgrade-anchors/<rev>/bin`，

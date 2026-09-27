@@ -62,6 +62,13 @@ pub(crate) enum Expected {
         reason: String,
         link: String,
     },
+    /// 加入方在 `stage` 阶段明确拒绝，且公开拒绝原因为 `rejection_reason`；配对本应失败时使用。
+    Rejected {
+        stage: String,
+        rejection_reason: String,
+        reason: String,
+        link: String,
+    },
     Skip {
         condition: String,
         reason: String,
@@ -92,6 +99,19 @@ impl Expected {
                     .any(|value| value.is_empty())
                 {
                     return Err("must record stage, condition, reason and link");
+                }
+            }
+            Self::Rejected {
+                stage,
+                rejection_reason,
+                reason,
+                link,
+            } => {
+                if [stage, rejection_reason, reason, link]
+                    .iter()
+                    .any(|value| value.is_empty())
+                {
+                    return Err("must record stage, rejection_reason, reason and link");
                 }
             }
             Self::Skip {

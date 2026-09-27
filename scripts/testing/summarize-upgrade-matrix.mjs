@@ -67,6 +67,17 @@ function matchesRegistration(expected, actual, facts) {
   if (expected.expected === 'known-incompatible') {
     return actual.result === 'fail' && actual.stage === expected.stage && actual.condition === expected.condition
   }
+  if (expected.expected === 'rejected') {
+    return (
+      actual.result === 'fail' &&
+      actual.stage === expected.stage &&
+      actual.condition === 'join-rejected' &&
+      Object.entries(facts ?? {}).some(
+        ([key, value]) =>
+          key.startsWith('join-rejected-') && value?.status === 'rejected' && value?.reason === expected.rejection_reason,
+      )
+    )
+  }
   if (expected.expected === 'skip') return actual.result === 'skip' && actual.condition === expected.condition
   return false
 }
@@ -77,10 +88,11 @@ function status(runs, expected) {
   if (!matchesRegistration(expected, last.actual, last.facts)) return 'mismatch'
   if (last.actual.result === 'pass') return 'pass'
   if (last.actual.result === 'skip') return 'skip'
+  if (expected.expected === 'rejected') return 'rejected'
   return 'known-incompatible'
 }
 
-const SYMBOL = { pass: 'P', skip: 'S', 'known-incompatible': 'K', mismatch: 'F', 'not-run': '·' }
+const SYMBOL = { pass: 'P', rejected: 'R', skip: 'S', 'known-incompatible': 'K', mismatch: 'F', 'not-run': '·' }
 
 function gitRevision() {
   try {
@@ -161,7 +173,7 @@ const markdown = `# 升级兼容矩阵结果
 - 模式：${summary.mode}；已执行 ${summary.executed_cells} / ${summary.total_cells} 个单元
 - 计数：${Object.entries(counts).map(([key, value]) => `${key} ${value}`).join('，')}
 - 单元累计耗时：${Math.round(summary.total_cell_elapsed_ms / 1000)} 秒
-- 图例：P 通过，K 已知不兼容（与登记一致），S 跳过（与登记一致），F 与登记不一致，· 未运行
+- 图例：P 通过，R 按登记原因被明确拒绝，K 已知不兼容（与登记一致），S 跳过（与登记一致），F 与登记不一致，· 未运行
 
 ## D1 单设备资料升级
 

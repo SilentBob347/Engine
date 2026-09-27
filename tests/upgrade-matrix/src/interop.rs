@@ -10,6 +10,10 @@ use crate::{
     fixture::digest,
 };
 
+/// 加入方公开加入状态为拒绝或终止时的失败条件；对应事实以 `JOIN_REJECTED_FACT` 加加入方标签为键。
+pub(crate) const JOIN_REJECTED: &str = "join-rejected";
+pub(crate) const JOIN_REJECTED_FACT: &str = "join-rejected-";
+
 /// 公开查询在运行期重组或设置未完成时返回的可重试错误码：操作暂不可用（1103）、尚未完成设置（1211）。
 const NOT_YET_AVAILABLE_CODES: [u64; 2] = [1103, 1211];
 
@@ -74,10 +78,10 @@ pub(crate) async fn pair(
             let join = &choices["ok"]["device_trust"]["current_join"];
             if join["status"] == "rejected" || join["status"] == "terminated" {
                 run.fact(
-                    &format!("join-rejected-{}", joiner.label),
+                    &format!("{JOIN_REJECTED_FACT}{}", joiner.label),
                     json!({ "status": join["status"], "reason": join["reason"] }),
                 );
-                return Err(failure(FailureKind::ProductInvariant, "join-rejected"));
+                return Err(failure(FailureKind::ProductInvariant, JOIN_REJECTED));
             }
         }
         deadline.tick().await?;

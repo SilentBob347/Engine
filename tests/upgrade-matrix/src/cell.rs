@@ -18,6 +18,7 @@ use uc_testkit::{
 use crate::{
     catalog::{self, CellSpec, Expected, Point},
     host::StderrTail,
+    interop::{JOIN_REJECTED, JOIN_REJECTED_FACT},
     rendezvous,
 };
 
@@ -221,9 +222,30 @@ fn matches(expected: &Expected, actual: &Actual, facts: &Map<String, Value>) -> 
                 ..
             },
         ) => stage == s && condition == c,
+        (
+            Expected::Rejected {
+                stage,
+                rejection_reason,
+                ..
+            },
+            Actual::Fail {
+                stage: s,
+                condition: c,
+                ..
+            },
+        ) => stage == s && c == JOIN_REJECTED && rejected_with(facts, rejection_reason),
         (Expected::Skip { condition, .. }, Actual::Skip { condition: c }) => condition == c,
         _ => false,
     }
+}
+
+/// 加入方记录的公开加入状态为 `rejected`，且原因与登记一致。
+fn rejected_with(facts: &Map<String, Value>, rejection_reason: &str) -> bool {
+    facts.iter().any(|(key, value)| {
+        key.starts_with(JOIN_REJECTED_FACT)
+            && value["status"] == "rejected"
+            && value["reason"] == rejection_reason
+    })
 }
 
 fn actual_json(actual: &Actual) -> Value {
@@ -379,5 +401,74 @@ fn test_name(id: &str) -> String {
         name
     } else {
         rest.replace('-', "_")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn rejected_registration() -> Expected {
+        Expected::Rejected {
+            stage: "pair".into(),
+            rejection_reason: "peer_upgrade_required".into(),
+            reason: "incompatible admission protocols".into(),
+            link: "docs".into(),
+        }
+    }
+
+    fn join_rejected(stage: &str, condition: &str) -> Actual {
+        Actual::Fail {
+            stage: stage.into(),
+            kind: FailureKind::ProductInvariant,
+            condition: condition.into(),
+        }
+    }
+
+    fn facts(status: &str, reason: &str) -> Map<String, Value> {
+        let mut facts = Map::new();
+        facts.insert(
+            format!("{JOIN_REJECTED_FACT}b"),
+            json!({ "status": status, "reason": reason }),
+        );
+        facts
+    }
+
+    #[test]
+    fn rejected_registration_requires_the_stage_condition_and_public_reason() {
+        let expected = rejected_registration();
+        let actual = join_rejected("pair", JOIN_REJECTED);
+
+        assert!(matches(
+            &expected,
+            &actual,
+            &facts("rejected", "peer_upgrade_required")
+        ));
+        assert!(!matches(
+            &expected,
+            &actual,
+            &facts("rejected", "authentication_rejected")
+        ));
+        assert!(!matches(
+            &expected,
+            &actual,
+            &facts("terminated", "peer_upgrade_required")
+        ));
+        assert!(!matches(&expected, &actual, &Map::new()));
+        assert!(!matches(
+            &expected,
+            &join_rejected("continue", JOIN_REJECTED),
+            &facts("rejected", "peer_upgrade_required")
+        ));
+        assert!(!matches(
+            &expected,
+            &join_rejected("pair", "pairing-not-completed"),
+            &facts("rejected", "peer_upgrade_required")
+        ));
+        assert!(!matches(
+            &expected,
+            &Actual::Pass,
+            &facts("rejected", "peer_upgrade_required")
+        ));
     }
 }
