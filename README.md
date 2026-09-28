@@ -120,6 +120,27 @@ git diff --check
 
 仓库检查会验证目录归属、依赖方向、唯一公开入口、绑定版本、产物来源、密文持久化规则和 LAN 隔离。
 
+### 可选：跨 worktree 编译缓存
+
+新建 worktree 后，可以用 [just](https://github.com/casey/just) 调用仓库固定版本的 mbx，
+复用其他 worktree 已编译的结果：
+
+```bash
+just mbx check --workspace --all-targets --locked
+just mbx nextest run --profile ci --locked --workspace --all-targets --no-run
+just mbx-exec bash scripts/testing/run-test-group.sh evidence
+just mbx-tool cache stats
+```
+
+说明：
+
+- 首次运行会下载固定版本的 mbx 并校验 sha256。
+- 缓存位置由环境变量 `MBX_CACHE_DIR` 决定，未设置时使用 mbx 的平台默认位置。
+- 默认的 `cargo`、sccache 和 CI 不受影响。
+- 同一个 worktree 请只使用一条路线（`just mbx` 或普通 `cargo`）；来回切换会重编工作区 crate。
+
+取舍与实测数据见 [ADR-028](docs/design-docs/decisions/028-optional-mbx-build-cache.md)。
+
 ## 统一集成流程
 
 无论接入哪个平台，都按以下顺序进行：

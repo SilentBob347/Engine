@@ -25,3 +25,4 @@ ADR 记录重要取舍的背景、备选方案和后果。编号保持历史稳�
 - [ADR-025：Application Space 一次性重写](025-application-space-membership-one-shot-rewrite.md)
 - [ADR-026：配对尝试期限与终止](026-bounded-admission-lifecycle.md)
 - [ADR-027：成员状态单一负责人](027-single-owner-space-membership-state.md)
+- [ADR-028：可选 mbx 编译缓存](028-optional-mbx-build-cache.md)
