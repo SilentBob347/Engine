@@ -16,7 +16,7 @@ use iroh::Endpoint;
 use iroh::EndpointAddr;
 use tokio::sync::{broadcast, Mutex};
 use tokio::task::JoinHandle;
-use tracing::{debug, info, instrument, warn};
+use tracing::instrument;
 
 use uc_application::deps::KnownPeerContact;
 use uc_core::ids::DeviceId;
@@ -37,6 +37,7 @@ use super::net_recovery::{
 };
 use super::peer_address_resolver::PeerAddressResolver;
 use super::peer_reachability_protocol;
+use uc_observability_contract::{uc_debug, uc_info, uc_warn};
 
 mod liveness;
 
@@ -193,8 +194,8 @@ impl HandlerState {
     fn now(&self) -> DateTime<Utc> {
         let ms = self.clock.now_ms();
         Utc.timestamp_millis_opt(ms).single().unwrap_or_else(|| {
-            warn!(
-                ms,
+            uc_warn!(
+                ms = ms,
                 "ClockPort returned out-of-range epoch millis; falling back to Utc::now",
             );
             Utc::now()
@@ -227,12 +228,17 @@ impl ProtocolHandler for IrohPeerReachabilityHandler {
         let generation = self.state.observations.lock().await.generation;
         let remote = connection.remote_id();
         let connection_id = connection.stable_id();
-        debug!("presence connection accepted; holding open until peer closes");
+        uc_debug!("presence connection accepted; holding open until peer closes");
 
         let (mut send, mut receive) =
             match tokio::time::timeout(PEER_ADMISSION_IO_TIMEOUT, connection.accept_bi()).await {
                 Ok(Ok(streams)) => streams,
                 _ => {
+                    // 探测连接也会走到这里，只适合 debug。
+                    uc_debug!(
+                        error_kind = "confirmation_missing",
+                        "presence accept: closing connection without an admission confirmation"
+                    );
                     connection.close(0u32.into(), b"admission_confirmation_missing");
                     return Ok(());
                 }
@@ -243,6 +249,10 @@ impl ProtocolHandler for IrohPeerReachabilityHandler {
             Ok(Ok(_))
         ) || request[0] != ADMISSION_CONFIRMATION_REQUEST
         {
+            uc_debug!(
+                error_kind = "confirmation_invalid",
+                "presence accept: closing connection with an invalid admission confirmation"
+            );
             connection.close(0u32.into(), b"admission_confirmation_invalid");
             return Ok(());
         }
@@ -256,7 +266,10 @@ impl ProtocolHandler for IrohPeerReachabilityHandler {
                     .state
                     .known_peer_contact_tx
                     .send(KnownPeerContact { device_id });
-                warn!(error.type = "peer_rejected", "presence accept: peer is not admitted by current space protection");
+                uc_warn!(
+                    error_kind = "peer_rejected",
+                    "presence accept: peer is not admitted by current space protection"
+                );
                 self.state.gate.record_rejection(rejection);
                 reject_admission(send, &connection).await;
                 return Ok(());
@@ -282,6 +295,10 @@ impl ProtocolHandler for IrohPeerReachabilityHandler {
                     .count()
                     >= 2
                 {
+                    uc_warn!(
+                        error_kind = "capacity",
+                        "presence accept: closing connection because the peer already holds the maximum pending connections"
+                    );
                     connection.close(0u32.into(), b"admission_capacity");
                     return Ok(());
                 }
@@ -306,6 +323,10 @@ impl ProtocolHandler for IrohPeerReachabilityHandler {
                 || !observation.is_current(device_id, &before)
                 || !self.state.accepting.load(Ordering::Acquire)
             {
+                uc_warn!(
+                    error_kind = "confirmation_failed",
+                    "presence accept: closing connection because admission confirmation did not complete"
+                );
                 connection.close(0u32.into(), b"admission_confirmation_failed");
                 return Ok(());
             }
@@ -353,9 +374,9 @@ impl ProtocolHandler for IrohPeerReachabilityHandler {
                     state: ReachabilityState::Online,
                     at: now_at,
                 });
-                info!("inbound presence connection: peer marked Online",);
+                uc_info!("inbound presence connection: peer marked Online",);
             } else {
-                debug!("inbound presence connection: peer already Online (no event)",);
+                uc_debug!("inbound presence connection: peer already Online (no event)",);
             }
         } else {
             // A peer that is no longer in the local space must not keep a
@@ -364,7 +385,7 @@ impl ProtocolHandler for IrohPeerReachabilityHandler {
                 self.state.gate.record_rejection(rejection);
             }
             reject_admission(send, &connection).await;
-            debug!("inbound presence connection from unresolved peer; closing",);
+            uc_debug!("inbound presence connection from unresolved peer; closing",);
             return Ok(());
         }
 
@@ -381,7 +402,7 @@ impl ProtocolHandler for IrohPeerReachabilityHandler {
         if let Ok(device) = admitted_device {
             self.state.mark_offline_if_disconnected(device).await;
         }
-        debug!("presence connection closed by peer",);
+        uc_debug!("presence connection closed by peer",);
         Ok(())
     }
 }
@@ -570,8 +591,8 @@ impl IrohPeerReachabilityAdapter {
         match Utc.timestamp_millis_opt(ms).single() {
             Some(dt) => dt,
             None => {
-                warn!(
-                    ms,
+                uc_warn!(
+                    ms = ms,
                     "ClockPort returned out-of-range epoch millis; falling back to Utc::now"
                 );
                 Utc::now()
@@ -649,7 +670,7 @@ impl IrohPeerReachabilityAdapter {
                 Some(address) => address,
                 None => {
                     *failure = PresenceCheckResult::AddressMissing;
-                    debug!("dial_and_track: no address record; returning NoAddress");
+                    uc_debug!("dial_and_track: no address record; returning NoAddress");
                     return Err(PeerReachabilityError::NoAddress(*device));
                 }
             };
@@ -726,7 +747,7 @@ impl IrohPeerReachabilityAdapter {
                     last.insert(*device, ReachabilityState::Online)
                         != Some(ReachabilityState::Online)
                 };
-                info!("dial_and_track: dial succeeded, peer marked Online");
+                uc_info!("dial_and_track: dial succeeded, peer marked Online");
                 if should_broadcast {
                     self.broadcast(*device, ReachabilityState::Online, now);
                 }
@@ -844,7 +865,7 @@ impl PeerReachabilityPort for IrohPeerReachabilityAdapter {
                         .values()
                         .any(|(id, connection)| id == device && fresh(connection))
                 {
-                    debug!("reusing recent peer response");
+                    uc_debug!("reusing recent peer response");
                     return Ok(ReachabilityState::Online);
                 }
             }
@@ -867,7 +888,7 @@ impl PeerReachabilityPort for IrohPeerReachabilityAdapter {
         if let Some(observations) = &self.network_recovery_observations {
             observations.publish(NetworkRecoveryObservation::CommunicationFailed(*device));
         }
-        debug!("communication failure submitted for peer recheck");
+        uc_debug!("communication failure submitted for peer recheck");
     }
 
     async fn forget(&self, device: &DeviceId) {
@@ -1388,6 +1409,225 @@ mod tests {
             self.proceed.acquire().await.unwrap().forget();
             Ok(true)
         }
+    }
+
+    /// 未完成确认的接入关闭要留下固定分类；只走 debug，避免探测连接刷屏。
+    #[tokio::test]
+    async fn an_invalid_admission_confirmation_is_recorded_before_the_connection_closes() {
+        let logs = uc_testkit::log_capture::CapturedLogs::default();
+        let _guard = logs.install();
+        let server = bound_endpoint().await;
+        wait_for_direct_addrs(&server).await;
+        let client = bound_endpoint().await;
+        let adapter = build_adapter(server.clone(), Arc::new(FakePeerAddressRepo::default()));
+        let router = Router::builder((*server).clone())
+            .accept(PEER_REACHABILITY_ALPN, adapter.handler())
+            .spawn();
+
+        let connection = client
+            .connect(server.addr(), PEER_REACHABILITY_ALPN)
+            .await
+            .unwrap();
+        let (mut send, _receive) = connection.open_bi().await.unwrap();
+        send.write_all(&[ADMISSION_CONFIRMATION_REQUEST.wrapping_add(1)])
+            .await
+            .unwrap();
+        send.finish().unwrap();
+        timeout(Duration::from_secs(2), connection.closed())
+            .await
+            .expect("an invalid confirmation closes the connection");
+        router.shutdown().await.unwrap();
+        client.close().await;
+
+        let output = logs.output();
+        let record = output
+            .lines()
+            .find(|line| line.contains("invalid admission confirmation"))
+            .unwrap_or_else(|| panic!("invalid confirmation record missing: {output}"));
+        assert!(
+            record.contains("error_kind=\"confirmation_invalid\""),
+            "{record}"
+        );
+        assert!(!record.contains(&client.id().to_string()), "{record}");
+    }
+
+    /// 探测连接没有打开确认流就关闭：只在 debug 留下固定分类。
+    #[tokio::test]
+    async fn a_connection_closed_before_any_confirmation_is_recorded_as_missing() {
+        let logs = uc_testkit::log_capture::CapturedLogs::default();
+        let _guard = logs.install();
+        let server = bound_endpoint().await;
+        wait_for_direct_addrs(&server).await;
+        let client = bound_endpoint().await;
+        let adapter = build_adapter(server.clone(), Arc::new(FakePeerAddressRepo::default()));
+        let router = Router::builder((*server).clone())
+            .accept(PEER_REACHABILITY_ALPN, adapter.handler())
+            .spawn();
+
+        let connection = client
+            .connect(server.addr(), PEER_REACHABILITY_ALPN)
+            .await
+            .unwrap();
+        connection.close(0u32.into(), b"probe_only");
+        timeout(Duration::from_secs(2), async {
+            while logs.count("without an admission confirmation") == 0 {
+                tokio::time::sleep(Duration::from_millis(20)).await;
+            }
+        })
+        .await
+        .expect("a missing confirmation must be recorded");
+        router.shutdown().await.unwrap();
+        client.close().await;
+
+        let record = logs
+            .output()
+            .lines()
+            .find(|line| line.contains("without an admission confirmation"))
+            .unwrap()
+            .to_owned();
+        assert!(
+            record.contains("error_kind=\"confirmation_missing\""),
+            "{record}"
+        );
+        assert!(!record.contains(&client.id().to_string()), "{record}");
+    }
+
+    /// 第一次检查通过、写出确认后再检查已不被接纳（例如刚被撤销）。
+    struct AdmittedOnlyOnce(std::sync::atomic::AtomicUsize);
+    #[async_trait]
+    impl PeerAdmissionPort for AdmittedOnlyOnce {
+        async fn is_admitted(
+            &self,
+            _device: &DeviceId,
+        ) -> Result<bool, uc_core::membership::PeerAdmissionError> {
+            Ok(self.0.fetch_add(1, Ordering::SeqCst) == 0)
+        }
+    }
+
+    #[tokio::test]
+    async fn a_confirmation_that_no_longer_holds_is_recorded_before_the_connection_closes() {
+        let logs = uc_testkit::log_capture::CapturedLogs::default();
+        let _guard = logs.install();
+        let client = bound_endpoint().await;
+        let server = bound_endpoint().await;
+        wait_for_direct_addrs(&server).await;
+        let members = Arc::new(MemMemberRepo::default());
+        members.seed(member_for_endpoint(&client, "revoked-after-confirmation"));
+        let adapter = IrohPeerReachabilityAdapter::new(
+            server.clone(),
+            Arc::new(FakePeerAddressRepo::default()),
+            members,
+            Arc::new(AdmittedOnlyOnce(std::sync::atomic::AtomicUsize::new(0))),
+            Arc::new(Sha256IdentityFingerprintFactory),
+            Arc::new(FixedClock),
+        );
+        let router = Router::builder((*server).clone())
+            .accept(PEER_REACHABILITY_ALPN, adapter.handler())
+            .spawn();
+
+        let connection = client
+            .connect(server.addr(), PEER_REACHABILITY_ALPN)
+            .await
+            .unwrap();
+        let (mut send, _receive) = connection.open_bi().await.unwrap();
+        send.write_all(&[ADMISSION_CONFIRMATION_REQUEST])
+            .await
+            .unwrap();
+        send.finish().unwrap();
+        let closed = timeout(Duration::from_secs(2), connection.closed())
+            .await
+            .expect("a failed confirmation closes the connection");
+        assert!(
+            format!("{closed:?}").contains("admission_confirmation_failed"),
+            "{closed:?}"
+        );
+        router.shutdown().await.unwrap();
+        client.close().await;
+
+        let output = logs.output();
+        let record = output
+            .lines()
+            .find(|line| line.contains("admission confirmation did not complete"))
+            .unwrap_or_else(|| panic!("failed confirmation record missing: {output}"));
+        assert!(
+            record.contains("error_kind=\"confirmation_failed\""),
+            "{record}"
+        );
+        assert!(!record.contains(&client.id().to_string()), "{record}");
+    }
+
+    /// 同一设备的待确认入站连接超过上限时，第三条连接被关闭并留下固定分类。
+    #[tokio::test]
+    async fn a_third_pending_connection_from_one_peer_is_recorded_as_over_capacity() {
+        let logs = uc_testkit::log_capture::CapturedLogs::default();
+        let _guard = logs.install();
+        let blocked = Arc::new(
+            Endpoint::builder(iroh::endpoint::presets::N0)
+                .alpns(vec![PEER_REACHABILITY_ALPN.to_vec()])
+                .relay_mode(RelayMode::Disabled)
+                .clear_address_lookup()
+                .transport_config(
+                    iroh::endpoint::QuicTransportConfig::builder()
+                        .stream_receive_window(0u32.into())
+                        .build(),
+                )
+                .bind()
+                .await
+                .unwrap(),
+        );
+        let server = bound_endpoint().await;
+        wait_for_direct_addrs(&server).await;
+        let members = Arc::new(MemMemberRepo::default());
+        members.seed(member_for_endpoint(&blocked, "blocked"));
+        let gate = Arc::new(DelayedAdmission {
+            checking: tokio::sync::Notify::new(),
+            proceed: tokio::sync::Semaphore::new(16),
+        });
+        let adapter = IrohPeerReachabilityAdapter::new(
+            server.clone(),
+            Arc::new(FakePeerAddressRepo::default()),
+            members,
+            gate,
+            Arc::new(Sha256IdentityFingerprintFactory),
+            Arc::new(FixedClock),
+        );
+        let router = Router::builder((*server).clone())
+            .accept(PEER_REACHABILITY_ALPN, adapter.handler())
+            .spawn();
+
+        let mut held = Vec::new();
+        for _ in 0..3 {
+            let connection = blocked
+                .connect(server.addr(), PEER_REACHABILITY_ALPN)
+                .await
+                .unwrap();
+            let (mut send, receive) = connection.open_bi().await.unwrap();
+            send.write_all(&[ADMISSION_CONFIRMATION_REQUEST])
+                .await
+                .unwrap();
+            send.finish().unwrap();
+            held.push((connection, receive));
+            // 前两条要先进入待确认，第三条才会撞上上限。
+            tokio::time::sleep(Duration::from_millis(150)).await;
+        }
+        timeout(Duration::from_secs(3), async {
+            while logs.count("maximum pending connections") == 0 {
+                tokio::time::sleep(Duration::from_millis(20)).await;
+            }
+        })
+        .await
+        .expect("the third pending connection must be recorded");
+
+        let record = logs
+            .output()
+            .lines()
+            .find(|line| line.contains("maximum pending connections"))
+            .unwrap()
+            .to_owned();
+        assert!(record.contains("error_kind=\"capacity\""), "{record}");
+        assert!(!record.contains(&blocked.id().to_string()), "{record}");
+        router.shutdown().await.unwrap();
+        blocked.close().await;
     }
 
     #[tokio::test]

@@ -23,11 +23,15 @@ use std::sync::Arc;
 use std::time::SystemTime;
 
 use anyhow::{Context, Result};
-use tracing::{debug, info, warn};
+
 use uc_observability_contract::analytics::{
     AnalyticsPort, CaptureOrigin, Event, PayloadSizeBucket, PayloadType,
 };
-use uc_observability_contract::error_source::io_error_kind;
+use uc_observability_contract::{
+    error_source::io_error_kind,
+    log_fields::{log_id, log_vocab, log_vocab_debug},
+    uc_debug, uc_info, uc_warn,
+};
 use unicode_normalization::UnicodeNormalization;
 
 use uc_core::blob::ports::BlobContentIngestPort;
@@ -252,6 +256,7 @@ impl CaptureClipboardUseCase {
     /// completed one it carries receiver-rewritten local paths; both hash
     /// differently from the wire identity and would fork the entry, breaking
     /// dedup against every other channel that carries the same wire hash.
+    #[tracing::instrument(name = "usecase.capture_clipboard.execute_with_origin", skip_all)]
     pub async fn execute_with_origin(
         &self,
         snapshot: SystemClipboardSnapshot,
@@ -271,6 +276,10 @@ impl CaptureClipboardUseCase {
         .await
     }
 
+    #[tracing::instrument(
+        name = "usecase.capture_clipboard.execute_directory_with_origin",
+        skip_all
+    )]
     pub(crate) async fn execute_directory_with_origin(
         &self,
         snapshot: SystemClipboardSnapshot,
@@ -297,6 +306,10 @@ impl CaptureClipboardUseCase {
         .await
     }
 
+    #[tracing::instrument(
+        name = "usecase.capture_clipboard.execute_inbound_with_origin",
+        skip_all
+    )]
     pub async fn execute_inbound_with_origin(
         &self,
         snapshot: SystemClipboardSnapshot,
@@ -328,18 +341,21 @@ impl CaptureClipboardUseCase {
     ) -> Result<Option<CaptureOutcome>> {
         {
             if origin == ClipboardChangeOrigin::LocalRestore {
-                info!(origin = ?origin, "Skipping clipboard capture");
+                uc_info!(
+                    origin = log_vocab_debug(&origin),
+                    "Skipping clipboard capture"
+                );
                 return Ok(None);
             }
             if !Self::has_supported_representation(&snapshot) {
-                info!(
-                    origin = ?origin,
+                uc_info!(
+                    origin = log_vocab_debug(&origin),
                     representation_count = snapshot.representations.len(),
                     "Skipping clipboard capture because snapshot has no supported representations"
                 );
                 return Ok(None);
             }
-            info!("Starting clipboard capture with provided snapshot");
+            uc_info!("Starting clipboard capture with provided snapshot");
 
             let event_id = EventId::new();
             let captured_at_ms = snapshot.ts_ms;
@@ -389,7 +405,7 @@ impl CaptureClipboardUseCase {
                         max_member_count: s.file_sync.max_file_set_member_count,
                     },
                     Err(err) => {
-                        warn!(error_kind = "settings_load", io_error_kind = io_error_kind(err.as_ref()), "capture: settings load failed; using fallback file-set caps for this capture");
+                        uc_warn!(error_kind = "settings_load", io_error_kind = io_error_kind(err.as_ref()), "capture: settings load failed; using fallback file-set caps for this capture");
                         FileSetCaps::fallback()
                     }
                 };
@@ -449,8 +465,8 @@ impl CaptureClipboardUseCase {
                 )
                 .await
                 {
-                    info!(
-                        entry_id = %existing,
+                    uc_info!(
+                        entry_id = log_id(&existing),
                         "Local capture matched existing content; resurfaced instead of duplicating"
                     );
                     return Ok(Some(CaptureOutcome {
@@ -492,9 +508,9 @@ impl CaptureClipboardUseCase {
                                 // No path in the message: a clipboard file
                                 // path is user content.
                                 .context("LocalFile rep ingest into blob store failed")?;
-                            info!(
-                                rep_id = %observed.id,
-                                blob_id = %blob_id,
+                            uc_info!(
+                                rep_id = log_id(&observed.id),
+                                blob_id = log_id(&blob_id),
                                 file_size = size_bytes,
                                 "Ingested LocalFile rep into blob store as BlobReady"
                             );
@@ -524,10 +540,8 @@ impl CaptureClipboardUseCase {
                 let mut staged_with_preview = 0usize;
                 let mut staged = 0usize;
                 let mut total_bytes: i64 = 0;
-                let mut breakdown_parts: Vec<String> = Vec::with_capacity(normalized_reps.len());
                 for rep in &normalized_reps {
                     total_bytes += rep.size_bytes;
-                    breakdown_parts.push(format!("{}:{}", rep.format_id, rep.size_bytes));
                     match rep.payload_state() {
                         PayloadAvailability::Inline => inline += 1,
                         PayloadAvailability::Staged if rep.inline_data.is_some() => {
@@ -537,14 +551,12 @@ impl CaptureClipboardUseCase {
                         _ => {}
                     }
                 }
-                let breakdown = breakdown_parts.join(", ");
-                info!(
+                uc_info!(
                     representations = normalized_reps.len(),
-                    inline,
-                    staged_with_preview,
-                    staged,
-                    total_bytes,
-                    breakdown = %breakdown,
+                    inline = inline,
+                    staged_with_preview = staged_with_preview,
+                    staged = staged,
+                    total_bytes = total_bytes,
                     "Normalized clipboard representations"
                 );
             }
@@ -763,8 +775,8 @@ impl CaptureClipboardUseCase {
             if !used_atomic_receive_commit {
                 if let Some(file_set) = &file_set {
                     if let Err(err) = self.entry_file_set_repo.save(&entry_id, file_set).await {
-                        warn!(
-                            entry_id = %entry_id,
+                        uc_warn!(
+                            entry_id = log_id(&entry_id),
                             error_kind = "file_set_manifest_save",
                             io_error_kind = io_error_kind(&err),
                             "capture: failed to persist entry file-set manifest"
@@ -773,7 +785,11 @@ impl CaptureClipboardUseCase {
                 }
             }
 
-            info!(event_id = %event_id, entry_id = %entry_id, "Clipboard capture completed");
+            uc_info!(
+                event_id = log_id(&event_id),
+                entry_id = log_id(&entry_id),
+                "Clipboard capture completed"
+            );
 
             // schema doc §12.1 · outbound 同步链路源头信号。
             // 红线：`RemotePush`（入站同步写本地剪贴板）严禁 emit，否则会与
@@ -804,19 +820,23 @@ impl CaptureClipboardUseCase {
             .iter()
             .any(Self::is_supported_representation);
 
-        debug!(
+        uc_debug!(
             repr_count = snapshot.representations.len(),
-            format_ids = ?snapshot
-                .representations
-                .iter()
-                .map(|r| r.format_id.to_string())
-                .collect::<Vec<_>>(),
-            mimes = ?snapshot
-                .representations
-                .iter()
-                .map(|r| r.mime.as_ref().map(|m| m.as_str().to_string()))
-                .collect::<Vec<_>>(),
-            result,
+            format_ids = log_vocab_debug(
+                &(snapshot
+                    .representations
+                    .iter()
+                    .map(|r| r.format_id.to_string())
+                    .collect::<Vec<_>>())
+            ),
+            mimes = log_vocab_debug(
+                &(snapshot
+                    .representations
+                    .iter()
+                    .map(|r| r.mime.as_ref().map(|m| m.as_str().to_string()))
+                    .collect::<Vec<_>>())
+            ),
+            result = log_vocab(&result),
             "has_supported_representation evaluated",
         );
 
@@ -877,7 +897,7 @@ async fn resurface_existing_entry(
         Ok(Some(existing)) => existing,
         Ok(None) => return None,
         Err(e) => {
-            warn!(
+            uc_warn!(
                 error_kind = "dedup_lookup",
                 io_error_kind = io_error_kind(&e),
                 "Local-capture dedup lookup failed; proceeding to create entry"
@@ -889,15 +909,15 @@ async fn resurface_existing_entry(
     match touch_entry.touch_entry(&existing, captured_at_ms).await {
         Ok(true) => Some(existing),
         Ok(false) => {
-            debug!(
-                entry_id = %existing,
+            uc_debug!(
+                entry_id = log_id(&existing),
                 "Dedup target vanished before resurface (0 rows touched); creating new entry"
             );
             None
         }
         Err(e) => {
-            warn!(
-                entry_id = %existing,
+            uc_warn!(
+                entry_id = log_id(&existing),
                 error_kind = "entry_resurface",
                 io_error_kind = io_error_kind(&e),
                 "Failed to resurface existing entry; creating new entry"
@@ -1035,7 +1055,7 @@ async fn build_entry_file_set(
             caps,
         )
         .await;
-        debug!(
+        uc_debug!(
             line_count = lines.len(),
             "capture: built file-set manifest from LocalFile reps"
         );
@@ -1085,7 +1105,7 @@ async fn build_entry_file_set(
         caps,
     )
     .await;
-    debug!(
+    uc_debug!(
         line_count = lines.len(),
         "capture: built file-set manifest from inline uri-list text"
     );
@@ -1220,8 +1240,8 @@ async fn build_file_member_lines(
             },
             file_path: None,
         }));
-        warn!(
-            reason = ?reason,
+        uc_warn!(
+            reason = log_vocab_debug(&reason),
             "capture: file-set traversal stopped; the whole set is ineligible"
         );
         lines.extend(pending.into_iter().map(|line| EntryFileSetLine {
@@ -1424,7 +1444,7 @@ async fn expand_directory(
 
 /// 展开失败落为文件集中的排除行（业务结果），错误不向上传递；在此记录一次 IO 分类，不记录路径。
 fn expansion_io_failed(error: &std::io::Error) {
-    warn!(
+    uc_warn!(
         error_kind = "file_set_expand",
         io_error_kind = io_error_kind(error),
         "capture: file-set expansion could not read a member; excluding the set"
@@ -1506,7 +1526,7 @@ async fn classify_file_path(
         },
         Err(err) => {
             // No path in the field: a clipboard file path is user content.
-            warn!(
+            uc_warn!(
                 error_kind = "file_content_hash",
                 io_error_kind = io_error_kind(err.as_ref()),
                 "capture: could not derive file-set line content hash"

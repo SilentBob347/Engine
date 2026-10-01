@@ -20,7 +20,8 @@ use iroh::{RelayUrl, SecretKey};
 use iroh_relay::client::{ClientBuilder, ConnectError, DialError};
 use iroh_relay::tls::{self, CaRootsConfig};
 use tokio::time::error::Elapsed;
-use tracing::{debug, instrument, warn};
+use tracing::instrument;
+use uc_observability_contract::{uc_debug, uc_warn};
 
 /// 探测整体预算。覆盖 DNS + TCP + TLS + WebSocket upgrade + 协议握手;
 /// 超过此预算返回 [`RelayProbeError::Timeout`]。
@@ -150,7 +151,7 @@ impl IrohRelayProbeAdapter {
 
     #[instrument(
         skip(self, url, access_token),
-        fields(relay = %sanitize_url_for_log(url), credential_configured = access_token.is_some())
+        fields(credential_configured = access_token.is_some())
     )]
     pub async fn probe_with_access_token(
         &self,
@@ -209,36 +210,13 @@ impl IrohRelayProbeAdapter {
             Ok(Ok(_client)) => {
                 let latency_ms =
                     u32::try_from(started_at.elapsed().as_millis()).unwrap_or(u32::MAX);
-                debug!(latency_ms, "relay probe succeeded");
+                uc_debug!(latency_ms = latency_ms, "relay probe succeeded");
                 Ok(RelayProbeReport { latency_ms })
             }
             Ok(Err(err)) => Err(map_connect_error(err)),
             Err(Elapsed { .. }) => Err(RelayProbeError::Timeout),
         }
     }
-}
-
-/// 把任意输入压成 `scheme://host[:port]`,无法解析时返回 `<unparseable>`。
-///
-/// 仅用于 tracing 字段 —— 避免把 userinfo / path / query / fragment(可能含
-/// token、session id 等敏感片段)落进日志。完整的原始 URL 仅在内存里参与
-/// 协议握手,不会跨进程边界。
-fn sanitize_url_for_log(url: &str) -> String {
-    let trimmed = url.trim();
-    if trimmed.is_empty() {
-        return "<empty>".to_string();
-    }
-    url::Url::parse(trimmed)
-        .ok()
-        .and_then(|parsed| {
-            let host = parsed.host_str()?;
-            let scheme = parsed.scheme();
-            Some(match parsed.port() {
-                Some(port) => format!("{scheme}://{host}:{port}"),
-                None => format!("{scheme}://{host}"),
-            })
-        })
-        .unwrap_or_else(|| "<unparseable>".to_string())
 }
 
 fn map_connect_error(err: ConnectError) -> RelayProbeError {
@@ -286,7 +264,7 @@ fn map_connect_error(err: ConnectError) -> RelayProbeError {
         // 兜底分支:把陌生 ConnectError 变体压成 Other,同时 warn 保留源头便
         // 于排查(iroh-relay 升级新增变体时是这里第一时间发现)。
         other => {
-            warn!(
+            uc_warn!(
                 error_kind = "unmapped_connect_error",
                 "relay probe: unmapped ConnectError variant"
             );
@@ -326,7 +304,7 @@ fn map_dial_error(err: DialError) -> RelayProbeError {
         // 与 map_connect_error 同理:陌生 DialError 变体走 Other,源信息进
         // tracing 便于跨版本对账。
         other => {
-            warn!(
+            uc_warn!(
                 error_kind = "unmapped_dial_error",
                 "relay probe: unmapped DialError variant"
             );

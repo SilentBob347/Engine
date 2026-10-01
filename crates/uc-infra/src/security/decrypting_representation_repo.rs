@@ -8,7 +8,6 @@
 use anyhow::{Context, Result};
 use async_trait::async_trait;
 use std::sync::Arc;
-use tracing::{debug, trace};
 
 use uc_core::ports::clipboard::{
     GetRepresentationByBlobIdPort, GetRepresentationByIdPort, GetRepresentationPort,
@@ -26,6 +25,7 @@ use uc_core::{
     ports::{security::BlobCipherPort, ClipboardRepresentationStore},
     BlobId,
 };
+use uc_observability_contract::{log_fields::log_id, uc_debug, uc_trace, uc_warn};
 
 /// Decorator that decrypts representation inline_data on read.
 pub struct DecryptingClipboardRepresentationRepository {
@@ -67,8 +67,8 @@ impl ClipboardRepresentationStore for DecryptingClipboardRepresentationRepositor
                 .await
                 .context("failed to decrypt inline_data")?;
 
-            trace!(
-                representation_id = %representation_id.as_ref(),
+            uc_trace!(
+                representation_id = log_id(&representation_id.as_ref()),
                 bytes = plaintext.len(),
                 "Decrypted inline_data for representation via BlobCipherPort"
             );
@@ -104,8 +104,8 @@ impl ClipboardRepresentationStore for DecryptingClipboardRepresentationRepositor
         };
 
         if rep.inline_data.is_some() {
-            trace!(
-                representation_id = %representation_id.as_ref(),
+            uc_trace!(
+                representation_id = log_id(&representation_id.as_ref()),
                 "Skipping inline_data decryption: event_id unavailable"
             );
         }
@@ -124,8 +124,8 @@ impl ClipboardRepresentationStore for DecryptingClipboardRepresentationRepositor
         };
 
         if rep.inline_data.is_some() {
-            trace!(
-                blob_id = %blob_id.as_ref(),
+            uc_trace!(
+                blob_id = log_id(&blob_id.as_ref()),
                 "Skipping inline_data decryption: event_id unavailable"
             );
         }
@@ -172,6 +172,7 @@ impl ClipboardRepresentationStore for DecryptingClipboardRepresentationRepositor
         let input_count = reps.len();
         let mut decrypted_count = 0usize;
         let mut decrypted_bytes = 0usize;
+        let mut failed = 0usize;
         let mut result = Vec::with_capacity(reps.len());
         for rep in reps {
             if let Some(ref encrypted_bytes) = rep.inline_data {
@@ -199,6 +200,7 @@ impl ClipboardRepresentationStore for DecryptingClipboardRepresentationRepositor
                     Err(_) => {
                         // 与历史行为对齐:解密失败时返回原始（密文）数据,
                         // 让上层决定如何处理（一般会跳过该 representation）。
+                        failed += 1;
                         result.push(rep);
                     }
                 }
@@ -206,12 +208,21 @@ impl ClipboardRepresentationStore for DecryptingClipboardRepresentationRepositor
                 result.push(rep);
             }
         }
+        if failed > 0 {
+            // 每次调用聚合成一条：只含数量，不含事件与 representation 标识、字节或错误正文。
+            uc_warn!(
+                error_kind = "inline_decrypt",
+                failed = failed,
+                representations = input_count,
+                "inline representation decryption failed; returning the stored bytes unchanged"
+            );
+        }
         if decrypted_count > 0 {
-            debug!(
-                event_id = %event_id.as_ref(),
+            uc_debug!(
+                event_id = log_id(&event_id.as_ref()),
                 representations = input_count,
                 decrypted = decrypted_count,
-                decrypted_bytes,
+                decrypted_bytes = decrypted_bytes,
                 "Decrypted representations for event via BlobCipherPort"
             );
         }
@@ -362,5 +373,126 @@ impl ListRepresentationIdsByStatePort for DecryptingClipboardRepresentationRepos
         ClipboardRepresentationStore::list_ids_by_payload_state(self, states)
             .await
             .map_err(to_repo_err)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use uc_core::clipboard::PayloadAvailability;
+    use uc_core::crypto::domain::Plaintext;
+    use uc_core::ids::FormatId;
+    use uc_core::ports::security::BlobCipherError;
+    use uc_testkit::log_capture::CapturedLogs;
+
+    struct FixedRepresentations(Vec<PersistedClipboardRepresentation>);
+
+    #[async_trait]
+    impl ClipboardRepresentationStore for FixedRepresentations {
+        async fn get_representation(
+            &self,
+            _: &EventId,
+            _: &RepresentationId,
+        ) -> Result<Option<PersistedClipboardRepresentation>> {
+            unimplemented!()
+        }
+
+        async fn get_representation_by_id(
+            &self,
+            _: &RepresentationId,
+        ) -> Result<Option<PersistedClipboardRepresentation>> {
+            unimplemented!()
+        }
+
+        async fn get_representation_by_blob_id(
+            &self,
+            _: &BlobId,
+        ) -> Result<Option<PersistedClipboardRepresentation>> {
+            unimplemented!()
+        }
+
+        async fn update_blob_id(&self, _: &RepresentationId, _: &BlobId) -> Result<()> {
+            unimplemented!()
+        }
+
+        async fn update_blob_id_if_none(&self, _: &RepresentationId, _: &BlobId) -> Result<bool> {
+            unimplemented!()
+        }
+
+        async fn update_processing_result(
+            &self,
+            _: &RepresentationId,
+            _: &[PayloadAvailability],
+            _: Option<&BlobId>,
+            _: PayloadAvailability,
+            _: Option<&str>,
+        ) -> Result<ProcessingUpdateOutcome> {
+            unimplemented!()
+        }
+
+        async fn get_representations_for_event(
+            &self,
+            _: &EventId,
+        ) -> Result<Vec<PersistedClipboardRepresentation>> {
+            Ok(self.0.clone())
+        }
+    }
+
+    struct RejectingCipher;
+
+    #[async_trait]
+    impl BlobCipherPort for RejectingCipher {
+        async fn encrypt(
+            &self,
+            _: &Plaintext,
+            _: &Aad,
+        ) -> Result<uc_core::crypto::domain::Ciphertext, BlobCipherError> {
+            unimplemented!()
+        }
+
+        async fn decrypt(&self, _: &Ciphertext, _: &Aad) -> Result<Plaintext, BlobCipherError> {
+            Err(BlobCipherError::InvalidCiphertext {
+                source: anyhow::anyhow!("PRIVATE_CIPHER_DETAIL"),
+            })
+        }
+    }
+
+    fn inline(id: &str) -> PersistedClipboardRepresentation {
+        PersistedClipboardRepresentation::new_with_state(
+            RepresentationId::from(id),
+            FormatId::from("public.utf8-plain-text"),
+            None,
+            4,
+            Some(vec![1, 2, 3, 4]),
+            None,
+            PayloadAvailability::Inline,
+            None,
+        )
+        .unwrap()
+    }
+
+    #[tokio::test]
+    async fn inline_decrypt_failures_are_recorded_once_per_call_with_counts_only() {
+        let logs = CapturedLogs::default();
+        let _guard = logs.install();
+        let repository = DecryptingClipboardRepresentationRepository::new(
+            Arc::new(FixedRepresentations(vec![inline("rep-1"), inline("rep-2")])),
+            Arc::new(RejectingCipher),
+        );
+
+        let representations = ClipboardRepresentationStore::get_representations_for_event(
+            &repository,
+            &EventId::from("event-1"),
+        )
+        .await
+        .unwrap();
+
+        assert_eq!(representations.len(), 2);
+        assert_eq!(logs.count("inline representation decryption failed"), 1);
+        assert!(logs.output().contains("error_kind=\"inline_decrypt\""));
+        assert!(logs.output().contains("failed=2"));
+        assert!(!logs.output().contains("PRIVATE"));
+        assert!(!logs.output().contains("rep-1"));
+        assert!(!logs.output().contains("event-1"));
     }
 }

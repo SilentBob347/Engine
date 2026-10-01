@@ -27,6 +27,10 @@ use uc_core::ports::file_transfer::{
 };
 use uc_core::ports::security::current_profile::CurrentProfilePort;
 use uc_core::ports::space::DeriveSpaceSubkeyPort;
+use uc_observability_contract::{
+    log_fields::{log_id, log_vocab},
+    uc_debug,
+};
 
 /// SQLite adapter for the receiver-side file-transfer projection ports.
 pub struct DieselFileTransferRepository<E> {
@@ -135,9 +139,9 @@ impl<E: DbExecutor> RecordReceiverTransferPort for DieselFileTransferRepository<
                         .optional()?;
                     if let Some(status) = existing_status.as_deref() {
                         if status != TrackedFileTransferStatus::Pending.as_str() {
-                            tracing::debug!(
-                                transfer_id = %row.transfer_id,
-                                existing_status = status,
+                            uc_debug!(
+                                transfer_id = log_id(&row.transfer_id),
+                                existing_status = log_vocab(&status),
                                 "upsert_pending_transfer: skipping — existing row is not pending"
                             );
                             return Ok(());
@@ -568,7 +572,7 @@ impl<E: DbExecutor> GetEntryReceiveProgressPort for DieselFileTransferRepository
         };
         let state = AttemptState::from_str(&attempt.attempt_state)
             .map_err(|error| FileTransferProjectionError::Backend(Box::new(error)))?;
-        // TryFromIntError：目标分类完整表达数值范围不符。
+        // discarded-source[int-conversion]: `core::num::TryFromIntError`: the target classification already expresses the range or length mismatch
         let items_total = u32::try_from(rows.len()).map_err(|_| {
             FileTransferProjectionError::Backend("receive item count exceeds u32".into())
         })?;
@@ -577,7 +581,7 @@ impl<E: DbExecutor> GetEntryReceiveProgressPort for DieselFileTransferRepository
                 .filter(|row| row.status == TrackedFileTransferStatus::Completed.as_str())
                 .count(),
         )
-        // TryFromIntError：目标分类完整表达数值范围不符。
+        // discarded-source[int-conversion]: `core::num::TryFromIntError`: the target classification already expresses the range or length mismatch
         .map_err(|_| {
             FileTransferProjectionError::Backend("completed receive item count exceeds u32".into())
         })?;

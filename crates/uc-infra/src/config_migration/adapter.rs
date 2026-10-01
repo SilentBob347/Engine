@@ -13,7 +13,7 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use async_trait::async_trait;
-use tracing::{error, info, instrument, warn};
+use tracing::instrument;
 
 use uc_core::crypto::domain::Passphrase;
 use uc_core::ids::ProfileId;
@@ -35,6 +35,7 @@ use super::staging::{
     DB_MEMBER, DEVICE_ID_MEMBER, IROH_IDENTITY_PREFIX, KEYSLOT_MEMBER, PENDING_IMPORT_SCHEMA_VER,
     PROFILE_SECRETS_MEMBER, SETTINGS_MEMBER, STAGING_DIR_NAME, UI_STATE_PREFIX,
 };
+use uc_observability_contract::{error_source::io_error_kind, uc_error, uc_info, uc_warn};
 
 /// Raw secure-storage entries collected for a bundle, paired with the
 /// current-profile KEK bytes when one was among them.
@@ -402,11 +403,12 @@ fn map_staging_err(err: StagingError) -> ConfigMigrationError {
     }
 }
 
-#[async_trait]
-impl ExportConfigBundlePort for ConfigMigrationAdapter {
-    #[instrument(skip_all, fields(profile = %self.profile_id.inner()))]
-    async fn export_bundle(&self, destination: &Path) -> Result<PathBuf, ConfigMigrationError> {
-        info!("starting config bundle export");
+impl ConfigMigrationAdapter {
+    async fn export_bundle_inner(
+        &self,
+        destination: &Path,
+    ) -> Result<PathBuf, ConfigMigrationError> {
+        uc_info!("starting config bundle export");
 
         // 1. Consistent db snapshot (blocking; sqlite + file IO).
         let pool = self.db_pool.clone();
@@ -428,14 +430,16 @@ impl ExportConfigBundlePort for ConfigMigrationAdapter {
         //    passphrase can open.
         let (secret_entries, kek) = self.collect_secrets()?;
         let Some(kek_bytes) = kek else {
-            error!("export aborted: current-profile KEK absent from secure storage while unlocked");
+            uc_error!(
+                "export aborted: current-profile KEK absent from secure storage while unlocked"
+            );
             return Err(ConfigMigrationError::Internal {
                 details: "key material unavailable for export".to_string(),
                 source: None,
             });
         };
         let kek_key: [u8; 32] = kek_bytes.as_slice().try_into().map_err(|error| {
-            error!("export aborted: KEK material has unexpected length");
+            uc_error!("export aborted: KEK material has unexpected length");
             ConfigMigrationError::Internal {
                 details: "key material has unexpected length".to_string(),
                 source: Some(Box::new(error)),
@@ -568,8 +572,20 @@ impl ExportConfigBundlePort for ConfigMigrationAdapter {
             source: Some(Box::new(error)),
         })??;
 
-        info!("config bundle export complete");
+        uc_info!("config bundle export complete");
         Ok(final_path)
+    }
+}
+
+#[async_trait]
+impl ExportConfigBundlePort for ConfigMigrationAdapter {
+    #[instrument(skip_all)]
+    async fn export_bundle(&self, destination: &Path) -> Result<PathBuf, ConfigMigrationError> {
+        let result = self.export_bundle_inner(destination).await;
+        if let Err(error) = &result {
+            record_boundary_failure("export", error);
+        }
+        result
     }
 }
 
@@ -595,15 +611,13 @@ impl PreviewConfigImportPort for ConfigMigrationAdapter {
     }
 }
 
-#[async_trait]
-impl StageConfigImportPort for ConfigMigrationAdapter {
-    #[instrument(skip_all)]
-    async fn stage_import(
+impl ConfigMigrationAdapter {
+    async fn stage_import_inner(
         &self,
         password: &Passphrase,
         source: &Path,
     ) -> Result<StagedConfigImport, ConfigMigrationError> {
-        info!("staging config import");
+        uc_info!("staging config import");
         let (archive, _manifest) = self.open_archive(password, source).await?;
 
         // Decide whether a KEK is present by inspecting the staged secrets.
@@ -640,12 +654,85 @@ impl StageConfigImportPort for ConfigMigrationAdapter {
         .map_err(map_staging_err)?;
 
         if !has_kek {
-            warn!("staged bundle carried no KEK; unlock will be required after apply");
+            uc_warn!("staged bundle carried no KEK; unlock will be required after apply");
         }
-        info!(has_kek, "config import staged");
+        uc_info!(has_kek = has_kek, "config import staged");
 
         Ok(StagedConfigImport {
             unlock_required_after_apply: !has_kek,
         })
+    }
+}
+
+#[async_trait]
+impl StageConfigImportPort for ConfigMigrationAdapter {
+    #[instrument(skip_all)]
+    async fn stage_import(
+        &self,
+        password: &Passphrase,
+        source: &Path,
+    ) -> Result<StagedConfigImport, ConfigMigrationError> {
+        let result = self.stage_import_inner(password, source).await;
+        if let Err(error) = &result {
+            record_boundary_failure("stage_import", error);
+        }
+        result
+    }
+}
+
+/// 导出与暂存导入的边界失败：Engine 侧会把 `Err` 折叠为内部错误，变体与阶段在此保留。
+/// 用户原因（口令错误、版本不兼容）为 WARN，io 与内部故障为 ERROR；不含路径、口令或错误正文。
+fn record_boundary_failure(operation: &'static str, error: &ConfigMigrationError) {
+    let error_kind = match error {
+        ConfigMigrationError::Locked => "locked",
+        ConfigMigrationError::NotInitialized => "not_initialized",
+        ConfigMigrationError::InvalidPasswordOrCorrupt => "invalid_password_or_corrupt",
+        ConfigMigrationError::IncompatibleBundle { .. } => "incompatible_bundle",
+        ConfigMigrationError::Io { .. } => "io",
+        ConfigMigrationError::Internal { .. } => "internal",
+    };
+    match error {
+        ConfigMigrationError::Io { .. } | ConfigMigrationError::Internal { .. } => uc_error!(
+            stage = operation,
+            error_kind = error_kind,
+            io_error_kind = io_error_kind(error),
+            "config migration failed"
+        ),
+        _ => uc_warn!(
+            stage = operation,
+            error_kind = error_kind,
+            "config migration rejected"
+        ),
+    }
+}
+
+#[cfg(test)]
+mod boundary_failure_tests {
+    use super::*;
+
+    #[test]
+    fn user_causes_warn_and_io_failures_error_without_error_text() {
+        let logs = uc_testkit::log_capture::CapturedLogs::default();
+        let _guard = logs.install();
+
+        record_boundary_failure(
+            "stage_import",
+            &ConfigMigrationError::InvalidPasswordOrCorrupt,
+        );
+        record_boundary_failure(
+            "export",
+            &ConfigMigrationError::Io {
+                details: "PRIVATE_DETAIL".to_owned(),
+                source: Some(Box::new(std::io::Error::other("PRIVATE_IO"))),
+            },
+        );
+
+        assert_eq!(logs.count("config migration rejected"), 1);
+        assert_eq!(logs.count("config migration failed"), 1);
+        assert!(logs
+            .output()
+            .contains("error_kind=\"invalid_password_or_corrupt\""));
+        assert!(logs.output().contains("io_error_kind=Other"));
+        assert!(!logs.output().contains("PRIVATE"));
     }
 }

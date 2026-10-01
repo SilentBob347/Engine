@@ -34,15 +34,15 @@ use uc_application::deps::PeerIdentityDirectoryPort;
 
 use iroh::endpoint::Connection;
 use iroh::protocol::{AcceptError, ProtocolHandler};
-use tracing::{debug, warn};
 
 #[cfg(test)]
 use uc_core::ids::DeviceId;
 use uc_core::membership::{ContentExchangeGatePort, PeerAdmissionPort};
 use uc_core::ports::clipboard::{ActiveClipboardPullServeError, ActiveClipboardPullServePort};
 use uc_core::ports::security::IdentityFingerprintFactoryPort;
-use uc_observability_contract::diagnostics::connectivity::InboundPeerProtocol;
-use uc_observability_contract::error_source::io_error_kind;
+use uc_observability_contract::{
+    diagnostics::connectivity::InboundPeerProtocol, error_source::io_error_kind, uc_debug, uc_warn,
+};
 
 use super::super::inbound_peer::InboundPeerGate;
 use super::pull_wire::{self, PullResponse};
@@ -136,10 +136,9 @@ impl ProtocolHandler for IrohActiveClipboardPullServeHandler {
         let (mut send, mut recv) = match connection.accept_bi().await {
             Ok(pair) => pair,
             Err(err) => {
-                warn!(
+                uc_warn!(
                     error_kind = "accept_bi",
                     io_error_kind = io_error_kind(&err),
-                    peer = %peer_device_id.as_str(),
                     "active-clipboard pull serve: accept_bi failed; dropping connection"
                 );
                 return Ok(());
@@ -152,10 +151,9 @@ impl ProtocolHandler for IrohActiveClipboardPullServeHandler {
         let snapshot_hash = match pull_wire::read_request(&mut recv).await {
             Ok(h) => h,
             Err(err) => {
-                warn!(
+                uc_warn!(
                     error_kind = "request_decode",
                     io_error_kind = io_error_kind(&err),
-                    peer = %peer_device_id.as_str(),
                     "active-clipboard pull serve: request decode failed; dropping connection"
                 );
                 return Ok(());
@@ -171,8 +169,7 @@ impl ProtocolHandler for IrohActiveClipboardPullServeHandler {
             .is_locally_removed(&peer_device_id)
             .await
         {
-            debug!(
-                peer = %peer_device_id.as_str(),
+            uc_debug!(
                 "active-clipboard pull serve: peer cannot exchange content; responding NotAvailable"
             );
             PullResponse::NotAvailable
@@ -183,22 +180,19 @@ impl ProtocolHandler for IrohActiveClipboardPullServeHandler {
             match self.state.serve.serve(&snapshot_hash).await {
                 Ok(envelope) => PullResponse::Envelope(envelope),
                 Err(ActiveClipboardPullServeError::NotAvailable) => {
-                    debug!(
-                        peer = %peer_device_id.as_str(),
+                    uc_debug!(
                         "active-clipboard pull serve: content not held; responding NotAvailable"
                     );
                     PullResponse::NotAvailable
                 }
                 Err(ActiveClipboardPullServeError::NotUnlocked) => {
-                    debug!(
-                        peer = %peer_device_id.as_str(),
-                        "active-clipboard pull serve: session locked; responding Locked"
-                    );
+                    uc_debug!("active-clipboard pull serve: session locked; responding Locked");
                     PullResponse::Locked
                 }
-                Err(ActiveClipboardPullServeError::Internal(_)) => {
-                    warn!(
-                        peer = %peer_device_id.as_str(),
+                Err(ActiveClipboardPullServeError::Internal(error)) => {
+                    uc_warn!(
+                        error_kind = "serve_internal",
+                        io_error_kind = io_error_kind(error.as_ref()),
                         "active-clipboard pull serve: internal failure; responding Internal"
                     );
                     PullResponse::Internal
@@ -208,19 +202,17 @@ impl ProtocolHandler for IrohActiveClipboardPullServeHandler {
 
         // 6. Write the response frame, then close the send half.
         if let Err(err) = pull_wire::write_response(&mut send, &response).await {
-            warn!(
+            uc_warn!(
                 error_kind = "response_write",
                 io_error_kind = io_error_kind(&err),
-                peer = %peer_device_id.as_str(),
                 "active-clipboard pull serve: response write failed; dropping connection"
             );
             return Ok(());
         }
         if let Err(err) = send.finish() {
-            debug!(
+            uc_debug!(
                 error_kind = "send_finish",
                 io_error_kind = io_error_kind(&err),
-                peer = %peer_device_id.as_str(),
                 "active-clipboard pull serve: send.finish failed"
             );
         }
@@ -473,6 +465,47 @@ mod tests {
         assert_eq!(resp, PullResponse::Envelope(envelope));
         assert_eq!(serve.seen_hash.lock().await.as_deref(), Some(hash.as_str()));
 
+        router.shutdown().await.ok();
+    }
+
+    /// 服务端内部失败只记固定分类与 io 类别，不带错误正文，并向对端回 Internal。
+    #[tokio::test]
+    async fn internal_serve_failure_is_recorded_without_its_message() {
+        let logs = uc_testkit::log_capture::CapturedLogs::default();
+        let _guard = logs.install();
+        let sender_seed = [0x51u8; 32];
+        let receiver_seed = [0x52u8; 32];
+        let member_repo: Arc<dyn MemberRepositoryPort> = Arc::new(MemMemberRepo::default());
+        member_repo
+            .save(&make_member(sender_seed, "member-internal"))
+            .await
+            .unwrap();
+        let serve = StubServe::new(Err(ActiveClipboardPullServeError::Internal(Box::new(
+            std::io::Error::other("PRIVATE_SERVE_DETAIL"),
+        ))));
+        let (endpoint, router) = spawn_serve(
+            receiver_seed,
+            Arc::clone(&member_repo),
+            Arc::clone(&serve) as _,
+        )
+        .await;
+
+        let hash = format!("blake3v1:{}", "9".repeat(64));
+        let resp = pull_request(sender_seed, endpoint.addr(), &hash)
+            .await
+            .expect("response decodes");
+
+        assert_eq!(resp, PullResponse::Internal);
+        assert_eq!(
+            logs.count("pull serve: internal failure"),
+            1,
+            "{}",
+            logs.output()
+        );
+        let output = logs.output();
+        assert!(output.contains("error_kind=\"serve_internal\""), "{output}");
+        assert!(output.contains("io_error_kind=Other"), "{output}");
+        assert!(!output.contains("PRIVATE_SERVE_DETAIL"), "{output}");
         router.shutdown().await.ok();
     }
 

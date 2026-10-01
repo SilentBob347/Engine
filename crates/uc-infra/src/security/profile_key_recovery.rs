@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex, MutexGuard};
 
 use serde::{Deserialize, Serialize};
-use tracing::warn;
+
 use uc_core::app_dirs::AppPaths;
 use uc_core::crypto::domain::Passphrase;
 use uc_core::crypto::model::EncryptionError;
@@ -26,6 +26,7 @@ use crate::migration_state::{decode_legacy_migration_run_id, DEFAULT_MIGRATION_S
 use crate::network::iroh::IDENTITY_STORE_KEY;
 use crate::space::KeyMaterialStore;
 use crate::FileSecureStorage;
+use uc_observability_contract::{uc_info, uc_warn};
 
 pub const PROFILE_SECRET_FILE_NAME: &str = "profile-secrets-v1";
 const FORMAT_VERSION: u16 = 1;
@@ -262,12 +263,24 @@ impl ProfileKeyRecoveryStore {
                     return Err(ProfileKeyRecoveryError::Corrupt);
                 };
                 if v1_aead::unwrap_master_key_xchacha(&kek, &wrapped.blob).is_err() {
+                    uc_warn!(
+                        reason = "kek_unwrap_failed",
+                        "profile key recovery requires passphrase"
+                    );
                     return Ok(ProfileRecoveryPreparation::AwaitingPassphrase { losses });
                 }
                 self.activate_or_migrate(&kek)?;
                 Ok(ProfileRecoveryPreparation::Ready)
             }
-            Err(EncryptionError::KeyNotFound | EncryptionError::KeyMaterialCorrupt { .. }) => {
+            Err(
+                error @ (EncryptionError::KeyNotFound | EncryptionError::KeyMaterialCorrupt { .. }),
+            ) => {
+                let reason = if matches!(error, EncryptionError::KeyNotFound) {
+                    "kek_missing"
+                } else {
+                    "kek_corrupt"
+                };
+                uc_warn!(reason = reason, "profile key recovery requires passphrase");
                 Ok(ProfileRecoveryPreparation::AwaitingPassphrase { losses })
             }
             Err(error) => Err(error.into()),
@@ -333,12 +346,14 @@ impl ProfileKeyRecoveryStore {
             return Ok(());
         }
         if self.file.exists() && self.rewrap_active(&kek)? {
+            uc_info!(reason = "rewrapped", "profile key vault refreshed");
             self.authorize_cleanup()?;
             self.cleanup_legacy_entries()?;
             return Ok(());
         }
         let secrets = self.current_or_legacy_secrets()?;
         self.create_and_activate(&kek, secrets, true)?;
+        uc_warn!(reason = "recreated", "profile key vault recreated");
         self.cleanup_legacy_entries()?;
         Ok(())
     }
@@ -884,7 +899,7 @@ impl ProfileKeyRecoveryStore {
             Err(error) => {
                 // 安全存储端口只能携带固定文本，真实原因只以固定分类记录。
                 let error = ProfileKeyRecoveryError::from(error);
-                warn!(
+                uc_warn!(
                     stage = "decode_automatic_unlock_key",
                     reason = error.diagnostic_reason(),
                     "资料 vault 自动打开失败"
@@ -895,7 +910,7 @@ impl ProfileKeyRecoveryStore {
             }
         };
         if let Err(error) = self.activate_existing(&kek) {
-            warn!(
+            uc_warn!(
                 stage = "open_vault",
                 reason = error.diagnostic_reason(),
                 "资料 vault 自动打开失败"
@@ -1310,6 +1325,114 @@ mod tests {
             assert_eq!(restarted.get(&name).unwrap(), Some(value));
             assert!(storage.get(&name).unwrap().is_none());
         }
+    }
+
+    async fn keyslot_with_wrapping_key(
+        directory: &tempfile::TempDir,
+    ) -> (ProfileKeyRecoveryStore, KeyMaterialStore, KeyScope) {
+        let storage = Arc::new(MemoryStorage::default());
+        let backing: Arc<dyn SecureStoragePort> = storage;
+        let paths = test_paths(directory);
+        let profile_id = uc_core::ids::ProfileId::new().into_inner();
+        let scope = KeyScope {
+            profile_id: profile_id.clone(),
+        };
+        let material = KeyMaterialStore::new(
+            Arc::clone(&backing),
+            Arc::new(JsonKeySlotStore::new(paths.vault_dir.clone())),
+        );
+        let draft = KeySlot::draft_v1(scope.clone()).unwrap();
+        let legacy = LegacyPassphrase("recovery passphrase".to_owned());
+        let kek = v1_aead::derive_kek_argon2id(&legacy, &draft.salt, &draft.kdf).unwrap();
+        let master = MasterKey::generate().unwrap();
+        let wrapped = v1_aead::wrap_master_key_xchacha(&kek, &master).unwrap();
+        material
+            .store_keyslot(&draft.finalize(WrappedMasterKey { blob: wrapped }))
+            .await
+            .unwrap();
+        let recovery = ProfileKeyRecoveryStore::new(paths, profile_id, backing);
+        (recovery, material, scope)
+    }
+
+    #[tokio::test]
+    async fn a_missing_kek_records_its_reason_and_asks_for_the_passphrase() {
+        let logs = uc_testkit::log_capture::CapturedLogs::default();
+        let _guard = logs.install();
+        let directory = tempfile::tempdir().unwrap();
+        let (recovery, _material, _scope) = keyslot_with_wrapping_key(&directory).await;
+
+        let preparation = recovery.prepare_startup().await.unwrap();
+
+        assert!(matches!(
+            preparation,
+            ProfileRecoveryPreparation::AwaitingPassphrase { .. }
+        ));
+        assert_eq!(
+            logs.count("profile key recovery requires passphrase"),
+            1,
+            "{}",
+            logs.output()
+        );
+        assert!(
+            logs.output().contains("reason=\"kek_missing\""),
+            "{}",
+            logs.output()
+        );
+    }
+
+    #[tokio::test]
+    async fn a_kek_that_cannot_unwrap_the_master_key_records_its_reason() {
+        let logs = uc_testkit::log_capture::CapturedLogs::default();
+        let _guard = logs.install();
+        let directory = tempfile::tempdir().unwrap();
+        let (recovery, material, scope) = keyslot_with_wrapping_key(&directory).await;
+        let other = LegacyPassphrase("another passphrase".to_owned());
+        let draft = KeySlot::draft_v1(scope.clone()).unwrap();
+        let wrong = v1_aead::derive_kek_argon2id(&other, &draft.salt, &draft.kdf).unwrap();
+        material.store_kek(&scope, &wrong).await.unwrap();
+
+        let preparation = recovery.prepare_startup().await.unwrap();
+
+        assert!(matches!(
+            preparation,
+            ProfileRecoveryPreparation::AwaitingPassphrase { .. }
+        ));
+        assert!(
+            logs.output().contains("reason=\"kek_unwrap_failed\""),
+            "{}",
+            logs.output()
+        );
+    }
+
+    #[tokio::test]
+    async fn refreshing_without_a_vault_file_records_that_the_vault_was_recreated() {
+        let logs = uc_testkit::log_capture::CapturedLogs::default();
+        let _guard = logs.install();
+        let directory = tempfile::tempdir().unwrap();
+        let (recovery, material, scope) = keyslot_with_wrapping_key(&directory).await;
+        let draft = KeySlot::draft_v1(scope.clone()).unwrap();
+        let kek = v1_aead::derive_kek_argon2id(
+            &LegacyPassphrase("recovery passphrase".to_owned()),
+            &draft.salt,
+            &draft.kdf,
+        )
+        .unwrap();
+        material.store_kek(&scope, &kek).await.unwrap();
+
+        recovery.refresh_after_authentication().await.unwrap();
+
+        assert_eq!(
+            logs.count("profile key vault recreated"),
+            1,
+            "{}",
+            logs.output()
+        );
+        assert!(
+            logs.output().contains("reason=\"recreated\""),
+            "{}",
+            logs.output()
+        );
+        assert!(recovery.vault_file().is_file());
     }
 
     #[tokio::test]

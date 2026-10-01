@@ -26,7 +26,7 @@ struct FixedMembershipLedger {
 #[tokio::test]
 async fn sponsor_state_load_is_correlated_in_standard_log_file() {
     let logs = tempfile::tempdir().expect("logs");
-    let _runtime = ProcessObservabilityRuntime::install(
+    let runtime = ProcessObservabilityRuntime::install(
         ObservabilityConfig::new(
             ObservabilityResource::new(
                 "1.1.0",
@@ -82,6 +82,96 @@ async fn sponsor_state_load_is_correlated_in_standard_log_file() {
     assert_eq!(steps[0]["span_id"], steps[1]["span_id"]);
     assert_eq!(steps[1]["capture_mode"], "standard");
     assert!(steps[1]["fields"]["duration_ms"].is_u64());
+    // 同一进程只能安装一次运行时；继续沿用上面的夹具与存储，制造第二次被未结算尝试拒绝的装载。
+    let first_message = authenticated_join_request(0x71, 0x72);
+    let first = SponsorAdmissionStatePort::load(&store, &first_message)
+        .await
+        .expect("fresh state");
+    let (token, mutation) = accepted_mutation(first_message, first);
+    SponsorAdmissionStatePort::commit(&store, token, mutation)
+        .await
+        .expect("accepted state commits");
+
+    let span = operation_span(OperationContext {
+        domain: DiagnosticDomain::SpaceAdmission,
+        operation: DiagnosticOperation::SpaceAdmission,
+        role: DiagnosticRole::Sponsor,
+        kind: DiagnosticSpanKind::Internal,
+    });
+    let second_message = authenticated_join_request(0x73, 0x74);
+    let refused = span
+        .in_scope(|| uc_observability_contract::diagnostics::ObservationContext::capture())
+        .scope(SponsorAdmissionStatePort::load(&store, &second_message))
+        .instrument(span)
+        .await;
+    assert!(matches!(
+        refused,
+        Err(SponsorAdmissionStateError::StateChanged { .. })
+    ));
+
+    // 诊断导出与宿主导出使用同一个入口：先刷新，再读取受管日志文件。
+    let report = runtime
+        .handle()
+        .prepare_local_diagnostic_export(std::time::Duration::from_secs(5))
+        .expect("export");
+    assert_eq!(report.flush, SignalResult::Completed);
+    assert!(report.module_logs.emitted >= 1, "{:?}", report.module_logs);
+    assert_eq!(report.module_logs.dropped_total(), 0);
+
+    let mut text = String::new();
+    for path in uc_observability_runtime::managed_log_files(logs.path()).expect("files") {
+        text.push_str(&std::fs::read_to_string(path).expect("file"));
+    }
+    let records: Vec<serde_json::Value> = text
+        .lines()
+        .map(|line| serde_json::from_str(line).expect("record"))
+        .collect();
+    let refusal = records
+        .iter()
+        .find(|record| {
+            record["source"] == "engine_module"
+                && record["message"] == "sponsor admission state load failed"
+        })
+        .unwrap_or_else(|| panic!("module record missing: {records:?}"));
+    assert_eq!(refusal["level"], "WARN");
+    // 仓库自有错误只写固定分类：本层分类加仓储来源分类（含拒绝原因），不渲染错误正文。
+    assert_eq!(refusal["fields"]["error_class"], "state_changed");
+    let source_class = refusal["fields"]["source_class"]
+        .as_str()
+        .expect("source class");
+    assert!(
+        source_class.starts_with("unsettled_sponsor_record_"),
+        "{source_class}"
+    );
+    assert!(refusal.get("error.chain").is_none(), "{refusal}");
+    let location = refusal["location"].as_str().expect("location");
+    assert!(location.starts_with("uc-infra/src/"), "{location}");
+    assert!(refusal["spans"]
+        .as_array()
+        .expect("spans")
+        .iter()
+        .any(|span| span == "space_admission.sponsor_state.load"));
+    assert!(refusal["trace_id"].is_string() && refusal["span_id"].is_string());
+    // 与同一次装载的合同完成记录处于同一 OpenTelemetry 上下文。
+    assert!(
+        records.iter().any(|record| {
+            record["fields"]["step"] == "sponsor_state_load"
+                && record["fields"]["event.name"] == "runtime.work.finished"
+                && record["trace_id"] == refusal["trace_id"]
+        }),
+        "no contract completion shares the module record trace: {records:?}"
+    );
+    assert!(records
+        .iter()
+        .filter(|record| record["source"] != "engine_module")
+        .all(|record| record.get("error.chain").is_none()));
+
+    // 隐私：不含临时目录路径、原始字节标识或字节数组文本。
+    let path_text = logs.path().to_string_lossy();
+    assert!(!text.contains(path_text.as_ref()));
+    for needle in ["0x73", "0x74", "[115", "7373737373"] {
+        assert!(!text.contains(needle), "leaked {needle}");
+    }
 }
 
 #[async_trait]

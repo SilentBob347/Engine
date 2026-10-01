@@ -5,9 +5,9 @@ use diesel::{connection::SimpleConnection, Connection, RunQueryDsl};
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, RwLock};
-use tracing::info;
 
 use super::connection::BUSY_TIMEOUT_MS;
+use uc_observability_contract::uc_info;
 
 /// Embed all diesel migrations at compile time
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations");
@@ -74,7 +74,7 @@ impl DbPool {
         let row =
             diesel::sql_query("SELECT revision FROM uc_database_revision WHERE singleton_id = 1")
                 .get_result::<DatabaseRevisionRow>(&mut self.get()?)?;
-        // TryFromIntError：目标分类完整表达数值范围不符。
+        // discarded-source[int-conversion]: `core::num::TryFromIntError`: the target classification already expresses the range or length mismatch
         u64::try_from(row.revision).map_err(|_| anyhow::anyhow!("database revision is invalid"))
     }
 }
@@ -145,7 +145,7 @@ fn enable_wal_mode(database_url: &str) -> Result<()> {
         .execute(&mut conn)
         .context("Failed to set journal_mode=WAL")?;
 
-    info!("WAL journal mode enabled");
+    uc_info!("WAL journal mode enabled");
     Ok(())
 }
 
@@ -417,10 +417,10 @@ mod switch_tests {
 fn run_migrations_raw(pool: &RawDbPool) -> Result<()> {
     let mut conn = pool.get()?;
 
-    info!("Running database migrations...");
+    uc_info!("Running database migrations...");
     conn.run_pending_migrations(MIGRATIONS)
         .map_err(|error| anyhow::anyhow!(error).context("Migration failed"))?;
-    info!("Database migrations completed");
+    uc_info!("Database migrations completed");
 
     Ok(())
 }

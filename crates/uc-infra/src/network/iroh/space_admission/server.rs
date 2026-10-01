@@ -21,7 +21,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::Semaphore;
-use tracing::{debug, Instrument};
+use tracing::Instrument;
 use uc_application::deps::{
     AuthenticatedSpaceAdmissionMessage, HandleAuthenticatedSpaceAdmissionMessagePort,
     SpaceAdmissionTransportError,
@@ -33,6 +33,7 @@ use uc_observability_contract::diagnostics::connectivity::{
 };
 mod authentication;
 use authentication::AuthenticatedRequest;
+use uc_observability_contract::{log_fields::log_vocab_debug, uc_debug, uc_warn};
 const EXCHANGE_DEADLINE: Duration = Duration::from_secs(120);
 const MAX_INBOUND_EXCHANGES: usize = 8;
 
@@ -64,6 +65,12 @@ impl IrohSpaceAdmissionHandler {
     #[cfg(test)]
     pub(super) fn with_exchange_deadline(mut self, deadline: Duration) -> Self {
         self.exchange_deadline = deadline;
+        self
+    }
+
+    #[cfg(test)]
+    pub(super) fn with_capacity(mut self, permits: usize) -> Self {
+        self.permits = Arc::new(Semaphore::new(permits));
         self
     }
 
@@ -163,7 +170,7 @@ impl IrohSpaceAdmissionHandler {
         })
         .instrument(span.clone())
         .await
-        // 超时本身就是分类。
+        // discarded-source[timeout]: `Elapsed`: the timeout itself is the classification
         .map_err(|_| HandlerError::Timeout)
         .and_then(|result| result);
         if let Err(error) = &result {
@@ -244,6 +251,10 @@ impl ProtocolHandler for IrohSpaceAdmissionHandler {
             return Ok(());
         }
         let Ok(_permit) = Arc::clone(&self.permits).try_acquire_owned() else {
+            uc_warn!(
+                reason = "busy",
+                "Space admission connection rejected while sponsor is at capacity"
+            );
             connection.close(CLOSE_BUSY.into(), b"admission_busy");
             return Ok(());
         };
@@ -254,25 +265,37 @@ impl ProtocolHandler for IrohSpaceAdmissionHandler {
                 | HandlerError::Credential(_)
                 | HandlerError::AuthenticationProof { .. }),
             ) => {
-                debug!(error_type = ?server_error_type(&error), "Space admission exchange rejected");
+                uc_debug!(
+                    error_type = log_vocab_debug(&server_error_type(&error)),
+                    "Space admission exchange rejected"
+                );
                 connection.close(CLOSE_AUTHENTICATION.into(), b"authentication_rejected");
             }
             Err(error @ HandlerError::PeerUpgradeRequired) => {
-                debug!(error_type = ?server_error_type(&error), "Space admission peer upgrade required");
+                uc_debug!(
+                    error_type = log_vocab_debug(&server_error_type(&error)),
+                    "Space admission peer upgrade required"
+                );
                 connection.close(CLOSE_PEER_UPGRADE_REQUIRED.into(), b"peer_upgrade_required");
             }
             Err(error @ HandlerError::Acknowledgement) => {
-                debug!(
-                    error_type = ?server_error_type(&error),
+                uc_debug!(
+                    error_type = log_vocab_debug(&server_error_type(&error)),
                     "Space admission reply completed without peer acknowledgement"
                 );
             }
             Err(error @ HandlerError::Timeout) => {
-                debug!(error_type = ?server_error_type(&error), "Space admission exchange timed out");
+                uc_debug!(
+                    error_type = log_vocab_debug(&server_error_type(&error)),
+                    "Space admission exchange timed out"
+                );
                 connection.close(CLOSE_PROTOCOL.into(), b"protocol_timeout");
             }
             Err(error) => {
-                debug!(error_type = ?server_error_type(&error), "Space admission exchange rejected");
+                uc_debug!(
+                    error_type = log_vocab_debug(&server_error_type(&error)),
+                    "Space admission exchange rejected"
+                );
                 connection.close(CLOSE_PROTOCOL.into(), b"protocol_rejected");
             }
         }

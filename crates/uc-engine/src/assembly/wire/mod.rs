@@ -98,6 +98,7 @@ use crate::assembly::platform::{create_platform_layer, ProfilePayloadMode, Syste
 use crate::assembly::runtime_storage::RuntimeStorageSelection;
 use crate::assembly::settings_notification::NotifyingSettings;
 use infra::*;
+use uc_observability_contract::uc_info;
 
 /// Infrastructure layer implementations
 struct InfraLayer {
@@ -372,7 +373,7 @@ pub async fn wire_dependencies_from_inputs(
             VaultLayout::new(vault_path.clone()).re_pairing_state_path(),
             Arc::clone(&admission_keys),
         ));
-    tracing::info!(
+    uc_info!(
         profile_ready = profile_lifecycle.state() == ProfileLifecycleState::Ready,
         "profile storage 启动 gate 开始"
     );
@@ -403,7 +404,7 @@ pub async fn wire_dependencies_from_inputs(
                 .context("open maintenance-only profile runtime layout"),
         })?
     };
-    tracing::info!(
+    uc_info!(
         storage_generation = if storage.is_v3() { "v3" } else { "legacy" },
         "空间存储 generation 已选择"
     );

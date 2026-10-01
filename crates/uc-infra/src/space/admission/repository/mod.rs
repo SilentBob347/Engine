@@ -10,7 +10,9 @@ pub(in crate::space::admission) fn fresh_test_repository_state(
     PersistedSpaceAdmissionRepositoryV2::fresh(profile_generation)
 }
 mod recovery_index;
+mod refusal;
 pub(super) mod token;
+pub(super) use refusal::AdmissionRefusal;
 
 #[cfg(feature = "test-util")]
 mod benchmark;
@@ -24,6 +26,7 @@ use crate::db::ports::DbExecutor;
 use crate::security::{ActiveSpaceGenerationManifestStore, AdmissionKeyManager};
 use uc_application::deps::AdmissionReadFailureCategory;
 use uc_application::deps::MembershipRecordStorePort;
+use uc_core::error_class::ErrorClass;
 use uc_core::membership::{AdmissionContinuationCredential, SpaceAdmissionId};
 
 use codec::RepositoryReadCache;
@@ -76,12 +79,31 @@ pub(super) enum SpaceAdmissionStateStoreError {
         source: anyhow::Error,
     },
     #[error("space admission state changed")]
-    Conflict,
+    Conflict {
+        /// 业务拒绝的固定原因；纯版本或令牌不符没有更细的原因。
+        #[source]
+        reason: Option<AdmissionRefusal>,
+    },
     #[error("space admission state storage is unavailable")]
     Unavailable {
         #[source]
         source: Option<anyhow::Error>,
     },
+}
+
+impl ErrorClass for SpaceAdmissionStateStoreError {
+    fn class(&self) -> &'static str {
+        match self {
+            Self::Locked => "locked",
+            Self::Corrupt { .. } => "corrupt",
+            Self::ReadInvalid { .. } => "read_invalid",
+            Self::Conflict {
+                reason: Some(reason),
+            } => reason.class(),
+            Self::Conflict { reason: None } => "conflict",
+            Self::Unavailable { .. } => "unavailable",
+        }
+    }
 }
 
 /// 纯状态或输入校验失败时 `source` 为空；有下层错误时保留为来源。
@@ -93,6 +115,16 @@ impl SpaceAdmissionStateStoreError {
     pub fn corrupt_from(source: impl Into<anyhow::Error>) -> Self {
         Self::Corrupt {
             source: Some(source.into()),
+        }
+    }
+
+    pub fn conflict() -> Self {
+        Self::Conflict { reason: None }
+    }
+
+    pub(super) fn refused(reason: AdmissionRefusal) -> Self {
+        Self::Conflict {
+            reason: Some(reason),
         }
     }
 
@@ -122,9 +154,10 @@ impl SpaceAdmissionStateStoreError {
     pub(in crate::space::admission) fn read_category(&self) -> AdmissionReadFailureCategory {
         match self {
             Self::ReadInvalid { category, .. } => *category,
-            Self::Locked | Self::Corrupt { .. } | Self::Conflict | Self::Unavailable { .. } => {
-                AdmissionReadFailureCategory::OtherStorageError
-            }
+            Self::Locked
+            | Self::Corrupt { .. }
+            | Self::Conflict { .. }
+            | Self::Unavailable { .. } => AdmissionReadFailureCategory::OtherStorageError,
         }
     }
 }
@@ -169,7 +202,7 @@ impl CredentialLoadError {
                 | SpaceAdmissionStateStoreError::ReadInvalid { .. },
             )
             | Self::Invalid { .. } => CredentialFailure::Corrupt,
-            Self::State(SpaceAdmissionStateStoreError::Conflict) => {
+            Self::State(SpaceAdmissionStateStoreError::Conflict { .. }) => {
                 CredentialFailure::RecoveryRequired
             }
             Self::State(SpaceAdmissionStateStoreError::Unavailable { .. })
