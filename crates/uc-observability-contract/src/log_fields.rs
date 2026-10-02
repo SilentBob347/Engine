@@ -486,6 +486,7 @@ __log_field_catalog! {
     reconciled: Scalar,
     recovered: Scalar,
     recovered_after_failures: Scalar,
+    relay_count: Scalar,
     relay_url_count: Scalar,
     remaining: Scalar,
     remaining_secs: Scalar,
